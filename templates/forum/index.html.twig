@@ -1,0 +1,113 @@
+{% extends 'home/base.html.twig' %}
+
+{% block title %}Forum{% endblock %}
+
+{% block body %}
+
+    <!-- bradcam_area_start  -->
+    <div class="bradcam_area breadcam_bg_1">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="bradcam_text">
+                        <h3>Forum</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- bradcam_area_end  -->
+    <!-- welcome_clicnic_area_start -->
+    <div class="welcome_clicnic_area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-xl-6 col-lg-6">
+                    <div class="welcome_thumb">
+                        <div class="thumb_1">
+                            <img src="{{ asset('img/about/1.jpg') }}" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="welcome_docmed_info">
+                        <h3>Welcome To
+                            <span>Our Forum.</span></h3>
+                        <p>Nous croyons en la collaboration et en l'échange de connaissances. Nous vous encourageons à partager vos idées, à poser des questions et à participer activement à la vie de ce forum. Ensemble, nous pouvons créer une communauté forte et dynamique.</p>
+                        <ul>
+                            <li> <i class="flaticon-verified"></i> Obtenez des conseils de professionnels </li>
+                            <li> <i class="flaticon-verified"></i> Rejoignez une communauté active</li>
+                            <li> <i class="flaticon-verified"></i> Partagez vos expériences et apprenez </li>
+                        </ul>
+                        {#  {% if is_granted('ROLE_USER') %}#}
+                        <a href="{{ path('forum_new') }}" class="boxed-btn6">Create new</a>
+                        {#  {% endif %}#}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- welcome_clicnic_area_end -->
+    <h3 class="table-title">Forum List</h3> <!-- Titre du tableau -->
+    <div class="table-wrapper">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Date</th>
+                <th scope="col">User</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for forum in forums %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ forum.Title }}</td>
+                    <td>{{ forum.Description }}</td>
+                    <td>{{ forum.Date ? forum.Date|date('Y-m-d') : '' }}</td>
+                    <td>{{ forum.user ? forum.user.nom : '' }}</td>
+                    <td>
+                        <a href="{{ path('forum_show', {'id': forum.id}) }}" class="btn btn-info btn-sm">Show</a>
+                        {#  {% if is_granted('ROLE_USER') %}
+                        <a href="{{ path('forum_edit', {'id': forum.id}) }}" class="btn btn-warning btn-sm">Edit</a>
+                          {% endif %} #}
+                    </td> <!-- Ajoute les boutons d'actions (Show/Edit) -->
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No forums found.</td> <!-- Message si aucun forum n'est trouvé -->
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% block stylesheets %}
+        <style>
+            .table-wrapper {
+                display: flex;
+                justify-content: center;  /* Centre le tableau horizontalement */
+                margin-top: 20px;  /* Ajoute une petite marge en haut si nécessaire */
+            }
+
+            .table {
+                margin: 0 auto; /* Centre le tableau */
+                width: 90%; /* Ajustez la largeur selon vos besoins */
+                margin-bottom: 50px; /* Espace de 30px entre le tableau et le footer */
+
+            }
+            .table-title {
+                font-size: 24px;
+                font-weight: 700;
+                color: #333;
+                margin-bottom: 35px;  /* Ajoute un peu d'espace entre le titre et le tableau */
+                text-align: center;   /* Centre le titre */
+            }
+
+        </style>
+    {% endblock %}
+
+
+{% endblock %}

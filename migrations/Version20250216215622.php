@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250214160620 extends AbstractMigration
+final class Version20250216215622 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,7 +27,7 @@ final class Version20250214160620 extends AbstractMigration
         $this->addSql('CREATE TABLE category (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE diagnostic (id INT AUTO_INCREMENT NOT NULL, diag_user_id INT DEFAULT NULL, fichier VARCHAR(255) NOT NULL, resultat VARCHAR(255) NOT NULL, INDEX IDX_FA7C8889CB3B5707 (diag_user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE donation_response (id INT AUTO_INCREMENT NOT NULL, blood_donation_id INT DEFAULT NULL, description VARCHAR(255) NOT NULL, INDEX IDX_F530148B9A49365F (blood_donation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE forum (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, date DATE NOT NULL, INDEX IDX_852BBECDA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE forum (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, date DATE NOT NULL, is_approved TINYINT(1) NOT NULL, INDEX IDX_852BBECDA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE forum_response (id INT AUTO_INCREMENT NOT NULL, forum_id INT DEFAULT NULL, description VARCHAR(255) NOT NULL, date DATE NOT NULL, INDEX IDX_1988861C29CCBAD0 (forum_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE pharmacy (id INT AUTO_INCREMENT NOT NULL, phar_user_id INT DEFAULT NULL, nom VARCHAR(255) NOT NULL, adresse VARCHAR(255) NOT NULL, num_tel VARCHAR(20) NOT NULL, type_pharmacie VARCHAR(255) NOT NULL, horaires VARCHAR(255) NOT NULL, INDEX IDX_D6C15C1EE3FC597A (phar_user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE prescription (id INT AUTO_INCREMENT NOT NULL, card_user_id INT DEFAULT NULL, rdvcard_id INT DEFAULT NULL, nom_medicament VARCHAR(255) NOT NULL, dosage VARCHAR(255) NOT NULL, duree VARCHAR(255) NOT NULL, notes VARCHAR(255) NOT NULL, INDEX IDX_1FBFB8D9F07459E3 (card_user_id), UNIQUE INDEX UNIQ_1FBFB8D9AD263032 (rdvcard_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
