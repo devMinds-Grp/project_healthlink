@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    
+    <link rel="shortcut icon" href="{{ asset('img/logo siteweb.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ asset('compiled/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/app-dark.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/auth.css') }}">
+</head>
+
+<body>
+    <script src="{{ asset('static/js/initTheme.js') }}"></script>
+    <div id="auth">
+        
+        <div class="row h-100">
+            <div class="col-lg-5 col-12">
+                <div id="auth-left">
+                    <h2 class="text-center">Inscription {{ role }}</h2>
+                    
+                    {{ form_start(form, {'attr': {'class': 'form form-vertical'}}) }}
+                    <div class="form-body">
+                        <div class="row">
+                            {% for field in form %}
+                                <div class="col-12">
+                                    <div class="form-group has-icon-left">
+                                        <label for="{{ field.vars.id }}">{{ field.vars.label }}</label>
+                                        <div class="position-relative">
+                                            {{ form_widget(field, {'attr': {'class': 'form-control', 'id': field.vars.id, 'placeholder': field.vars.label}}) }}
+                                            {{ form_errors(field) }}
+                                            <div class="form-control-icon">
+                                                {% if field.vars.name == 'email' %}
+                                                    <i class="bi bi-envelope"></i>
+                                                {% elseif field.vars.name == 'password' %}
+                                                    <i class="bi bi-lock"></i>
+                                                {% elseif field.vars.name == 'phone' %}
+                                                    <i class="bi bi-phone"></i>
+                                                {% else %}
+                                                    <i class="bi bi-person"></i>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-success" >S'inscrire</button>
+                                <button type="reset" class="btn btn-light-secondary me-1 mb-1">Réinitialiser</button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                    
+                    <hr>
+
+                    <p>Choisissez un rôle :</p>
+                    <a href="{{ path('app_register', { role: 'Patient' }) }}" class="btn btn-primary me-1 mb-1">Patient</a>
+                    <a href="{{ path('app_register', { role: 'Médecin' }) }}" class="btn btn-primary me-1 mb-1">Médecin</a>
+                    <a href="{{ path('app_register', { role: 'Soignant' }) }}" class="btn btn-primary me-1 mb-1">Soignant</a>
+
+                    <p>Déjà inscrit ? <a href="{{ path('app_login') }}">Connectez-vous</a>.</p>
+
+                </div>
+            </div>
+            <div class="col-lg-7 d-none d-lg-block">
+                <div id="auth-right"></div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

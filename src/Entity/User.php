@@ -5,10 +5,13 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity]
-#[ORM\Table(name: "User")]
-class User
+#[ORM\Table(name: "utilisateur")]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,32 +19,52 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
+    #[Assert\Length(min: 2, max: 50, minMessage: "Le nom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.")]
+    #[Assert\Length(min: 2, max: 50, minMessage: "Le prénom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: "L'email est obligatoire.")]
+    #[Assert\Email(message: "L'email '{{ value }}' n'est pas valide.")]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
+    #[Assert\Length(min: 8, max: 255, minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.")]
     private ?string $motDePasse = null;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $role = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
+    #[ORM\Column(length: 8, nullable: true)]
+    #[Assert\Regex(pattern: "/^(\+?\d{1,3})?\d{8,14}$/", message: "Le numéro de téléphone doit être valide.")]
     private ?string $numTel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255, maxMessage: "L'adresse ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $adresse = null;
 
+
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(max: 50, maxMessage: "La spécialité ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $speciality = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $categorieSoin = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+
+    private ?string $image = null;
+
+    #[ORM\Column(type: 'string', length: 20, options: ['default' => 'en attente'])]
+    private ?string $statut = 'en attente';
+
 
     public function __construct()
     {
@@ -117,12 +140,33 @@ class User
         return $this->nom;
     }
 
+
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
         return $this;
     }
 
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): self
+    {
+        $this->statut = $statut;
+        return $this;
+    }
     public function getPrenom(): ?string
     {
         return $this->prenom;
@@ -154,6 +198,32 @@ class User
     {
         $this->motDePasse = $motDePasse;
         return $this;
+    }
+    public function getPassword(): ?string
+    {
+        return $this->motDePasse;
+    }
+    public function getRoles(): array
+    {
+        // Récupérer le rôle de l'utilisateur
+        $role = $this->getRole();
+
+        // Si aucun rôle n'est défini, retourner un rôle par défaut (par exemple, ROLE_USER)
+        if (!$role) {
+            return ['ROLE_USER'];
+        }
+
+        // Retourner le rôle sous forme de tableau
+        return ['ROLE_' . strtoupper($role->getNom())];
+    }
+    public function eraseCredentials(): void
+    {
+        // Cette méthode est obligatoire mais peut rester vide
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email; // Symfony utilise cette méthode pour l'authentification
     }
 
     public function getRole(): ?Role

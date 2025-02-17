@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
-use App\Enum\StatutReclamation;
+use App\Enum\PatientStatus;
+use App\Enum\Status;
+use App\Repository\ReclamationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ReclamationRepository::class)]
 class Reclamation
 {
     #[ORM\Id]
@@ -13,71 +16,97 @@ class Reclamation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $titre;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre ne peut pas être vide")]
+    #[Assert\NotNull(message: "Le titre ne peut pas être null")]
 
-    #[ORM\Column(type: 'text')]
-    private string $description;
+    private ?string $titre = null;
 
-    #[ORM\Column(enumType: StatutReclamation::class)]
-    private StatutReclamation $statutReclamation;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le description ne peut pas être vide")]
+
+    #[Assert\Length(
+        min: 5,
+        max: 100,
+        minMessage: " description doit comporter au moins {{ limit }} caractères",
+        maxMessage: " description ne peut pas dépasser {{ limit }} caractères"
+    )]
+    private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'reclamations')]
-    private ?Category $RecCat = null;
-
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reclamations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $patient = null;
+    #[Assert\NotBlank(message: "champ ne peut pas être vide")]
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'handledReclamations')]
-    private ?User $admin = null;
+    private ?Category $category = null;
+
+    #[ORM\Column(enumType: Status::class)]
+    private ?Status $Statut = null;
+
+    #[ORM\Column(length: 255 , nullable:true)]
+
+    private ?string $image = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitre(): string
+    public function getTitre(): ?string
     {
         return $this->titre;
     }
 
-    public function setTitre(string $titre): self
+    public function setTitre(string $titre): static
     {
         $this->titre = $titre;
+
         return $this;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
-    public function getStatutReclamation(): StatutReclamation
+    public function getCategory(): ?Category
     {
-        return $this->statutReclamation;
+        return $this->category;
     }
 
-    public function setStatutReclamation(StatutReclamation $statutReclamation): self
+    public function setCategory(?Category $category): static
     {
-        $this->statutReclamation = $statutReclamation;
+        $this->category = $category;
+
         return $this;
     }
 
-    public function getRecCat(): ?Category
+    public function getStatut(): ?Status
     {
-        return $this->RecCat;
+        return $this->Statut;
     }
 
-    public function setRecCat(?Category $RecCat): static
+    public function setStatut(Status $Statut): static
     {
-        $this->RecCat = $RecCat;
+        $this->Statut = $Statut;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

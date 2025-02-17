@@ -6,6 +6,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -16,12 +17,14 @@ class Category
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Name = null;
+    #[Assert\NotBlank(message: "champ ne peut pas être vide")]
+    #[Assert\NotNull(message: "Le titre ne peut pas être null")]
+    private ?string $nom = null;
 
     /**
      * @var Collection<int, Reclamation>
      */
-    #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'RecCat')]
+    #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'category')]
     private Collection $reclamations;
 
     public function __construct()
@@ -34,14 +37,14 @@ class Category
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->Name;
+        return $this->nom;
     }
 
-    public function setName(string $Name): static
+    public function setNom(string $nom): static
     {
-        $this->Name = $Name;
+        $this->nom = $nom;
 
         return $this;
     }
@@ -58,7 +61,7 @@ class Category
     {
         if (!$this->reclamations->contains($reclamation)) {
             $this->reclamations->add($reclamation);
-            $reclamation->setRecCat($this);
+            $reclamation->setCategory($this);
         }
 
         return $this;
@@ -68,8 +71,8 @@ class Category
     {
         if ($this->reclamations->removeElement($reclamation)) {
             // set the owning side to null (unless already changed)
-            if ($reclamation->getRecCat() === $this) {
-                $reclamation->setRecCat(null);
+            if ($reclamation->getCategory() === $this) {
+                $reclamation->setCategory(null);
             }
         }
 

@@ -1,0 +1,63 @@
+{% extends 'home/admin_base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="col-md-6 col-12">
+        <div class="card">
+            <div class="container">
+                <div class="card-content">
+                    <div class="card-body">
+                        <h2 class="text-center">Edit User</h2>
+                        <form method="post" class="form form-vertical">
+                            <div class="form-body">
+                                <div class="row">
+                                    {% for field in form %}
+                                        <div class="col-12">
+                                            <div class="form-group has-icon-left">
+                                                <label for="{{ field.vars.id }}">{{ field.vars.label }}</label>
+                                                <div class="position-relative">
+                                                    {{ form_widget(field, {'attr': {'class': 'form-control', 'id': field.vars.id, 'placeholder': field.vars.label}}) }}
+                                                    {{ form_errors(field) }}
+                                                    <div class="form-control-icon">
+                                                        {% if field.vars.name == 'email' %}
+                                                            <i class="bi bi-envelope"></i>
+                                                        {% elseif field.vars.name == 'password' %}
+                                                            <i class="bi bi-lock"></i>
+                                                        {% elseif field.vars.name == 'phone' %}
+                                                            <i class="bi bi-phone"></i>
+                                                        {% else %}
+                                                            <i class="bi bi-person"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                      
+                                      
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <a href="   {% if role == 'Médecin' %}
+                                        {{ path('app_user_medecins') }}
+                                    {% elseif role == 'Soignant' %}
+                                        {{ path('app_user_soignants') }}
+                                    {% else %}
+                                        {{ path('app_user_patients') }}
+                                    {% endif %}" class="btn btn-secondary">
+                                            <i class="bi bi-arrow-left"></i> Retour à la liste
+                                        </a>
+                                        
+                                        <button type="submit" class="btn btn-primary me-1 mb-1">Mettre à jour</button>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
