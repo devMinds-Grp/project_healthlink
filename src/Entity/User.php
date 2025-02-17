@@ -140,7 +140,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->nom;
     }
 
-
     public function setNom(string $nom): self
     {
         $this->nom = $nom;

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 class Forum
@@ -17,9 +18,31 @@ class Forum
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre est obligatoire.")]
+    #[Assert\Length(
+        min: 5,
+        max: 100,
+        minMessage: "Le titre doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z0-9\s\-_?!]+$/",
+        message: "Le titre contient des caractères non autorisés."
+    )]
     private ?string $Title = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(
+        min: 10,
+        max: 1000,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z0-9\s\-_?!.,\n\r]+$/",
+        message: "La description contient des caractères non autorisés."
+    )]
     private ?string $Description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -31,8 +54,22 @@ class Forum
     /**
      * @var Collection<int, ForumResponse>
      */
-    #[ORM\OneToMany(targetEntity: ForumResponse::class, mappedBy: 'forum')]
+    #[ORM\OneToMany(targetEntity: ForumResponse::class, mappedBy: 'forum',cascade: ['remove'])]
     private Collection $ForomRep;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isApproved = false; // Par défaut, la publication n'est pas approuvée
+
+    public function isApproved(): bool
+    {
+        return $this->isApproved;
+    }
+
+    public function setIsApproved(bool $isApproved): self
+    {
+        $this->isApproved = $isApproved;
+        return $this;
+    }
 
     public function __construct()
     {
