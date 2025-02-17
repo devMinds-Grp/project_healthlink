@@ -2,11 +2,26 @@
 
 namespace App\Controller;
 
+use App\Repository\BloodDonationRepository;
+use App\Entity\BloodDonation;
+use App\Repository\DonationResponseRepository;
+
+use App\Entity\Reclamation;
+use App\Repository\CategoryRepository;
+use App\Repository\ReclamationRepository;
+
+
+
+use App\Entity\Forum;
+use App\Entity\ForumResponse;
+use App\Repository\ForumRepository;
+use App\Repository\ForumResponseRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\AppointmentRepository;
-use App\Entity\Appointment;
+
 
 final class AdminController extends AbstractController
 {
@@ -17,6 +32,181 @@ final class AdminController extends AbstractController
             'controller_name' => 'AdminController',
         ]);
     }
-  
+    
+    #[Route('/admin/blood-donations', name: 'app_admin_blood_donations')]
+    public function listBloodDonations(EntityManagerInterface $em): Response
+    {
+        $bloodDonations = $em->getRepository(BloodDonation::class)->findAll();
 
+        return $this->render('blood_donation/admin1/list_blood_donations.html.twig', [
+            'bloodDonations' => $bloodDonations,
+        ]);
+    }
+    #[Route('/admin/blood_donation', name: 'app_admin_blood_donation')]
+    public function indexx5(BloodDonationRepository $BloodDonationRepository): Response
+    {
+        return $this->render('blood_donation/admin1/list_blood_donations.html.twig', [
+            'BloodDonation' => $BloodDonationRepository->findAll(),
+        ]);
+    }
+    #[Route('/admin/donation_response', name: 'app_admin_Donation_Response')]
+    public function index6(DonationResponseRepository $DonationResponseRepository): Response
+    {
+        return $this->render('donation_response/admin1/response.html.twig', [
+            'DonationResponse' => $DonationResponseRepository->findAll(),
+        ]);
+    }
+    #[Route('/blood-donation/approve/{id}', name: 'approve_blood_donation')]
+public function approve(int $id, EntityManagerInterface $entityManager): Response
+{
+    $bloodDonation = $entityManager->getRepository(BloodDonation::class)->find($id);
+
+    if (!$bloodDonation) {
+        throw $this->createNotFoundException('Pas de demande de don trouvée pour cet ID');
+    }
+
+    // Exemple : Mettre à jour le statut
+    $bloodDonation->setStatus('approved');
+    $entityManager->flush();
+
+    $this->addFlash('success', 'Demande approuvée avec succès.');
+
+    return $this->redirectToRoute('app_blood_donation_list');
+}
+
+#[Route('/blood-donation/delete/{id}', name: 'delete_blood_donation')]
+public function delete(int $id, EntityManagerInterface $entityManager): Response
+{
+    $bloodDonation = $entityManager->getRepository(BloodDonation::class)->find($id);
+
+    if (!$bloodDonation) {
+        throw $this->createNotFoundException('Pas de demande de don trouvée pour cet ID');
+    }
+
+    $entityManager->remove($bloodDonation);
+    $entityManager->flush();
+
+    $this->addFlash('success', 'Demande supprimée avec succès.');
+
+    return $this->redirectToRoute('app_blood_donation_list');
+}
+
+
+   
+    #[Route('/admin/category/reclamation', name: 'app_admin_category_reclamation')]
+    public function index5(CategoryRepository $categoryRepository): Response
+    {
+        return $this->render('category/index.html.twig', [
+            'categories' => $categoryRepository->findAll(),
+        ]);
+    }
+    #[Route('/admin/reclamation', name: 'app_admin_reclamation')]
+    public function index3(ReclamationRepository $reclamationRepository): Response
+    {
+        return $this->render('reclamation/admin/index.html.twig', [
+            'reclamations' => $reclamationRepository->findAll(),
+        ]);
+    }
+    #[Route('/admin/reclamation/{id}', name: 'app_admin_reclamation_show')]
+    public function show1(Reclamation $reclamation): Response
+    {
+        return $this->render('reclamation/admin/show.html.twig', [
+            'reclamation' => $reclamation,
+        ]);
+    }
+   
+    
+
+    #[Route('/admin/forums', name: 'admin_forum_index', methods: ['GET'])]
+    public function listForums(ForumRepository $forumRepository): Response
+    {
+        // Récupérer tous les forums (approuvés et non approuvés)
+        $forums = $forumRepository->findAll();
+
+        return $this->render('admin/forum/index.html.twig', [
+            'forums' => $forums,
+        ]);
+    }
+
+    #[Route('/admin/forum/{id}/approve', name: 'admin_forum_approve', methods: ['POST'])]
+    public function approveForum(Request $request, Forum $forum, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('approve'.$forum->getId(), $request->request->get('_token'))) {
+            $forum->setIsApproved(true);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('admin_forum_index');
+    }
+
+    #[Route('/admin/forum/{id}/disapprove', name: 'admin_forum_disapprove', methods: ['POST'])]
+    public function disapproveForum(Request $request, Forum $forum, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('disapprove'.$forum->getId(), $request->request->get('_token'))) {
+            $forum->setIsApproved(false);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('admin_forum_index');
+    }
+
+    #[Route('/admin/forum/{id}/delete', name: 'admin_forum_delete', methods: ['POST'])]
+    public function deleteForum(Request $request, Forum $forum, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$forum->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($forum);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('admin_forum_index');
+    }
+
+    #[Route('/admin/responses', name: 'admin_response_index', methods: ['GET'])]
+    public function listResponses(ForumResponseRepository $responseRepository): Response
+    {
+        return $this->render('admin/response/index.html.twig', [
+            'responses' => $responseRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/admin/response/{id}/delete', name: 'admin_response_delete', methods: ['POST'])]
+    public function deleteResponse(Request $request, ForumResponse $response, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$response->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($response);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('admin_response_index');
+    }
+    #[Route('/admin/forum/{id}/comments', name: 'admin_forum_comments', methods: ['GET'])]
+    public function showComments(Forum $forum): Response
+    {
+        // Récupérer les commentaires associés à ce forum
+        $comments = $forum->getForomRep();
+
+        return $this->render('admin/response/index.html.twig', [
+            'forum' => $forum,
+            'comments' => $comments,
+        ]);
+    }
+    #[Route('/admin/comment/{id}/delete', name: 'admin_comment_delete', methods: ['POST'])]
+    public function deleteComment(Request $request, ForumResponse $comment, EntityManagerInterface $entityManager): Response
+    {
+        // Vérifier le token CSRF pour la sécurité
+        if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->request->get('_token'))) {
+            // Supprimer le commentaire
+            $entityManager->remove($comment);
+            $entityManager->flush();
+
+            // Ajouter un message flash pour informer l'utilisateur
+            $this->addFlash('success', 'Le commentaire a été supprimé avec succès.');
+        } else {
+            // Si le token CSRF est invalide, afficher un message d'erreur
+            $this->addFlash('error', 'Token CSRF invalide.');
+        }
+
+        // Rediriger vers la liste des commentaires du forum
+        return $this->redirectToRoute('admin_forum_comments', ['id' => $comment->getForum()->getId()]);
+    }
 }

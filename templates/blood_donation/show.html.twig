@@ -1,0 +1,39 @@
+{% extends 'home/base.html.twig' %}
+
+{% block body %}
+    <div class="container" style="margin-top: 220px;margin-bottom: 500px;">
+        <h1 class="mb-4 text-center ">Détails du Don de Sang</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+
+                        <tr>
+                            <th scope="row">Description</th>
+                            <td>{{ blood_donation.Description }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Lieu</th>
+                            <td>{{ blood_donation.lieu }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date</th>
+                            <td>{{ blood_donation.Date ? blood_donation.Date|date('Y-m-d') : 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Téléphone</th>
+                            <td>{{ blood_donation.numTel }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <a href="{{ path('app_blood_donation_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            <a href="{{ path('app_blood_donation_edit', {'id': blood_donation.id}) }}" class="btn btn-warning">Modifier</a>
+            {{ include('blood_donation/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\CareRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,20 +17,24 @@ class Care
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: "The date cannot be empty.")]
+    #[Assert\Type("\DateTimeInterface")]
     private ?\DateTimeInterface $Date = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "The address is required.")]
+    #[Assert\Length(min: 5, max: 255, minMessage: "The address must be at least 5 characters long.")]
     private ?string $Address = null;
 
     #[ORM\Column(length: 255)]
     private ?string $Description = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'caresAsCaregiver')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $caregiver = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'caresAsPatient')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $patient = null;
 
     #[ORM\OneToMany(mappedBy: 'care', targetEntity: CareResponse::class, cascade: ['persist', 'remove'])]
@@ -42,6 +46,7 @@ class Care
     public function __construct()
     {
         $this->careResponse = new ArrayCollection();
+        $this->Date = new \DateTime();
     }
 
 
@@ -86,19 +91,47 @@ class Care
         return $this;
     }
 
-
-
-    public function getcareResponse(): ?CareResponse
+    public function getCaregiver(): ?User
     {
-        return $this->careResponse;
+        return $this->caregiver;
     }
 
-    public function setcareResponse(?CareResponse $careResponse): static
+    public function setCaregiver(?User $caregiver): static
     {
-        $this->careResponse = $careResponse;
+        $this->caregiver = $caregiver;
 
         return $this;
     }
+
+    public function getPatient(): ?User
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?User $patient): static
+    {
+        $this->patient = $patient;
+
+        return $this;
+    }
+
+
+public function getCareResponse(): Collection
+{
+    return $this->careResponse;
+}
+
+
+
+public function setCareResponse(CareResponse $careResponse): static
+{
+    if (!$this->careResponse->contains($careResponse)) {
+        $this->careResponse[] = $careResponse;
+    }
+
+    return $this;
+}
+
 
     public function getCareUser(): ?User
     {

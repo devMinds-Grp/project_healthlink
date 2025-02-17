@@ -1,0 +1,38 @@
+ 
+<div class="container mt-4">
+ 
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div class="mb-3">
+        {{ form_label(form.titre) }} <span class="text-danger"> * </span>
+        {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+         <span class="text-danger"> {{ form_errors(form.titre) }} </span>
+    </div>
+
+    <div class="mb-3"> 
+        {{ form_label(form.description) }}<span class="text-danger"> * </span>
+        {{ form_widget(form.description) }}
+        <span class="text-danger">  {{ form_errors(form.description) }}</span>
+        
+    </div>
+
+   
+
+    <div class="mb-3">
+        {{ form_label(form.image) }}
+        {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.image) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.category) }} <span class="text-danger"> * </span>
+        {{ form_widget(form.category, {'attr': {'class': 'form-select'}}) }}
+        <span class="text-danger">  {{ form_errors(form.category) }}</span>
+    </div>
+<br>
+<br>
+    <button type="submit" class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+
+    {{ form_end(form) }}
+</div>
+ 

@@ -1,4 +1,8 @@
 <?php
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 namespace App\Enum;
 
 enum TypeRdv: string

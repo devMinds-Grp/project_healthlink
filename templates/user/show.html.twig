@@ -1,0 +1,89 @@
+{% extends 'home/admin_base.html.twig' %}
+
+{% block title %}Détails de l'utilisateur{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="col-md-6 col-12">
+        <div class="card">
+            <div class="container">
+                <div class="card-content">
+                    <div class="card-body">
+                        <h2 class="text-center">Détails de l'utilisateur</h2>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>ID</th>
+                                        <td>{{ user.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <td>{{ user.nom }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Prénom</th>
+                                        <td>{{ user.prenom }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>{{ user.email }}</td>
+                                    </tr>
+
+                                    {# Affichage conditionnel selon le rôle #}
+                                    {% if role == 'Médecin' %}
+                                        <tr>
+                                            <th>Spécialité</th>
+                                            <td>{{ user.speciality }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Attestation</th>
+                                            <td><img src="{{ asset('uploads/' ~ user.image) }}" alt="Image de {{ user.nom }}" class="img-fluid"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Numéro de téléphone</th>
+                                            <td>{{ user.numTel }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Adresse</th>
+                                            <td>{{ user.adresse }}</td>
+                                        </tr>
+                                    {% elseif role == 'Soignant' %}
+                                        <tr>
+                                            <th>Catégorie de soin</th>
+                                            <td>{{ user.categorieSoin }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Attestation</th>
+                                            <td><img src="{{ asset('uploads/' ~ user.image) }}" alt="Image de {{ user.nom }}" class="img-fluid"></td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="   {% if role == 'Médecin' %}
+                            {{ path('app_user_medecins') }}
+                        {% elseif role == 'Soignant' %}
+                            {{ path('app_user_soignants') }}
+                        {% else %}
+                            {{ path('app_user_patients') }}
+                        {% endif %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Retour à la liste
+                            </a>
+                            
+                            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Modifier
+                            </a>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

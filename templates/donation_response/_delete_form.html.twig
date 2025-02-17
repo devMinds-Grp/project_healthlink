@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('app_donation_response_delete', {'id': donation_response.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');" class="d-inline-block">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ donation_response.id) }}">
+    <button type="submit" class="btn btn-danger btn-sm">
+        <i class="bi bi-trash"></i> Supprimer
+    </button>
+</form>

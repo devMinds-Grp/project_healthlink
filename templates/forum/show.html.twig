@@ -1,0 +1,105 @@
+{# templates/forum/new.html.twig #}
+{% extends 'home/base.html.twig' %}
+
+{% block title %}Forum Details{% endblock %}
+
+{% block body %}
+    <!-- bradcam_area_start  -->
+    <div class="bradcam_area breadcam_bg_1">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="bradcam_text">
+                        <h3>Forum</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card w-50">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4">Forum Details</h1>
+
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th scope="row">Title</th>
+                        <td>{{ forum.Title }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Description</th>
+                        <td>{{ forum.Description }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Date</th>
+                        <td>{{ forum.Date ? forum.Date|date('Y-m-d') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">User</th>
+                        <td>{{ forum.user ? forum.user.nom : '' }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="d-grid gap-2">
+                    <a href="{{ path('forum_index') }}" class="btn btn-secondary">Back to list</a>
+                    {#  {% if app.user and app.user.id == forum.user.id %}#}
+                    <a href="{{ path('forum_edit', {'id': forum.id}) }}" class="btn btn-warning">Edit Forum</a>
+                    {{ include('forum/_delete_form.html.twig') }}
+                    {#  {% endif %}#}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-8 mx-auto mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-center">Latest Responses</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-lg">
+                        <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for response in forum.ForomRep %}
+                            <tr>
+                                <td class="col-auto">
+                                    <p class="mb-0">{{ response.Description }}</p>
+                                </td>
+                                <td class="col-auto">
+                                    <p class="mb-0">{{ response.Date|date('Y-m-d') }}</p>
+                                </td>
+                                <td class="col-auto">
+                                    <a href="{{ path('forum_response_edit', {'id': response.id}) }}" class="btn btn-sm btn-primary">Edit</a>
+                                    <form method="post" action="{{ path('forum_response_delete', {'id': response.id}) }}" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this response?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ response.id) }}">
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center">No responses found.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bouton "Add Response" -->
+                <div class="d-grid gap-2 mt-4">
+                    <a href="{{ path('forum_response_new', {'id': forum.id}) }}" class="btn btn-success">Add Response</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
