@@ -15,4 +15,11 @@ final class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/doctors', name: 'app_doctor_list')]
+    public function listDoctors(): Response
+    {
+        return $this->render('liste_doctor/list.html.twig');
+    }
+
 }

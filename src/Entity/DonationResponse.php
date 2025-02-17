@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DonationResponseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DonationResponseRepository::class)]
 class DonationResponse
@@ -14,9 +15,17 @@ class DonationResponse
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Description = null;
+    #[Assert\NotBlank(message: 'La description est obligatoire.')]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: 'La description doit contenir au moins {{ limit }} caractères.',
+        maxMessage: 'La description ne peut pas dépasser {{ limit }} caractères.'
+    )]
 
-    #[ORM\ManyToOne(inversedBy: 'DldRep')]
+    private ?string $description = null;
+
+    #[ORM\ManyToOne(targetEntity: BloodDonation::class, inversedBy: 'DldRep')]
     private ?BloodDonation $bloodDonation = null;
 
     public function getId(): ?int
@@ -24,14 +33,14 @@ class DonationResponse
         return $this->id;
     }
 
-    public function getDescription(): ?string
+    public function getdescription(): ?string
     {
-        return $this->Description;
+        return $this->description;
     }
 
-    public function setDescription(string $Description): static
+    public function setdescription(string $description): static
     {
-        $this->Description = $Description;
+        $this->description = $description;
 
         return $this;
     }

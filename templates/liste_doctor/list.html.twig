@@ -1,0 +1,277 @@
+{% extends 'home/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/doctor.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/4.9.95/css/materialdesignicons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha256-mLBIhmBvigTFWPSCtvdu6a76T+3Xyt+K571hupeFLg4=" crossorigin="anonymous" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js" integrity="sha256-Zr3vByTlMGQhvMfgkQ5BtWRSKBGa2QlspKYJnkjZTmo=" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container" style="margin-top: 220px;margin-bottom: 500px;">
+  
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="left-sidebar">
+                <div class="accordion" id="accordionExample">
+                 <!-- Barre de recherche -->
+                    <div class="search-bar mb-4">
+                        <input type="text" class="form-control" placeholder="Rechercher un médecin...">
+                    </div>
+                    
+                    <!-- Spécialités-->
+                    <div class="card mt-4">
+                        <a data-toggle="collapse" href="#collapseOne" class="job-list" aria-expanded="true" aria-controls="collapseOne">
+                            <div class="card-header" id="headingOne">
+                                <h6 class="mb-0 text-dark f-18">Spécialités</h6>
+                            </div>
+                        </a>
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
+                            <div class="card-body p-0">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input all-select" id="customCheckAll">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheckAll">Cardiologie </label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input all-select" id="customCheck22">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck22">Dermatologie </label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input all-select" id="customCheck23">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck23">Pédiatrie </label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input all-select" id="customCheck3">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck3">Orthopédie </label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input all-select" id="customCheck4">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck4">Ophtalmologie </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- genre -->
+                    <div class="card mt-4">
+                        <a data-toggle="collapse" href="#collapsetwo" class="job-list" aria-expanded="true" aria-controls="collapsetwo">
+                            <div class="card-header" id="headingtwo">
+                                <h6 class="mb-0 text-dark f-18">genre</h6>
+                            </div>
+                        </a>
+                        <div id="collapsetwo" class="collapse show" aria-labelledby="headingtwo">
+                            <div class="card-body p-0">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck5">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck5">Femme</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck6">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck6">Homme</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck7">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck7">Autre</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ville -->
+                    <div class="card mt-4">
+                        <a data-toggle="collapse" href="#collapsethree" class="job-list" aria-expanded="true" aria-controls="collapsethree">
+                            <div class="card-header" id="headingthree">
+                                <h6 class="mb-0 text-dark f-18">Ville</h6>
+                            </div>
+                        </a>
+                        <div id="collapsethree" class="collapse show" aria-labelledby="headingthree">
+                            <div class="card-body p-0">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck13">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck13">Tunis</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck14">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck14">Sfax</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck15">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck15">Sousse</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck16">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck16">Nabeul</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck17">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck17">kairouan</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Gafsa</label>
+                                </div>
+                                  <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Kasserine</label>
+                                </div>
+                                  <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Monastir</label>
+                                </div>
+                                  <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Mahdia</label>
+                                </div>
+                                  <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Bizerte</label>
+                                </div>
+                                  <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Gabes</label>
+                                </div>
+                                 <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Tatouine</label>
+                                </div>
+                                 <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Beja</label>
+                                </div>
+                                 <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Tozeur</label>
+                                </div>
+                                 <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Kaf</label>
+                                </div>
+                                 <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Jandouba</label>
+                                </div>
+                                 <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">seliana</label>
+                                </div>
+                                 <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Zaghouen</label>
+                                </div>
+                                 <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                                    <label class="custom-control-label ml-1 text-muted f-15" for="customCheck18">Médenine</label>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                     
+
+                    
+                </div>
+                
+            </div>
+            <br>
+             <div class="card-footer">
+                                <button class="btn btn-primary btn-block">Filtrer</button>
+                    </div>
+        </div>
+
+ <div class="col-lg-9">
+         <div class="container mt-4">
+          <div class="row">
+        <!-- Médecin 1 -->
+        <div class="col-md-12 mb-3">
+            <div class="card p-3 d-flex flex-row align-items-center">
+                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Dr. Anis Jedidi" class="rounded-circle" style="width: 100px; height: 100px;">
+                <div class="card-body">
+                    <h5 class="card-title">Dr. Anis Jedidi</h5>
+                    <p class="card-text"><strong>Spécialité :</strong> Dermatologue</p>
+                    <p class="card-text"><strong>Lieu :</strong> Les Berges Du Lac</p>
+                    <p class="text-muted">Spécialiste en dermatologie, maladies des ongles et cheveux, laser, carboxythérapie, plexer, dermatologie interventionnelle et esthétique.</p>
+                </div>
+                <div class="ml-auto">
+                    <a href="{{ path('app_appointment_new') }}" class="btn btn-primary">Prendre RDV</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Médecin 2 -->
+        <div class="col-md-12 mb-3">
+            <div class="card p-3 d-flex flex-row align-items-center">
+                <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="Dr. Bilel Mabrouki" class="rounded-circle" style="width: 100px; height: 100px;">
+                <div class="card-body">
+                    <h5 class="card-title">Dr. Bilel Mabrouki</h5>
+                    <p class="card-text"><strong>Spécialité :</strong> Gynécologue</p>
+                    <p class="card-text"><strong>Lieu :</strong> Sousse</p>
+                    <p class="text-muted">Spécialiste en gynécologie-obstétrique, coeliochirurgie, chirurgie DS, fécondation in vitro, échographie 4D.</p>
+                </div>
+                <div class="ml-auto">
+                    <a href="{{ path('app_appointment_new') }}" class="btn btn-primary">Prendre RDV</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Médecin 3 -->
+        <div class="col-md-12 mb-3">
+            <div class="card p-3 d-flex flex-row align-items-center">
+                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Dr. Wiem Kammoun Makni" class="rounded-circle" style="width: 100px; height: 100px;">
+                <div class="card-body">
+                    <h5 class="card-title">Dr. Wiem Kammoun Makni</h5>
+                    <p class="card-text"><strong>Spécialité :</strong> Chirurgien-dentiste</p>
+                    <p class="card-text"><strong>Lieu :</strong> Sfax</p>
+                    <p class="text-muted">Spécialiste en prothèse complète, implantologie, occlusodontie et dentisterie esthétique.</p>
+                </div>
+                <div class="ml-auto">
+                    <a href="{{ path('app_appointment_new') }}" class="btn btn-primary">Prendre RDV</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Médecin 4 -->
+        <div class="col-md-12 mb-3">
+            <div class="card p-3 d-flex flex-row align-items-center">
+                <img src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="Dr. Mohamed Hamrouni" class="rounded-circle" style="width: 100px; height: 100px;">
+                <div class="card-body">
+                    <h5 class="card-title">Dr. Amel Tounsi</h5>
+                    <p class="card-text"><strong>Spécialité :</strong> Chirurgien-dentiste</p>
+                    <p class="card-text"><strong>Lieu :</strong> Gafsa</p>
+                    <p class="text-muted">Spécialiste en prothèse complète, implantologie, occlusodontie et dentisterie esthétique.</p>
+                </div>
+                <div class="ml-auto">
+                   <a href="{{ path('app_appointment_new') }}" class="btn btn-primary">Prendre RDV</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+                            
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

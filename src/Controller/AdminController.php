@@ -2,6 +2,16 @@
 
 namespace App\Controller;
 
+use App\Repository\BloodDonationRepository;
+use App\Entity\BloodDonation;
+use App\Repository\DonationResponseRepository;
+
+use App\Entity\Reclamation;
+use App\Repository\CategoryRepository;
+use App\Repository\ReclamationRepository;
+
+
+
 use App\Entity\Forum;
 use App\Entity\Care;
 use App\Entity\CareResponses;
@@ -17,15 +27,100 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 
-class AdminController extends AbstractController
+
+final class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'app_admin')]
     public function index(): Response
     {
-        return $this->render('admin_base.html.twig', [
+        return $this->render('home/admin_base.html.twig', [
             'controller_name' => 'AdminController',
         ]);
     }
+    
+    #[Route('/admin/blood-donations', name: 'app_admin_blood_donations')]
+    public function listBloodDonations(EntityManagerInterface $em): Response
+    {
+        $bloodDonations = $em->getRepository(BloodDonation::class)->findAll();
+
+        return $this->render('blood_donation/admin1/list_blood_donations.html.twig', [
+            'bloodDonations' => $bloodDonations,
+        ]);
+    }
+    #[Route('/admin/blood_donation', name: 'app_admin_blood_donation')]
+    public function indexx5(BloodDonationRepository $BloodDonationRepository): Response
+    {
+        return $this->render('blood_donation/admin1/list_blood_donations.html.twig', [
+            'BloodDonation' => $BloodDonationRepository->findAll(),
+        ]);
+    }
+    #[Route('/admin/donation_response', name: 'app_admin_Donation_Response')]
+    public function index6(DonationResponseRepository $DonationResponseRepository): Response
+    {
+        return $this->render('donation_response/admin1/response.html.twig', [
+            'DonationResponse' => $DonationResponseRepository->findAll(),
+        ]);
+    }
+    #[Route('/blood-donation/approve/{id}', name: 'approve_blood_donation')]
+public function approve(int $id, EntityManagerInterface $entityManager): Response
+{
+    $bloodDonation = $entityManager->getRepository(BloodDonation::class)->find($id);
+
+    if (!$bloodDonation) {
+        throw $this->createNotFoundException('Pas de demande de don trouvée pour cet ID');
+    }
+
+    // Exemple : Mettre à jour le statut
+    $bloodDonation->setStatus('approved');
+    $entityManager->flush();
+
+    $this->addFlash('success', 'Demande approuvée avec succès.');
+
+    return $this->redirectToRoute('app_blood_donation_list');
+}
+
+#[Route('/blood-donation/delete/{id}', name: 'delete_blood_donation')]
+public function delete(int $id, EntityManagerInterface $entityManager): Response
+{
+    $bloodDonation = $entityManager->getRepository(BloodDonation::class)->find($id);
+
+    if (!$bloodDonation) {
+        throw $this->createNotFoundException('Pas de demande de don trouvée pour cet ID');
+    }
+
+    $entityManager->remove($bloodDonation);
+    $entityManager->flush();
+
+    $this->addFlash('success', 'Demande supprimée avec succès.');
+
+    return $this->redirectToRoute('app_blood_donation_list');
+}
+
+
+   
+    #[Route('/admin/category/reclamation', name: 'app_admin_category_reclamation')]
+    public function index5(CategoryRepository $categoryRepository): Response
+    {
+        return $this->render('category/index.html.twig', [
+            'categories' => $categoryRepository->findAll(),
+        ]);
+    }
+    #[Route('/admin/reclamation', name: 'app_admin_reclamation')]
+    public function index3(ReclamationRepository $reclamationRepository): Response
+    {
+        return $this->render('reclamation/admin/index.html.twig', [
+            'reclamations' => $reclamationRepository->findAll(),
+        ]);
+    }
+    #[Route('/admin/reclamation/{id}', name: 'app_admin_reclamation_show')]
+    public function show1(Reclamation $reclamation): Response
+    {
+        return $this->render('reclamation/admin/show.html.twig', [
+            'reclamation' => $reclamation,
+        ]);
+    }
+   
+    
 
     #[Route('/admin/forums', name: 'admin_forum_index', methods: ['GET'])]
     public function listForums(ForumRepository $forumRepository): Response
@@ -130,7 +225,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/care/approve/{id}', name: 'care_approve')]
-    public function approve(Care $care, EntityManagerInterface $entityManager): RedirectResponse
+    public function approve1(Care $care, EntityManagerInterface $entityManager): RedirectResponse
     {
         // Supposons que l'entité Care ait un champ "approved"
         $care->setApproved(true); 
@@ -142,7 +237,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/care/delete/{id}', name: 'care_delete', methods: ['POST', 'GET'])]
-    public function delete(Care $care, EntityManagerInterface $entityManager): RedirectResponse
+    public function delete1(Care $care, EntityManagerInterface $entityManager): RedirectResponse
     {
         $entityManager->remove($care);
         $entityManager->flush();

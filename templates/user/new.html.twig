@@ -1,0 +1,52 @@
+{% extends 'home/admin_base.html.twig' %}
+
+{% block title %}Inscription {{ role }}{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="col-md-6 col-12">
+        <div class="card">
+            <div class="container">
+                <div class="card-content">
+                    <div class="card-body">
+                        <h2 class="text-center">Inscription {{ role }}</h2>
+                        {{ form_start(form, {'attr': {'class': 'form form-vertical'}}) }}
+                            <div class="form-body">
+                                <div class="row">
+                                    {% for field in form %}
+                                        <div class="col-12">
+                                            <div class="form-group has-icon-left">
+                                                <label for="{{ field.vars.id }}">{{ field.vars.label }}</label>
+                                                <div class="position-relative">
+                                                    {{ form_widget(field, {'attr': {'class': 'form-control', 'id': field.vars.id, 'placeholder': field.vars.label}}) }}
+                                                    {{ form_errors(field) }}
+                                                    <div class="form-control-icon">
+                                                        {% if field.vars.name == 'email' %}
+                                                            <i class="bi bi-envelope"></i>
+                                                        {% elseif field.vars.name == 'password' %}
+                                                            <i class="bi bi-lock"></i>
+                                                        {% elseif field.vars.name == 'phone' %}
+                                                            <i class="bi bi-phone"></i>
+                                                        {% else %}
+                                                            <i class="bi bi-person"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary me-1 mb-1">S'inscrire</button>
+                                        <button type="reset" class="btn btn-light-secondary me-1 mb-1">Réinitialiser</button>
+                                    </div>
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

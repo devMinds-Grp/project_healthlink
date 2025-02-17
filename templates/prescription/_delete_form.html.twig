@@ -1,0 +1,9 @@
+<!-- Formulaire de suppression -->
+<form method="post" action="{{ path('app_prescription_delete', {'id': prescription.id}) }}" id="delete-form-{{ prescription.id }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ prescription.id) }}">
+    <button type="button" class="btn btn-custom-danger" data-toggle="modal" data-target="#deleteConfirmationModal" data-prescription-id="{{ prescription.id }}">
+        Supprimer
+    </button>
+</form>
+
+
