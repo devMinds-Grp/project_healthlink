@@ -10,6 +10,8 @@ use App\Entity\Reclamation;
 use App\Repository\CategoryRepository;
 use App\Repository\ReclamationRepository;
 
+use App\Entity\Appointment;
+use App\Repository\AppointmentRepository;
 
 
 use App\Entity\Forum;
@@ -208,5 +210,14 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
 
         // Rediriger vers la liste des commentaires du forum
         return $this->redirectToRoute('admin_forum_comments', ['id' => $comment->getForum()->getId()]);
+    }
+    #[Route('/admin/appointment', name: 'app_admin_appointment')]
+    public function listappointment(EntityManagerInterface $em): Response
+    {
+        $appointment = $em->getRepository(appointment::class)->findAll();
+
+        return $this->render('appointment/admin1/appointment.html.twig', [
+            'appointment' => $appointment,
+        ]);
     }
 }
