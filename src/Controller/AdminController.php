@@ -3,14 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Forum;
+use App\Entity\Care;
+use App\Entity\CareResponses;
 use App\Entity\ForumResponse;
 use App\Repository\ForumRepository;
+use App\Repository\CareRepository;
+use App\Repository\CareResponseRepository;
 use App\Repository\ForumResponseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
 
 class AdminController extends AbstractController
 {
@@ -114,4 +119,47 @@ class AdminController extends AbstractController
         // Rediriger vers la liste des commentaires du forum
         return $this->redirectToRoute('admin_forum_comments', ['id' => $comment->getForum()->getId()]);
     }
+    #[Route('/admin/care', name: 'app_admin_care')]
+    public function listcare(EntityManagerInterface $em): Response
+    {
+        $care = $em->getRepository(Care::class)->findAll();
+
+        return $this->render('care/admin1/care.html.twig', [
+            'care' => $care,
+        ]);
+    }
+
+    #[Route('/care/approve/{id}', name: 'care_approve')]
+    public function approve(Care $care, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        // Supposons que l'entité Care ait un champ "approved"
+        $care->setApproved(true); 
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Le soin a été approuvé avec succès.');
+
+        return $this->redirectToRoute('care_list'); // Redirige vers la liste des soins
+    }
+
+    #[Route('/care/delete/{id}', name: 'care_delete', methods: ['POST', 'GET'])]
+    public function delete(Care $care, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $entityManager->remove($care);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'Le soin a été supprimé.');
+
+        return $this->redirectToRoute('care_list'); // Redirige vers la liste des soins
+    }
+  
+    #[Route('/admin/care-responses', name: 'admin_care_responses')]
+    public function listCareResponse(CareResponseRepository $careResponseRepository): Response
+    {
+        $careResponses = $careResponseRepository->findAll();
+    
+        return $this->render('care_response/admin1/careresp.html.twig', [
+            'careResponses' => $careResponses // est bien définie
+        ]);
+    }
+    
 }

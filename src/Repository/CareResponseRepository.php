@@ -15,6 +15,7 @@ class CareResponseRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, CareResponse::class);
     }
+}
 
     //    /**
     //     * @return CareResponse[] Returns an array of CareResponse objects
@@ -40,4 +41,4 @@ class CareResponseRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-}
+
