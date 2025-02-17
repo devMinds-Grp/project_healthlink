@@ -1,0 +1,62 @@
+{% extends 'home/admin_base.html.twig' %}
+
+{% block title %}Liste des Soignants{% endblock %}
+
+{% block body %}
+<section>
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Liste des Soignants</h5>
+            <a href="{{ path('app_user_new', { role: 'Soignant' }) }}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Ajouter un Soignant
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="soignantsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Email</th>
+                            <th>Catégorie de Soin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for soignant in soignants %}
+                        {% if soignant.statut == 'approuvé' %}
+                            <tr>
+                                <td>{{ soignant.id }}</td>
+                                <td>{{ soignant.nom }}</td>
+                                <td>{{ soignant.prenom }}</td>
+                                <td>{{ soignant.email }}</td>
+                                <td>{{ soignant.categorieSoin }}</td>
+                                <td>
+                                    <a href="{{ path('app_user_show', {'id': soignant.id}) }}" class="btn btn-sm btn-primary me-2">
+                                        <i class="bi bi-eye"></i> Voir
+                                    </a>
+                                    <a href="{{ path('app_user_edit', {'id': soignant.id}) }}" class="btn btn-sm btn-warning me-2">
+                                        <i class="bi bi-pencil"></i> Modifier
+                                    </a>
+                                    <form method="post" action="{{ path('app_user_delete', {'id': soignant.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun soignant trouvé</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
