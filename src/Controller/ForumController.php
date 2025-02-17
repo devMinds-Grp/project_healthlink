@@ -53,7 +53,7 @@ class ForumController extends AbstractController
     #[Route('/{id}', name: 'forum_show', methods: ['GET'])]
     public function show(Forum $forum): Response
     {
-        return $this->render('forum/new.html.twig', [
+        return $this->render('forum/show.html.twig', [
             'forum' => $forum,
         ]);
     }
