@@ -10,19 +10,20 @@
     <link rel="stylesheet" href="{{ asset('compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('compiled/css/app-dark.css') }}">
     <link rel="stylesheet" href="{{ asset('compiled/css/auth.css') }}">
-
 </head>
 
 <body>
     <script src="{{ asset('static/js/initTheme.js') }}"></script>
-    
     <div id="auth">
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <h2 class="text-center">Connexion</h2>
 
-                   
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
 
                     <form method="post" action="{{ path('app_login') }}">
                         <div class="form-body">
@@ -31,7 +32,7 @@
                                     <div class="form-group has-icon-left">
                                         <label for="email">Email</label>
                                         <div class="position-relative">
-                                            <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+                                            <input type="email" value="{{ last_username }}" name="email" id="email" class="form-control" placeholder="Email" required autofocus>
                                             <div class="form-control-icon">
                                                 <i class="bi bi-envelope"></i>
                                             </div>
@@ -50,6 +51,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
                                 <div class="col-12 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary me-1 mb-1">Se connecter</button>
                                     <button type="reset" class="btn btn-light-secondary me-1 mb-1">Réinitialiser</button>
@@ -66,7 +70,6 @@
             </div>
         </div>
     </div>
-
 </body>
 
 </html>

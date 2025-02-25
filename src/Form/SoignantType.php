@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\CareResponse;
 use App\Entity\Role;
 use App\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,6 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 class SoignantType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -62,7 +65,13 @@ class SoignantType extends AbstractType
                 'required' => true,
 
                 'mapped' => false, // Important: tells Symfony not to try to map this field to an entity property
+            ])
+            ->add('imageprofile', FileType::class, [
+                'label' => 'Image de profil',
+                'required' => false, // Le champ n'est pas obligatoire
+                'mapped' => false, // Ne pas mapper directement à l'entité
             ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

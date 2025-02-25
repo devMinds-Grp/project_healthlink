@@ -6,6 +6,7 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo siteweb.png') }}">
     <!-- CSS here -->
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
@@ -44,29 +45,31 @@
                                         <div class="menu_wrap_inner d-flex align-items-center justify-content-end">
                                             <div class="main-menu">
                                                 <nav>
-                                                    <ul id="navigation">
-                                                        <li><a href="index.html">Accueil</a></li>
-                                                        <li><a href="about.html">À propos</a></li>
-                                                        <li><a href="#">Blog <i class="ti-angle-down"></i></a>
-                                                            <ul class="submenu">
-                                                                <li><a href="blog.html">Blog</a></li>
-                                                                <li><a href="single-blog.html">Article unique</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><a href="#">Pages <i class="ti-angle-down"></i></a>
-                                                            <ul class="submenu">
-                                                                <li><a href="department.html">Département</a></li>
-                                                                <li><a href="elements.html">Éléments</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><a href="{{ path('forum_index') }}">Forum</a></li>
-                                                        <li><a href="{{ path('app_care_index') }}">Soins</a></li>
-                                                        <li><a href="{{ path('app_doctor_list') }}">Médecin</a></li>
-                                                        <li><a href="{{ path('app_prescription_new') }}">Prescription</a></li>
-
+                                                    <ul id="navigation" class="d-flex align-items-center list-unstyled mb-0">
+                                                        <li class="nav-item"><a href="{{ path('app_home') }}" class="nav-link">Accueil</a></li>
+                                                        <li class="nav-item"><a href="{{ path('forum_index') }}" class="nav-link">Forum</a></li>
+                                                        <li class="nav-item"><a href="{{ path('app_care_index') }}" class="nav-link">Soins</a></li>
+                                                        <li class="nav-item"><a href="{{ path('app_doctor_list') }}" class="nav-link">Médecin</a></li>
+                                                        <li class="nav-item"><a href="{{ path('app_prescription_new') }}" class="nav-link">Prescription</a></li>
+                                                        <li class="nav-item"><a href="{{ path('app_reclamation_index') }}" class="nav-link">Reclamation</a></li>
+                                                        <li class="nav-item"><a href="{{ path('app_blood_donation_index') }}" class="nav-link">Don song</a></li>
+                                                        <li class="nav-item"><a href="{{ path('app_profile') }}" class="nav-link">Profile</a></li>
+                                                        {% if is_granted('ROLE_ADMIN') %}
+                                                        <li class="nav-item"><a href="{{ path('app_admin') }}" class="nav-link">Dashboard</a></li>
+                                                    {% endif %}
+                                                    {% if app.user %}
+                                                    <li class="nav-item">
+                                                        <a href="{{ path('app_logout') }}" class="nav-link">
+                                                            <i class="fas fa-sign-out-alt"></i> {# Icône de déconnexion #}
+                                                            Déconnexion
+                                                        </a>
+                                                    </li>
+                                                {% endif %}       
+                                                            
                                                     </ul>
                                                 </nav>
                                             </div>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>

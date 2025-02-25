@@ -13,6 +13,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 class MedecinType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -69,10 +72,16 @@ class MedecinType extends AbstractType
             ])
             ->add('image', FileType::class, [
                 'label' => 'Diplome',
-                'required' => true, 
-               
+                'required' => true,
+
                 'mapped' => false, // Important: tells Symfony not to try to map this field to an entity property
-            ]) ; 
+            ])
+            ->add('imageprofile', FileType::class, [
+                'label' => 'Image de profil',
+                'required' => false, 
+                'mapped' => false, 
+            ]);
+            
     }
 
     public function configureOptions(OptionsResolver $resolver): void

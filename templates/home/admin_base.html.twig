@@ -78,6 +78,7 @@
                             <span>Gestion des RDv</span>
                         </a>
                     </li>
+                    
 
                     <li
                             class="sidebar-item  has-sub">
@@ -106,27 +107,65 @@
                             </li>
 
 
-                            <!-- Liste des Soins -->
+                            
             
                         </ul>
-                        <ul >
-                            <li class="sidebar-item">
-                                <a href="{{ path('app_care_index') }}" class='sidebar-link'>
-                                    <i class="bi bi-list-check"></i>
-                                    <span>Liste des Soins</span>
-                                </a>
-                            </li>
-                        </ul>   
-                        <ul >
-                            <li class="sidebar-item">
-                                <a href="{{ path('admin_forum_index') }}" class='sidebar-link'>
-                                    <i class="bi bi-list-check"></i>
-                                    <span>Gestion Forums</span>
-                                </a>
-                            </li>
-                        </ul>     
+                
+                        
+                        
+
+                    
                     </li>
+                    <li
+                            class="sidebar-item  ">
+                        <a href="{{ path('app_care_index') }}" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>Liste des demandes</a> </span>
+                        </a>
                     </li>
+                    <li
+                            class="sidebar-item  ">
+                        <a href="{{ path('admin_forum_index') }}" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>Gestion Forums</a> </span>
+                        </a>
+                    </li>
+                    <li
+                            class="sidebar-item  ">
+                        <a href="{{ path('app_admin_appointment') }}" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>Liste rendez-vous</a> </span>
+                        </a>
+                    </li>
+                    <li
+                            class="sidebar-item  ">
+                        <a href="{{ path('app_admin_care') }}" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>Liste Soins</a> </span>
+                        </a>
+                    </li>
+                    <li
+                            class="sidebar-item  ">
+                        <a href="{{ path('app_admin_reclamation') }}" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>Gestion Reclamation</a> </span>
+                        </a>
+                    </li>
+                    <li
+                            class="sidebar-item  ">
+                        <a href="{{ path('app_category_new') }}" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>Gestion Catégories</a> </span>
+                        </a>
+                    </li>
+                    <li
+                            class="sidebar-item  ">
+                        <a href="{{ path('app_admin_blood_donation') }}" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>Gestion don </a> </span>
+                        </a>
+                    </li>
+                    
                 </ul>
             </div>
         </div>
