@@ -5,14 +5,15 @@ namespace App\Controller;
 use App\Repository\BloodDonationRepository;
 use App\Entity\BloodDonation;
 use App\Repository\DonationResponseRepository;
-
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Entity\Reclamation;
 use App\Repository\CategoryRepository;
 use App\Repository\ReclamationRepository;
 
 use App\Entity\Appointment;
 use App\Repository\AppointmentRepository;
-
+use App\Entity\Prescription;
+use App\Repository\PrescriptionRepository;
 
 use App\Entity\Forum;
 use App\Entity\Care;
@@ -44,16 +45,18 @@ final class AdminController extends AbstractController
     public function listBloodDonations(EntityManagerInterface $em): Response
     {
         $bloodDonations = $em->getRepository(BloodDonation::class)->findAll();
-
+    
         return $this->render('blood_donation/admin1/list_blood_donations.html.twig', [
             'bloodDonations' => $bloodDonations,
         ]);
     }
+    
+    // Remove or update the redundant method
     #[Route('/admin/blood_donation', name: 'app_admin_blood_donation')]
     public function indexx5(BloodDonationRepository $BloodDonationRepository): Response
     {
         return $this->render('blood_donation/admin1/list_blood_donations.html.twig', [
-            'BloodDonation' => $BloodDonationRepository->findAll(),
+            'bloodDonations' => $BloodDonationRepository->findAll(), // Correct variable name
         ]);
     }
     #[Route('/admin/donation_response', name: 'app_admin_Donation_Response')]
@@ -95,7 +98,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
 
     $this->addFlash('success', 'Demande supprimée avec succès.');
 
-    return $this->redirectToRoute('app_blood_donation_list');
+    return $this->redirectToRoute('app_admin_blood_donation');
 }
 
 
@@ -121,9 +124,6 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
             'reclamation' => $reclamation,
         ]);
     }
-   
-    
-
     #[Route('/admin/forums', name: 'admin_forum_index', methods: ['GET'])]
     public function listForums(ForumRepository $forumRepository): Response
     {
@@ -197,6 +197,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
             'comments' => $comments,
         ]);
     }
+
     #[Route('/admin/comment/{id}/delete', name: 'admin_comment_delete', methods: ['POST'])]
     public function deleteComment(Request $request, ForumResponse $comment, EntityManagerInterface $entityManager): Response
     {
@@ -216,6 +217,8 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
         // Rediriger vers la liste des commentaires du forum
         return $this->redirectToRoute('admin_forum_comments', ['id' => $comment->getForum()->getId()]);
     }
+   
+   
     #[Route('/admin/appointment', name: 'app_admin_appointment')]
     public function listappointment(EntityManagerInterface $em): Response
     {
@@ -225,6 +228,66 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
             'appointment' => $appointment,
         ]);
     }
+
+    #[Route('/appointment/approve/{id}', name: 'appointment_approve')]
+    public function approve2(Appointment $appointment, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        // Supposons que l'entité Care ait un champ "approved"
+        $care->setApproved(true); 
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Le soin a été approuvé avec succès.');
+
+        return $this->redirectToRoute('appointment_list'); // Redirige vers la liste des soins
+
+    }
+
+    #[Route('/appointment/delete/{id}', name: 'appointment_delete', methods: ['POST', 'GET'])]
+    public function delete2(Appointment $appointment, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $entityManager->remove($appointment);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'Le soin a été supprimé.');
+
+        return $this->redirectToRoute('app_admin_appointment'); // Redirige vers la liste des soins
+    }
+
+
+    #[Route('/admin/prescription', name: 'app_admin_prescription')]
+    public function listprescription(EntityManagerInterface $em): Response
+    {
+        $prescription = $em->getRepository(prescription::class)->findAll();
+
+        return $this->render('prescription/admin1/prescription.html.twig', [
+            'prescription' => $prescription,
+        ]);
+    }
+
+    #[Route('/prescription/approve/{id}', name: 'prescription_approve')]
+    public function approve3(prescription $prescription, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        // Supposons que l'entité Care ait un champ "approved"
+        $prescription->setApproved(true); 
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Le soin a été approuvé avec succès.');
+
+        return $this->redirectToRoute('prescription_list'); // Redirige vers la liste des soins
+
+    }
+
+    #[Route('/prescription/delete/{id}', name: 'prescription_delete', methods: ['POST', 'GET'])]
+    public function delete3(prescription $prescription, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $entityManager->remove($prescription);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'Le soin a été supprimé.');
+
+        return $this->redirectToRoute('app_admin_prescription'); // Redirige vers la liste des soins
+    }
+    
     #[Route('/admin/care', name: 'app_admin_care')]
     public function listcare(EntityManagerInterface $em): Response
     {
@@ -245,6 +308,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
         $this->addFlash('success', 'Le soin a été approuvé avec succès.');
 
         return $this->redirectToRoute('care_list'); // Redirige vers la liste des soins
+
     }
 
     #[Route('/care/delete/{id}', name: 'care_delete', methods: ['POST', 'GET'])]
@@ -255,7 +319,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
 
         $this->addFlash('danger', 'Le soin a été supprimé.');
 
-        return $this->redirectToRoute('care_list'); // Redirige vers la liste des soins
+        return $this->redirectToRoute('app_admin_care'); // Redirige vers la liste des soins
     }
   
     #[Route('/admin/care-responses', name: 'admin_care_responses')]
@@ -268,4 +332,5 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
         ]);
     }
     
+
 }

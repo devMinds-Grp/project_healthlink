@@ -15,14 +15,15 @@ class DonationResponseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+        ->add('bloodDonation', EntityType::class, [
+            'class' => BloodDonation::class,
+            'choice_label' => 'lieu',
+        ])
         ->add('description', TextType::class, [
             'label' => 'Description',
             'required' => false,
         ])
-                    ->add('bloodDonation', EntityType::class, [
-                'class' => BloodDonation::class,
-                'choice_label' => 'lieu',
-            ])
+                
         ;
     }
 

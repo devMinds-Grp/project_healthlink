@@ -1,6 +1,6 @@
 {% extends 'home/admin_base.html.twig' %}
 
-{% block title %}Admin - Reponses de Dons{% endblock %}
+{% block title %}Admin - Prescription{% endblock %}
 
 {% block css %}
     <link rel="stylesheet" href="{{ asset('compiled/css/app.css') }}">
@@ -13,7 +13,7 @@
         .table-responsive {
             overflow-x: auto;
         }
-   
+       
     /* General Styling */
     .btn-sm {
         margin: 2px;
@@ -142,11 +142,13 @@
     .card-body {
         padding: 20px;
     }
-</style>
+
+    </style>
 {% endblock %}
 
 {% block body %}
-  
+
+
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none">
@@ -155,7 +157,7 @@
             </header>
 
             <div class="page-heading">
-                <h3>Admin - Reponses de Dons</h3>
+                <h3>Liste des prescriptions</h3>
             </div>
 
             <div class="page-content">
@@ -163,28 +165,36 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Listes des reponses</h4>
+                                <h4>Listes des prescription</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-lg">
                                         <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Description</th>
+                                         <tr>
+                                            <th>Nom du médicament</th>
+                                            <th>Date du RDV</th>
+                                            <th>Dosage</th>
+                                            <th>Durée</th>
                                             <th>Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                         {% for DonationResponse in DonationResponse %}
-
+                                         {% for prescription in prescription %}
                                             <tr>
-                                                <td>{{ DonationResponse.id }}</td>
-                                                <td>{{ DonationResponse.Description }}</td>
+                                                <td>{{ prescription.nomMedicament }}</td>
+                                                <td>{{ prescription.RDVCard ? prescription.RDVCard.date|date('Y-m-d ') : 'N/A' }}</td>
+                                                <td>{{ prescription.dosage }}</td>
+                                                <td>{{ prescription.duree }}</td>
                                                 <td>
-                                                    <a href="{{ path('approve_blood_donation', { 'id': DonationResponse.id }) }}" class="btn btn-success btn-sm">Approuver</a>
-                                                    <a href="{{ path('delete_blood_donation', { 'id': DonationResponse.id }) }}" class="btn btn-danger btn-sm">Supprimer</a>
-                                                </td>
+                                                        <a href="{{ path('prescription_approve', { 'id': prescription.id }) }}" class="btn btn-success">Approuver</a>
+                                                        <a href="{{ path('prescription_delete', { 'id': prescription.id }) }}" class="btn btn-danger" 
+                                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette prescription ?');">
+                                                        Supprimer
+                                                        </a>
+                                                 </td>
+
+                                                
                                             </tr>
                                         {% else %}
                                             <tr>

@@ -1,50 +1,223 @@
-{% extends 'admin_base.html.twig' %}
+{% extends 'home/admin_base.html.twig' %}
 
-{% block title %} Liste des Réclamations {% endblock %}
+{% block title %}Liste des Réclamations{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ asset('compiled/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/app-dark.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/iconly.css') }}">
+    <style>
+        /* General Styling */
+        .btn-sm {
+            margin: 2px;
+            padding: 5px 10px;
+            font-size: 0.875rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-sm:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        /* Table Styling */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table tbody tr td {
+            vertical-align: middle;
+        }
+
+        /* Actions Column */
+        .table tbody tr td:last-child {
+            white-space: nowrap;
+        }
+
+        /* Page Heading */
+        .page-heading {
+            margin-left: -260px; /* Match the card's left margin */
+            width: calc(100% + 300px); /* Match the card's width */
+            text-align: center; /* Center the title text */
+        }
+
+        .page-heading h2 {
+            font-size: 1.75rem;
+            font-weight: bold; /* Mettre en gras */
+            margin-bottom: 20px;
+            color: rgb(27, 77, 126);
+        }
+
+        /* Card Styling */
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-left: -260px; /* Move the card to the left */
+            width: calc(100% + 300px); /* Increase the width of the card */
+            max-width: none; /* Remove any max-width restrictions */
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .card-header h4 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Badge Styling */
+        .badge {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+
+        .badge.bg-custom-warning {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .badge.bg-custom-success {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .badge.bg-custom-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h2 class="mb-4">Liste des Réclamations</h2>
-<div class="card">
-   <table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Catégorie</th>
-            <th>Statut</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for reclamation in reclamations %}
-            <tr >
-                <td>{{ reclamation.titre }}</td>
-                <td>{{ reclamation.description }}</td>
-                <td>{{ reclamation.category.nom }}</td>
-                <td>    <span class="badge {{ reclamation.Statut.badgeClass() }}">
-    <i class="bx {{ reclamation.Statut.iconClass() }}"></i>
-    {{ reclamation.Statut.label() }}
-</td>
-                <td>
-                    {% if reclamation.image %}
-                        <img src="{{ asset('reclamations/' ~ reclamation.image) }}" alt="Image" width="80">
-                    {% else %}
-                        Pas d'image
-                    {% endif %}
-                </td>
-                <td>
-                     <a href="{{ path('app_admin_reclamation_show', {'id': reclamation.id}) }}" class="btn btn-sm btn-primary"><i class='bx bx-show-alt'></i></a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6" class="text-center">Aucune réclamation trouvée.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-</div>
-</div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <h2>Liste des Réclamations</h2>
+        </div>
+
+        <div class="page-content">
+            <section class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Titre</th>
+                                            <th>Description</th>
+                                            <th>Catégorie</th>
+                                            <th>Statut</th>
+                                            <th>Image</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for reclamation in reclamations %}
+                                            <tr>
+                                                <td>{{ reclamation.titre }}</td>
+                                                <td>{{ reclamation.description }}</td>
+                                                <td>{{ reclamation.category.nom }}</td>
+                                                <td>
+                                                    <span class="badge {{ reclamation.Statut.badgeClass() }}">
+                                                        <i class="bx {{ reclamation.Statut.iconClass() }}"></i>
+                                                        {{ reclamation.Statut.label() }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    {% if reclamation.image %}
+                                                        <img src="{{ asset('reclamations/' ~ reclamation.image) }}" alt="Image" width="80">
+                                                    {% else %}
+                                                        Pas d'image
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a href="{{ path('app_admin_reclamation_show', {'id': reclamation.id}) }}" class="btn btn-sm btn-primary">
+                                                        <i class='bx bx-show-alt'></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="6" class="text-center">Aucune réclamation trouvée.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ asset('static/js/initTheme.js') }}"></script>
+    <script src="{{ asset('static/js/components/dark.js') }}"></script>
+    <script src="{{ asset('extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('compiled/js/app.js') }}"></script>
+    <script src="{{ asset('extensions/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('static/js/pages/dashboard.js') }}"></script>
 {% endblock %}
