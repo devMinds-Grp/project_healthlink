@@ -182,8 +182,13 @@
                                          {% for appointment in appointment %}
 
                                             <tr>
-                                                <td>Mr Anis Jedidi</td>
-                <td>Hanin Ammani</td>
+
+ 
+                                              <td> {{ appointment.doctor.nom }} {{ appointment.doctor.prenom }}</td>
+   
+                                              <td>{{ appointment.patient.nom }} {{ appointment.patient.prenom }}</td>
+   
+                                                
                 <td>{{ appointment.date ? appointment.date|date('Y-m-d') : '' }}</td>
                 <td>{{ appointment.type.value }}</td>
                 <td>

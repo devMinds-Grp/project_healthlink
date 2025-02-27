@@ -13,19 +13,19 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Table(name: "utilisateur")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
+    #[ORM\Id]// pour dire que c'est le clé primaire 
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
-    #[Assert\Length(min: 2, max: 50, minMessage: "Le nom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\Length(min: 3, max: 50, minMessage: "Le nom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.")]
-    #[Assert\Length(min: 2, max: 50, minMessage: "Le prénom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\Length(min: 3, max: 50, minMessage: "Le prénom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255, unique: true)]
@@ -36,6 +36,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
     #[Assert\Length(min: 8, max: 255, minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.")]
+    // #[Assert\Regex(
+    //     pattern: "/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/",
+    //     message: "Le mot de passe doit contenir au moins une lettre et un chiffre."
+    // )]
     private ?string $motDePasse = null;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
@@ -59,8 +63,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $categorieSoin = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-
+    #[Assert\File(
+        maxSize: "2M",
+        mimeTypes: ["image/jpeg", "image/png", "image/gif"],
+        mimeTypesMessage: "Veuillez téléverser une image valide (JPEG, PNG, GIF)."
+    )]
     private ?string $image = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\File(
+        maxSize: "2M",
+        mimeTypes: ["image/jpeg", "image/png", "image/gif"],
+        mimeTypesMessage: "Veuillez téléverser une image valide (JPEG, PNG, GIF)."
+    )]
+    private ?string $imageprofile = null;
+
 
     #[ORM\Column(type: 'string', length: 20, options: ['default' => 'en attente'])]
     private ?string $statut = 'en attente';
@@ -156,6 +173,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->image = $image;
         return $this;
     }
+    public function getImageprofile(): ?string
+    {
+        return $this->imageprofile;
+    }
+
+    public function setImageprofile(?string $imageprofile): self
+    {
+        $this->imageprofile = $imageprofile;
+        return $this;
+    }
     public function getStatut(): ?string
     {
         return $this->statut;
@@ -204,17 +231,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
     public function getRoles(): array
     {
-        // Récupérer le rôle de l'utilisateur
+        // Initialiser avec ROLE_USER par défaut
+        $roles = ['ROLE_USER'];
+
+        // Vérifier si l'utilisateur a un rôle associé
         $role = $this->getRole();
 
-        // Si aucun rôle n'est défini, retourner un rôle par défaut (par exemple, ROLE_USER)
-        if (!$role) {
-            return ['ROLE_USER'];
+        // Si le rôle existe et a un nom, l'ajouter au tableau des rôles
+        if ($role !== null && $role->getNom() !== null) {
+            // Normaliser le nom du rôle (supprimer les accents et convertir en majuscules)
+            $roleName = strtoupper($role->getNom());
+            $roles[] = 'ROLE_' . $roleName;
         }
 
-        // Retourner le rôle sous forme de tableau
-        return ['ROLE_' . strtoupper($role->getNom())];
+        return $roles;
     }
+
+
     public function eraseCredentials(): void
     {
         // Cette méthode est obligatoire mais peut rester vide

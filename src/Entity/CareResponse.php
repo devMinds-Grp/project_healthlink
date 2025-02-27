@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\CareResponseRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert; // Add this line
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CareResponseRepository::class)]
 class CareResponse
@@ -32,6 +31,14 @@ class CareResponse
     #[ORM\ManyToOne(targetEntity: Care::class, inversedBy: 'careResponse')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Care $care = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $patient = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $soignant = null;
 
     public function getId(): ?int
     {
@@ -64,7 +71,6 @@ class CareResponse
         $this->contenu_rep = $contenu_rep;
         return $this;
     }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -75,7 +81,6 @@ class CareResponse
         $this->user = $user;
         return $this;
     }
-
     public function getCare(): ?Care
     {
         return $this->care;
@@ -84,6 +89,28 @@ class CareResponse
     public function setCare(?Care $care): static
     {
         $this->care = $care;
+        return $this;
+    }
+
+    public function getPatient(): ?User
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?User $patient): self
+    {
+        $this->patient = $patient;
+        return $this;
+    }
+
+    public function getSoignant(): ?User
+    {
+        return $this->soignant;
+    }
+
+    public function setSoignant(?User $soignant): self
+    {
+        $this->soignant = $soignant;
         return $this;
     }
 }

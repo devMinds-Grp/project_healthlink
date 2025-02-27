@@ -15,9 +15,9 @@ use App\Form\MedecinType;
 use App\Form\SoignantType;
 use App\Entity\User;
 use App\Entity\Role;
+use Psr\Log\LoggerInterface;
 
 final class AuthentificationController extends AbstractController
-
 {
     #[Route('/inscription/confirmation', name: 'app_inscription_confirmation')]
     public function confirmation(): Response
@@ -25,40 +25,79 @@ final class AuthentificationController extends AbstractController
         return $this->render('authentification/confirmation.html.twig');
     }
 
-    #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
-    public function login(AuthenticationUtils $authenticationUtils, Security $security): Response
-    {
-        $user = $security->getUser();
-
-        if ($user) {
-            dump($user); // Vérifiez l'utilisateur
-            $roles = $user->getRoles();
-            dump($roles); // Vérifiez les rôles
-
-            if (in_array('ROLE_ADMIN', $roles)) {
-                dump('Redirection vers app_admin'); // Debug
-                return $this->redirectToRoute('app_admin', [], Response::HTTP_SEE_OTHER);
+    #[Route('/login1', name: 'app_login1', methods: ['GET', 'POST'])]
+    public function login(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        Security $security,
+        LoggerInterface $logger // Ajoutez le LoggerInterface
+    ): Response {
+        // Si l'utilisateur est déjà authentifié, redirigez-le vers la page d'accueil
+        if ($security->getUser()) {
+            $logger->info('Utilisateur déjà authentifié, redirection vers app_admin.');
+            return $this->redirectToRoute('app_admin');
+        }
+    
+        // Créer un formulaire de connexion (vous pouvez utiliser un formulaire Symfony ou une simple requête POST)
+        $email = $request->request->get('email');
+        $motDePasse = $request->request->get('motDePasse');
+    
+        if ($request->isMethod('POST')) {
+            $logger->info('Tentative de connexion avec email: ' . $email);
+    
+            // Valider les champs email et mot de passe
+            if (empty($email) || empty($motDePasse)) {
+                $logger->warning('Champs email ou mot de passe vides.');
+                $this->addFlash('error', 'Veuillez remplir tous les champs.');
+                return $this->redirectToRoute('app_login');
             }
-
-            if (in_array('ROLE_PATIENT', $roles) || in_array('ROLE_SOIGNANT', $roles) || in_array('ROLE_MEDECIN', $roles)) {
-                dump('Redirection vers app_home'); // Debug
-                return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+    
+            // Récupérer l'utilisateur par son email
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+    
+            if (!$user) {
+                $logger->warning('Aucun utilisateur trouvé avec cet email: ' . $email);
+                $this->addFlash('error', 'Email ou mot de passe incorrect.');
+                return $this->redirectToRoute('app_login');
+            }
+    
+            // Vérifier le mot de passe
+            if (!$passwordHasher->isPasswordValid($user, $motDePasse)) {
+                $logger->warning('Mot de passe incorrect pour l\'utilisateur: ' . $email);
+                $this->addFlash('error', 'Email ou mot de passe incorrect.');
+                return $this->redirectToRoute('app_login');
+            }
+    
+            // Vérifier le statut de l'utilisateur
+            if ($user->getStatut() !== 'approuvé') {
+                $logger->warning('Compte non approuvé pour l\'utilisateur: ' . $email);
+                $this->addFlash('error', 'Votre compte n\'est pas encore approuvé.');
+                return $this->redirectToRoute('app_login');
+            }
+    
+            // Authentifier l'utilisateur
+            $security->login($user);
+            $logger->info('Utilisateur authentifié avec succès: ' . $email);
+    
+            // Rediriger en fonction du rôle
+            $role = $user->getRole()->getNom();
+            $logger->info('Rôle de l\'utilisateur: ' . $role);
+    
+            if ($role === 'Médecin') {
+                return $this->redirectToRoute('app_user_medecins');
+            } elseif ($role === 'Soignant') {
+                return $this->redirectToRoute('app_user_soignants');
+            } else {
+                return $this->redirectToRoute('app_user_patients');
             }
         }
-
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        dump($error, $lastUsername); // Debug
-
-        return $this->render('authentification/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
-        ]);
-
+    
+        // Afficher le formulaire de connexion
+        $logger->info('Affichage du formulaire de connexion.');
+        return $this->render('authentification/login.html.twig');
     }
-
-    #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
+    #[Route('/register1', name: 'app_register1', methods: ['GET', 'POST'])]
     public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
@@ -103,7 +142,7 @@ final class AuthentificationController extends AbstractController
             } else {
                 $user->setStatut('approuvé'); // Approuvé immédiatement
             }
-            
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -116,11 +155,6 @@ final class AuthentificationController extends AbstractController
             'role' => $roleName,
         ]);
     }
+    
 
-
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(): void
-    {
-        throw new \LogicException('Cette méthode peut être vide, Symfony gère automatiquement la déconnexion.');
-    }
 }

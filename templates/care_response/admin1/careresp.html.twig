@@ -171,9 +171,12 @@
                                         <thead>
                                         <tr>
                                             <th>Id</th>
-                <th>Date_rep</th>
-                <th>Contenu_rep</th>
-                <th>actions</th>
+                                        <th>Date_rep</th>
+                                        <th>Contenu_rep</th>
+                                        <th>Nom du patient</th>
+                                        <th>Nom du soignant </th>
+                                        <th>actions</th>
+                                    
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -183,6 +186,18 @@
                                                 <td>{{ careResponses.id }}</td>
                                                 <td>{{ careResponses.contenuRep }}</td>
                                                 <td>{{ careResponses.dateRep ? careResponses.dateRep|date('Y-m-d') : 'N/A' }}</td>
+                                                <td>
+                                                    {% if careResponses.patient %}
+                                                        {{ careResponses.patient.nom }} {{ careResponses.patient.prenom }}
+                                                    
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if careResponses.soignant %}
+                                                        {{ careResponses.soignant.nom }} {{ careResponses.soignant.prenom }}
+                                                   
+                                                    {% endif %}
+                                                </td>
                                                 <td>
         <a href="{{ path('care_delete', { 'id': careResponses.id }) }}" class="btn btn-danger" 
            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce soin ?');">

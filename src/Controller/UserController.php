@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\User1Type;
+use Imagine\Gd\Imagine;
+use Imagine\Gd\Font;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 use App\Form\PatientType;
 use App\Form\MedecinType;
 use App\Form\SoignantType;
@@ -11,8 +14,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Role;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -29,7 +36,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    
+
     #[Route('/patients', name: 'app_user_patients', methods: ['GET'])]
     public function patients(EntityManagerInterface $entityManager): Response
     {
@@ -106,7 +113,7 @@ final class UserController extends AbstractController
     }
 
     #[Route(path: '/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer): Response
     {
         $user = new User();
 
@@ -144,11 +151,38 @@ final class UserController extends AbstractController
                     $user->setImage($newFilename); // Enregistrer le nom du fichier dans l'entité
                 }
             }
+            $imageFile = $form->get('imageprofile')->getData(); // Récupérer l'image
+
+            if ($imageFile) {
+                $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension(); // Générer un nom unique
+                $imageFile->move($uploadsDir, $newFilename); // Déplacer l'image dans le dossier
+
+                $user->setImageProfile($newFilename);// Enregistrer le nom du fichier dans l'entité
+            } else {
+                // Générer une image de profil par défaut avec initiales
+                $initials = strtoupper(substr($user->getNom(), 0, 1) . substr($user->getPrenom(), 0, 1));
+                $defaultAvatar = $this->generateInitialAvatar($initials);
+                $user->setImageProfile($defaultAvatar);
+            }
+
+            // Encoder le mot de passe
+            $hashedPassword = $passwordHasher->hashPassword($user, $user->getMotDePasse());
+            $user->setMotDePasse($hashedPassword);
 
             $user->setStatut('approuvé');
             $entityManager->persist($user);
             $entityManager->flush();
 
+            $email = (new TemplatedEmail())
+                ->from('amenichakroun62@gmail.com') // Votre adresse email
+                ->to($user->getEmail()) // Utiliser l'email de l'utilisateur
+                ->subject('Bienvenue sur notre plateforme')
+                ->htmlTemplate('emails/registration.html.twig')
+                ->context([
+                    'user' => $user,
+                ]);
+            $mailer->send($email);
             // Redirection selon le rôle
             if ($roleName === 'Médecin') {
                 return $this->redirectToRoute('app_user_medecins', [], Response::HTTP_SEE_OTHER);
@@ -166,6 +200,71 @@ final class UserController extends AbstractController
         ]);
     }
 
+    private function generateInitialAvatar(string $initials): string
+    {
+        // Taille de l'image
+        $width = 100;
+        $height = 100;
+
+        // Créer une image vide
+        $image = imagecreatetruecolor($width, $height);
+
+        // Activer l'antialiasing pour un rendu plus lisse
+        imageantialias($image, true);
+
+        // Générer une couleur de fond dynamique
+        $hash = crc32($initials);
+        $red = ($hash & 0xFF0000) >> 16;
+        $green = ($hash & 0x00FF00) >> 8;
+        $blue = $hash & 0x0000FF;
+        $backgroundColor = imagecolorallocate($image, $red, $green, $blue);
+
+        // Remplir l'image avec la couleur de fond
+        imagefilledrectangle($image, 0, 0, $width, $height, $backgroundColor);
+
+        // Couleur du texte (blanc)
+        $textColor = imagecolorallocate($image, 255, 255, 255);
+
+        // Chemin vers une police TTF (remplacez par le chemin de votre police)
+        $fontPath = $this->getParameter('kernel.project_dir') . '/public/fonts/Roboto-Regular.ttf';
+
+        // Taille de la police (ajustez selon vos préférences)
+        $fontSize = 40;
+
+        // Calculer la position du texte pour le centrer
+        $textBox = imagettfbbox($fontSize, 0, $fontPath, $initials);
+        $textWidth = $textBox[2] - $textBox[0];
+        $textHeight = $textBox[7] - $textBox[1];
+        $textX = ($width - $textWidth) / 2;
+        $textY = ($height - $textHeight) / 2 + $fontSize;
+
+        // Ajouter le texte à l'image
+        imagettftext($image, $fontSize, 0, $textX, $textY, $textColor, $fontPath, $initials);
+
+        // Créer un masque circulaire
+        $mask = imagecreatetruecolor($width, $height);
+        $transparent = imagecolorallocate($mask, 0, 0, 0);
+        imagecolortransparent($mask, $transparent);
+        imagefilledellipse($mask, $width / 2, $height / 2, $width, $height, $transparent);
+
+        // Appliquer le masque circulaire
+        imagecopymerge($image, $mask, 0, 0, 0, 0, $width, $height, 100);
+        imagedestroy($mask);
+
+        // Sauvegarder l'image dans un fichier temporaire
+        $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
+        if (!is_dir($uploadsDir)) {
+            mkdir($uploadsDir, 0777, true);
+        }
+        $filename = uniqid() . '.png';
+        $filePath = $uploadsDir . '/' . $filename;
+        imagepng($image, $filePath);
+
+        // Libérer la mémoire
+        imagedestroy($image);
+
+        return $filename;
+    }
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
@@ -177,12 +276,25 @@ final class UserController extends AbstractController
 
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         // Vérifier si le statut est "en attente" et le modifier en "approuvé"
         if ($user->getStatut() === 'en attente') {
             $user->setStatut('approuvé');
             $entityManager->flush();
+
+            // Envoyer un email à l'utilisateur avec un template Twig
+            $email = (new TemplatedEmail())
+                ->from('amenichakroun62@gmail.com') // Remplacez par l'email de l'administrateur
+                ->to($user->getEmail()) // Utiliser l'email de l'utilisateur
+                ->subject('Votre compte a été approuvé')
+                ->htmlTemplate('emails/account_approved.html.twig') // Template Twig pour l'email
+                ->context([
+                    'user' => $user, // Passer l'utilisateur au template
+                ]);
+
+            $mailer->send($email);
+
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -245,6 +357,8 @@ final class UserController extends AbstractController
         // Si le statut n'est ni "En attente" ni "Approuvé", redirection par défaut
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
 
 
 

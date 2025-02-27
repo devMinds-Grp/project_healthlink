@@ -34,11 +34,11 @@ final class ReclamationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
-           
+
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $newFilename = $originalFilename . '.' . $imageFile->guessExtension();
-    
+
                 try {
                     $imageFile->move(
                         $this->getParameter('upload_directory_reclamations'),
@@ -48,17 +48,17 @@ final class ReclamationController extends AbstractController
                     $this->addFlash('error', 'Une erreur est survenue lors du téléchargement de l\'image.');
                     return $this->redirectToRoute('app_student_group_index_administrateur');
                 }
-    
+
                 $reclamation->setImage($newFilename);
             } else {
                 $reclamation->setImage("default.png");
 
             }
-           
+
 
             $reclamation->setStatut(Status::EN_ATTENTE);
             $entityManager->persist($reclamation);
-            $entityManager->flush();    
+            $entityManager->flush();
 
             return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -98,7 +98,7 @@ final class ReclamationController extends AbstractController
     #[Route('/{id}', name: 'app_reclamation_delete', methods: ['POST'])]
     public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reclamation->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reclamation->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($reclamation);
             $entityManager->flush();
         }
@@ -117,29 +117,29 @@ final class ReclamationController extends AbstractController
 
     //accepter reclamation
     #[Route('/{id}/accept', name: 'app_reclamation_accept')]
-    public function accept( Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    public function accept(Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
-      
+
 
         $reclamation->setStatut(Status::TERMINE);
         $entityManager->persist($reclamation);
-            $entityManager->flush();
-            $this->addFlash('success', 'La réclamation a été Accepté avec succès.');
-            return $this->redirectToRoute('app_admin_reclamation_show', ["id"=>$reclamation->getId()], Response::HTTP_SEE_OTHER);
-       
+        $entityManager->flush();
+        $this->addFlash('success', 'La réclamation a été Accepté avec succès.');
+        return $this->redirectToRoute('app_admin_reclamation_show', ["id" => $reclamation->getId()], Response::HTTP_SEE_OTHER);
+
     }
 
 
     //refuser reclamation
     #[Route('/{id}/refuse', name: 'app_reclamation_refuse')]
-    public function refuse(  Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    public function refuse(Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
-       
+
         $reclamation->setStatut(Status::REFUSE);
         $entityManager->persist($reclamation);
-            $entityManager->flush();
-            $this->addFlash('danger', 'La réclamation a été refusée avec succès.');
-            return $this->redirectToRoute('app_admin_reclamation_show', ["id"=>$reclamation->getId()], Response::HTTP_SEE_OTHER);
+        $entityManager->flush();
+        $this->addFlash('danger', 'La réclamation a été refusée avec succès.');
+        return $this->redirectToRoute('app_admin_reclamation_show', ["id" => $reclamation->getId()], Response::HTTP_SEE_OTHER);
     }
 
 

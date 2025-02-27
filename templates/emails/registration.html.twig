@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenue sur HealthLink</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2C3E50;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .info {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .info p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .highlight {
+            color: #3498db;
+            font-weight: bold;
+        }
+        .header {
+            background-color: #3498db;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            color: white;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- En-tête avec fond coloré -->
+        <div class="header">
+            <h1>Bienvenue sur HealthLink</h1>
+        </div>
+
+        <!-- Logo -->
+        <img src="{{ absolute_url(asset('img/logo siteweb.png')) }}" alt="HealthLink Logo" class="logo">
+
+        <!-- Message de bienvenue -->
+        <p>Nous sommes ravis de vous accueillir sur <span class="highlight">HealthLink</span>, votre plateforme de santé en ligne.</p>
+        <p>Votre compte a été créé avec succès. Voici vos informations de connexion :</p>
+
+        <!-- Informations de connexion -->
+        <div class="info">
+            <p><strong>Email :</strong> {{ user.email }}</p>
+            <p><strong>Mot de passe :</strong> {{ user.motDePasse }}</p>
+        </div>
+
+        <!-- Bouton de connexion -->
+        <a href="{{ url('app_login') }}" class="btn">Se connecter à mon compte</a>
+
+        <!-- Message de sécurité -->
+        <p class="footer">
+            <strong>Conseil de sécurité :</strong> Ne partagez jamais votre mot de passe avec qui que ce soit.
+        </p>
+
+        <!-- Informations de contact -->
+        <p class="footer">
+            Si vous avez des questions, contactez-nous à <a href="mailto:contact@healthlink.com">contact@healthlink.com</a>
+            ou appelez-nous au <span class="highlight">+216 XX XXX XXX</span>.
+        </p>
+    </div>
+</body>
+</html>

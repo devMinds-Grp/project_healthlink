@@ -44,18 +44,21 @@ class AppointmentType extends AbstractType
                 'multiple' => false,
             ])
             
-            // Uncomment and adjust these fields if needed
-            // ->add('doctor', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'id', // Change 'nom' par le champ que tu veux afficher (ex: email, prénom)
-            //     'placeholder' => 'Sélectionner un médecin', // Optionnel, pour éviter un champ vide
-            // ])
+            ->add('doctor', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => function (User $user) {
+        return $user->getNom() . ' ' . $user->getPrenom(); // Concatenating nom and prenom
+    }, // Change 'nom' par le champ que tu veux afficher (ex: email, prénom)
+                'placeholder' => 'Sélectionner un médecin', // Optionnel, pour éviter un champ vide
+            ])
             
-            // ->add('patient', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'id',
-            //     'placeholder' => 'Sélectionner un patient',
-            // ])
+            ->add('patient', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => function (User $user) {
+        return $user->getNom() . ' ' . $user->getPrenom(); // Concatenating nom and prenom
+    },
+                'placeholder' => 'Sélectionner un patient',
+            ])
         ;
     }
 

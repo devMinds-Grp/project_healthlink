@@ -105,6 +105,17 @@ class Appointment
         return $this;
     }
 
+    public function getMedecin(): ?User
+    {
+        return $this->medecin;
+    }
+
+    public function setMedecin(?User $medecin): static
+    {
+        $this->medecin = $medecin;
+        return $this;
+    }
+    
     public function __toString(): string
 {
     return $this->date ? $this->date->format('Y-m-d H:i') : '';

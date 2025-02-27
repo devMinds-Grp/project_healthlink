@@ -13,7 +13,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 class PatientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -46,6 +49,11 @@ class PatientType extends AbstractType
                     'placeholder' => 'Entrez le mot de passe',
                     'class' => 'form-control',
                 ],
+            ])
+            ->add('imageprofile', FileType::class, [
+                'label' => 'Image de profil',
+                'required' => false, // Le champ n'est pas obligatoire
+                'mapped' => false, // Ne pas mapper directement à l'entité
             ]);
     }
 

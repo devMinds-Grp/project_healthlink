@@ -171,11 +171,11 @@
                                     <table class="table table-hover table-lg">
                                         <thead>
                                         <tr>
-                                            <th>ID</th>
+                                         
                                             <th>Description</th>
                                             <th>Address</th>
                                             <th>Date</th>
-                                            <th>caregiver</th>
+                                            
                                             <th>patient</th>
                                             <th>Actions</th>
                                         </tr>
@@ -184,12 +184,12 @@
                                          {% for care in care %}
 
                                             <tr>
-                                                <td>{{ care.id }}</td>
+                                                
                                                 <td>{{ care.Description }}</td>
                                                 <td>{{ care.Address }}</td>
                                                 <td>{{ care.Date ? care.Date|date('Y-m-d') : 'N/A' }}</td>
-                                                <td>Majd</td>
-                                                <td>Ghassen</td>
+                                                
+                                               <td>{{ care.patient.nom }} {{ care.patient.prenom }}</td>
                                                 <td>
        
         <a href="{{ path('care_delete', { 'id': care.id }) }}" class="btn btn-danger" 
