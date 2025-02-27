@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
+
 class PatientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -54,7 +55,12 @@ class PatientType extends AbstractType
                 'label' => 'Image de profil',
                 'required' => false, // Le champ n'est pas obligatoire
                 'mapped' => false, // Ne pas mapper directement à l'entité
+            ])
+            ->add('captcha', Recaptcha3Type::class, [
+                'constraints' => new Recaptcha3(),
+                'action_name' => 'homepage',
             ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

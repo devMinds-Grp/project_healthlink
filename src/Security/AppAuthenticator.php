@@ -4,6 +4,8 @@ namespace App\Security;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -31,11 +33,14 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
+
         $email = $request->getPayload()->getString('email');
-        $recaptchaToken = $request->getPayload()->getString('g-recaptcha-response');
-        if (!$this->verifyRecaptcha($recaptchaToken)) {
-            throw new \Exception('reCAPTCHA validation failed.');
-        }
+        // $recaptchaToken = $request->request->get('recaptcha_token');
+
+        // if (!$this->isRecaptchaValid($recaptchaToken)) {
+        //     throw new CustomUserMessageAuthenticationException('Échec de la vérification reCAPTCHA.');
+        // }
+
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
         return new Passport(
@@ -48,21 +53,23 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    private function verifyRecaptcha(string $recaptchaToken): bool
-    {
-        $client = HttpClient::create();
-        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
-            'body' => [
-                'secret' => $_ENV['RECAPTCHA_SECRET_KEY'],
-                'response' => $recaptchaToken,
-            ],
-        ]);
+    // private function isRecaptchaValid(string $recaptchaToken): bool
+    // {
+    //     $recaptchaSecret = $_ENV['RECAPTCHA3_SECRET'];
 
-        $data = $response->toArray();
-        $this->logger->info('reCAPTCHA response:', $data); // Log the response
+    //     $client = HttpClient::create();
+    //     $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+    //         'body' => [
+    //             'secret' => $recaptchaSecret,
+    //             'response' => $recaptchaToken
+    //         ]
+    //     ]);
 
-        return $data['success'] ?? false;
-    }
+    //     $data = $response->toArray();
+
+    //     // Vérifiez le score (par exemple, un score > 0.5 est considéré comme valide)
+    //     return $data['success'] && $data['score'] > 0.5;
+    // }
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $this->logger->info('Utilisateur connecté avec succès, redirection vers app_home.');

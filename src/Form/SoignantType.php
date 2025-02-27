@@ -70,7 +70,11 @@ class SoignantType extends AbstractType
                 'label' => 'Image de profil',
                 'required' => false, // Le champ n'est pas obligatoire
                 'mapped' => false, // Ne pas mapper directement à l'entité
-            ]);
+            ])
+        ->add('captcha', Recaptcha3Type::class, [
+            'constraints' => new Recaptcha3(),
+            'action_name' => 'homepage',
+        ]);
 
     }
 

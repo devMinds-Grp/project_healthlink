@@ -50,13 +50,15 @@
                                                         <li class="nav-item"><a href="{{ path('forum_index') }}" class="nav-link">Forum</a></li>
                                                         <li class="nav-item"><a href="{{ path('app_care_index') }}" class="nav-link">Soins</a></li>
                                                         <li class="nav-item"><a href="{{ path('app_doctor_list') }}" class="nav-link">Médecin</a></li>
+                                                        {% if is_granted('ROLE_MEDECIN') %}
                                                         <li class="nav-item"><a href="{{ path('app_prescription_new') }}" class="nav-link">Prescription</a></li>
+                                                        {% endif %}
                                                         <li class="nav-item"><a href="{{ path('app_reclamation_index') }}" class="nav-link">Reclamation</a></li>
                                                         <li class="nav-item"><a href="{{ path('app_blood_donation_index') }}" class="nav-link">Don song</a></li>
                                                         <li class="nav-item"><a href="{{ path('app_profile') }}" class="nav-link">Profile</a></li>
                                                         {% if is_granted('ROLE_ADMIN') %}
                                                         <li class="nav-item"><a href="{{ path('app_admin') }}" class="nav-link">Dashboard</a></li>
-                                                    {% endif %}
+                                                        {% endif %}
                                                     {% if app.user %}
                                                     <li class="nav-item">
                                                         <a href="{{ path('app_logout') }}" class="nav-link">

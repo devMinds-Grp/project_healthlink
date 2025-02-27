@@ -26,6 +26,9 @@ security:
       entry_point: form_login # Set the entry point to "form_login"
   access_control:
     - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/prescription, roles: ROLE_MEDECIN }
+    - { path: ^/patient, roles: ROLE_PATIENT }
+    - { path: ^/soignant, roles: ROLE_SOIGNANT }
     - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

@@ -151,8 +151,8 @@ final class UserController extends AbstractController
                     $user->setImage($newFilename); // Enregistrer le nom du fichier dans l'entité
                 }
             }
-            $imageFile = $form->get('imageprofile')->getData(); // Récupérer l'image
 
+            $imageFile = $form->get('imageprofile')->getData(); // Récupérer l'image
             if ($imageFile) {
                 $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
                 $newFilename = uniqid() . '.' . $imageFile->guessExtension(); // Générer un nom unique
@@ -234,9 +234,10 @@ final class UserController extends AbstractController
         // Calculer la position du texte pour le centrer
         $textBox = imagettfbbox($fontSize, 0, $fontPath, $initials);
         $textWidth = $textBox[2] - $textBox[0];
-        $textHeight = $textBox[7] - $textBox[1];
+        $textHeight = abs($textBox[7] - $textBox[1]); // Prendre la valeur absolue
+
         $textX = ($width - $textWidth) / 2;
-        $textY = ($height - $textHeight) / 2 + $fontSize;
+        $textY = ($height + $textHeight) / 2 - ($textBox[1]); // Ajustement pour un centrage correct
 
         // Ajouter le texte à l'image
         imagettftext($image, $fontSize, 0, $textX, $textY, $textColor, $fontPath, $initials);

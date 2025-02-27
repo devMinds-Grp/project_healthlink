@@ -81,7 +81,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 20, options: ['default' => 'en attente'])]
     private ?string $statut = 'en attente';
+    #[ORM\Column(type: 'string', length: 6, nullable: true)]
+    private ?string $resetCode = null;
 
+    public function getResetCode(): ?string
+    {
+        return $this->resetCode;
+    }
+
+    public function setResetCode(?string $resetCode): self
+    {
+        $this->resetCode = $resetCode;
+        return $this;
+    }
 
     public function __construct()
     {
