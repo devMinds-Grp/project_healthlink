@@ -1,6 +1,10 @@
 # config/services.yaml
 
-
+parameters:
+    upload_directory_reclamations: '%kernel.project_dir%/public/reclamations/'
+    twilio_sid: 'AC4d47c9846983f4a9198e28adf8d6fd02'
+    twilio_auth_token: '5b894c385035596f899e61530295ff2c'
+    twilio_phone_number: '16507299537'
 
 services:
     # Configuration par défaut pour les services
@@ -28,7 +32,12 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    
+    # Configuration du service SmsService
+    App\Service\SmsService:
+        arguments:
+            $twilioAccountSid: 'AC4d47c9846983f4a9198e28adf8d6fd02'
+            $twilioAuthToken: '5b894c385035596f899e61530295ff2c'
+            $twilioPhoneNumber: '16507299537'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
