@@ -1,0 +1,21 @@
+{# templates/sms/send.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <h1 class="mb-4">Envoyer un SMS</h1>
+
+    <form action="{{ path('app_send_sms') }}" method="POST">
+        <div class="mb-3">
+            <label for="to" class="form-label">Numéro de téléphone</label>
+            <input type="text" class="form-control" id="to" name="to" required>
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+</div>
+{% endblock %}

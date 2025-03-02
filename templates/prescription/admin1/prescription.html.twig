@@ -172,24 +172,25 @@
                                     <table class="table table-hover table-lg">
                                         <thead>
                                          <tr>
+                                         <th>Nom de patient</th>
                                             <th>Nom du médicament</th>
                                             <th>Date du RDV</th>
                                             <th>Dosage</th>
                                             <th>Durée</th>
-                                            <th>Nom de patient</th>
                                             <th>Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                          {% for prescription in prescription %}
                                             <tr>
+                                            <td>{{ prescription.cardUser.nom }} {{ prescription.cardUser.prenom }}</td>
                                                 <td>{{ prescription.nomMedicament }}</td>
                                                 <td>{{ prescription.RDVCard ? prescription.RDVCard.date|date('Y-m-d ') : 'N/A' }}</td>
                                                 <td>{{ prescription.dosage }}</td>
                                                 <td>{{ prescription.duree }}</td>
-                                                 <td>{{ prescription.cardUser.nom }} {{ prescription.cardUser.prenom }}</td>
+                                                 
                                                 <td>
-                                                        <a href="{{ path('prescription_approve', { 'id': prescription.id }) }}" class="btn btn-success">Approuver</a>
+                                                       
                                                         <a href="{{ path('prescription_delete', { 'id': prescription.id }) }}" class="btn btn-danger" 
                                                         onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette prescription ?');">
                                                         Supprimer

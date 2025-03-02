@@ -1,26 +1,29 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
+# config/services.yaml
 
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     upload_directory_reclamations: '%kernel.project_dir%/public/reclamations/'
-    
+    twilio_sid: 'AC4d47c9846983f4a9198e28adf8d6fd02'
+    twilio_auth_token: '5b894c385035596f899e61530295ff2c'
+    twilio_phone_number: '16507299537'
 
 services:
-    # default configuration for services in *this* file
+    # Configuration par défaut pour les services
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true      # Injection automatique des dépendances
+        autoconfigure: true # Configuration automatique des services
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+    # Dossier src/ pour les services
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-            
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+
+    # Configuration du service SmsService
+    App\Service\SmsService:
+        arguments:
+            $twilioAccountSid: 'AC4d47c9846983f4a9198e28adf8d6fd02'
+            $twilioAuthToken: '5b894c385035596f899e61530295ff2c'
+            $twilioPhoneNumber: '16507299537'
+

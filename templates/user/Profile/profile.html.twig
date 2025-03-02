@@ -212,7 +212,7 @@
                     <div class="card-body text-center">
                         <div class="avatar avatar-2xl">
                             {% if app.user.imageprofile %}
-                                <img src="{{ asset('uploads/' ~ app.user.imageprofile) }}" alt="Avatar">
+                                <img src="{{ asset('uploads/profile_images/' ~ app.user.imageprofile) }}" alt="Avatar">
                             {% else %}
                                 <img src="{{ asset('compiled/jpg/default-avatar.jpg') }}" alt="Avatar">
                             {% endif %}

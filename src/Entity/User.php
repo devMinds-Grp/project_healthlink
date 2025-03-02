@@ -312,4 +312,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->categorieSoin = $categorieSoin;
         return $this;
     }
+    
 }

@@ -5,6 +5,7 @@ use App\Repository\PrescriptionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\User;
 
 #[ORM\Entity(repositoryClass: PrescriptionRepository::class)]
 class Prescription
@@ -133,4 +134,17 @@ class Prescription
         $this->patient = $patient;
         return $this;
     }
+     
+     public function getDoctor(): ?User
+     {
+         return $this->doctor;
+     }
+ 
+     public function setDoctor(?User $doctor): self
+     {
+         $this->doctor = $doctor;
+         return $this;
+     }
+
+     
 }

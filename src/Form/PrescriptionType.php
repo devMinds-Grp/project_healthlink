@@ -54,7 +54,7 @@ class PrescriptionType extends AbstractType
                 'choice_label' => function(Appointment $appointment) {
                     // Nettoyer le label du type en retirant " RDV card"
                     $typeLabel = str_replace(' RDV card', '', $appointment->getType()->label());
-                    return $appointment->getDate()->format('Y-m-d H:i') . ' - ' . $typeLabel;
+                    return $appointment->getDate()->format('Y-m-d ') . ' - ' . $typeLabel;
                 },
             ]);
     }}

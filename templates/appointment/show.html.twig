@@ -25,16 +25,22 @@
                         <td>{{ appointment.date ? appointment.date|date('Y-m-d') : 'Non spécifiée' }}</td>
                     </tr>
                     <tr>
-                        <th>Statut</th>
-                        <td>
-                            <span class="badge {{ appointment.statut.value == 'confirme' ? 'bg-success' : 'bg-warning' }}">
-                                {{ appointment.statut.label() }}
-                            </span>
-                        </td>
+                        
                     </tr>
                     <tr>
                         <th>Type</th>
                         <td>{{ appointment.type.label() }}</td>
+                    </tr>
+                         <th>Statut</th>
+                        <td>
+                            <span class="badge 
+                                {% if appointment.statut == 'en_attente' %}bg-warning
+                                {% elseif appointment.statut == 'confirme' %}bg-success
+                                {% elseif appointment.statut == 'annule' %}bg-danger
+                                {% endif %}">
+                               {{ appointment.statut.label() }}
+                            </span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -144,5 +150,29 @@
     .gap-2 {
         gap: 10px;
     }
+
+    /* Styles pour les badges de statut */
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.875em;
+    font-weight: 600;
+    border-radius: 10px;
+    color:rgb(0, 0, 0); /* Texte blanc pour une meilleure lisibilité */
+}
+
+/* Statut "En attente" */
+.badge.bg-warning {
+    background-color: #ffc107 !important; /* Jaune */
+}
+
+/* Statut "Confirmé" */
+.badge.bg-success {
+    background-color: #28a745 !important; /* Vert */
+}
+
+/* Statut "Annulé" */
+.badge.bg-danger {
+    background-color: #dc3545 !important; /* Rouge */
+}
 </style>
 {% endblock %}

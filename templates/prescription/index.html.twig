@@ -12,6 +12,7 @@
         <table class="table table-hover mb-0">
             <thead class="table-header-custom">
                 <tr>
+                <th>Nom de patient</th>
                     <th>Nom du médicament</th>
                     <th>Date du RDV</th>
                     <th>Dosage</th>
@@ -22,6 +23,7 @@
             <tbody>
             {% for prescription in prescriptions %}
                 <tr>
+                <td>{{ prescription.cardUser.nom }} {{ prescription.cardUser.prenom }}</td>
                     <td>{{ prescription.nomMedicament }}</td>
                     <td>{{ prescription.RDVCard ? prescription.RDVCard.date|date('Y-m-d ') : 'N/A' }}</td>
                     <td>{{ prescription.dosage }}</td>
@@ -30,6 +32,7 @@
                         <div class="d-flex gap-2">
                             <a href="{{ path('app_prescription_show', {'id': prescription.id}) }}" class="btn btn-custom-secondary">Voir</a>
                             <a href="{{ path('app_prescription_edit', {'id': prescription.id}) }}" class="btn btn-custom-warning">Modifier</a>
+                            <a href="{{ path('app_prescription_send_email', {'id': prescription.id}) }}" class="btn btn-custom-primary">Envoyer</a>
                         </div>
                     </td>
                 </tr>
@@ -83,7 +86,8 @@
     /* Styles de boutons unifiés */
     .btn-custom-warning,
     .btn-custom-danger,
-    .btn-custom-secondary {
+    .btn-custom-secondary,
+    .btn-custom-primary {
         min-width: 100px;
         height: 40px;
         border: none;
@@ -118,6 +122,17 @@
         background-color: #5a6268;
         transform: translateY(-2px);
         box-shadow: 0 6px 12px rgba(108, 117, 125, 0.2);
+    }
+
+    .btn-custom-primary {
+        background-color: #007bff; /* Couleur bleue pour le bouton "Envoyer" */
+        color: #fff;
+    }
+
+    .btn-custom-primary:hover {
+        background-color: #0056b3; /* Couleur bleue plus foncée au survol */
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
     }
 
     .d-flex.gap-2 {

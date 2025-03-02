@@ -12,6 +12,10 @@
         <div class="card-body">
             <table class="table table-bordered">
                 <tbody>
+                <tr>
+                        <th>Nom de patient</th>
+                        <td>{{ prescription.cardUser.nom }} {{ prescription.cardUser.prenom }}</td>
+                    </tr>
                     <tr>
                         <th>Nom du médicament</th>
                         <td>{{ prescription.nomMedicament }}</td>
@@ -32,6 +36,8 @@
                         <th>Notes</th>
                         <td>{{ prescription.notes }}</td>
                     </tr>
+                    
+
                 </tbody>
             </table>
         </div>
