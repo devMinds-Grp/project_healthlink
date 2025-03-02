@@ -1,0 +1,139 @@
+{# templates/forum/rate.html.twig #}
+
+{% extends 'home/base.html.twig' %}
+
+{% block title %}Noter le forum{% endblock %}
+
+{% block body %}
+    <div class="rating-container">
+        <h2>Noter le forum "{{ forum.Title }}"</h2>
+
+        <div class="rating-card">
+            {{ form_start(form) }}
+
+            <div class="rating-stars">
+                {% for i in 1..5 %}
+                    <span class="star {% if form.vars.value.stars and form.vars.value.stars >= i %}active{% endif %}"
+                          data-value="{{ i }}">&#9733;</span>
+                {% endfor %}
+            </div>
+
+            {{ form_widget(form.stars) }}
+
+            {#  <div class="comment-box">
+                {{ form_row(form.comment) }}
+            </div>#}
+
+            <button type="submit" class="submit-btn">Enregistrer votre notation</button>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <style>
+        /* Center the form */
+        .rating-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Card-like form */
+        .rating-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 750px;
+            text-align: center;
+        }
+
+        /* Star rating styling */
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 35px;
+        }
+
+        .star {
+            cursor: pointer;
+            color: #ccc;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #06BBCC ;
+        }
+
+       /* /* Comment box
+        .comment-box {
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+            resize: none;
+        }*/
+
+        /* Submit button */
+        .submit-btn {
+            background: #06BBCC ;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const stars = document.querySelectorAll(".star");
+            const ratingInput = document.querySelector(".rating-input");
+
+            function updateStars(value) {
+                stars.forEach(star => {
+                    star.classList.remove("active");
+                    if (star.dataset.value <= value) {
+                        star.classList.add("active");
+                    }
+                });
+                ratingInput.value = value;
+            }
+
+            stars.forEach(star => {
+                star.addEventListener("click", function () {
+                    let value = this.getAttribute("data-value");
+                    updateStars(value);
+                });
+
+                star.addEventListener("mouseover", function () {
+                    let value = this.getAttribute("data-value");
+                    updateStars(value);
+                });
+
+                star.addEventListener("mouseleave", function () {
+                    updateStars(ratingInput.value || 0);
+                });
+            });
+
+            // Set initial stars based on form value (for editing ratings)
+            updateStars(ratingInput.value || 0);
+        });
+    </script>
+{% endblock %}

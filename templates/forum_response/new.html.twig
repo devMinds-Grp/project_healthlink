@@ -30,13 +30,26 @@
                     {{ form_errors(form.Description) }}
                 </div>
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
-                    <a href="{{ path('forum_show', {'id': forum.id}) }}" class="btn btn-secondary">Back to list</a>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary d-inline-block">{{ button_label|default('Save') }}</button>
+                    <a href="{{ path('forum_show', {'id': forum.id}) }}" class="btn btn-secondary d-inline-block">Back to list</a>
                 </div>
 
                 {{ form_end(form) }}
             </div>
         </div>
     </div>
+
+    <style>
+        /* Style pour uniformiser les boutons */
+        .btn {
+            display: inline-block !important;
+            width: auto !important;
+        }
+
+        /* Container pour les boutons */
+        .d-flex.gap-2 {
+            gap: 0.5rem !important;
+        }
+    </style>
 {% endblock %}
