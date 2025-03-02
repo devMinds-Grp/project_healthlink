@@ -1,0 +1,61 @@
+{# templates/forum/report.html.twig #}
+{% extends 'home/base.html.twig' %}
+
+{% block title %}Signaler un forum - {{ forum.title }}{% endblock %}
+
+{% block body %}
+    <!-- bradcam_area_start  -->
+    <div class="bradcam_area breadcam_bg_1">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="bradcam_text">
+                        <h3>Signaler un forum</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card w-50">
+            <div class="card-body">
+                <h1 class="card-title text-center">Signaler le forum : {{ forum.title }}</h1>
+
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
+
+                <div class="mb-3">
+                    {{ form_label(form.reason, 'Raison du signalement', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.reason, {'attr': {'class': 'form-control', 'placeholder': 'Entrez la raison du signalement'}}) }}
+                    {{ form_errors(form.reason) }}
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-warning small-btn">
+                        <i class="fas fa-flag"></i> Signaler
+                    </button>
+                    <a href="{{ path('forum_show', {'id': forum.id}) }}" class="btn btn-secondary small-btn">
+                        <i class="fas fa-arrow-left"></i> Retour au forum
+                    </a>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Style pour uniformiser la taille des boutons si pas déjà défini dans base.html.twig */
+        .small-btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            display: inline-block;
+            width: auto;
+        }
+
+        /* Pour assurer que les boutons s'alignent correctement */
+        .d-flex.gap-2 {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+{% endblock %}
