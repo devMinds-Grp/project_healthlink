@@ -22,25 +22,33 @@ final class CareController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_care_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $care = new Care();
-        $form = $this->createForm(CareType::class, $care);
-        $form->handleRequest($request);
+   // src/Controller/CareController.php
+// src/Controller/CareController.php
+#[Route('/new', name: 'app_care_new', methods: ['GET', 'POST'])]
+public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
+{
+    $care = new Care();
+    $form = $this->createForm(CareType::class, $care);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($care);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_care_index', [], Response::HTTP_SEE_OTHER);
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Set the patient to the currently logged-in user
+        $user = $security->getUser();
+        if ($user && in_array('ROLE_PATIENT', $user->getRoles())) {
+            $care->setPatient($user);
         }
 
-        return $this->render('care/new.html.twig', [
-            'care' => $care,
-            'form' => $form,
-        ]);
+        $entityManager->persist($care);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_care_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    return $this->render('care/new.html.twig', [
+        'care' => $care,
+        'form' => $form,
+    ]);
+}
 
     #[Route('/{id}', name: 'app_care_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(int $id, CareRepository $careRepository): Response

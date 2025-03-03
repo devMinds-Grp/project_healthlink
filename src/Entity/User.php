@@ -97,6 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->appointmentsAsPatient = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
         $this->handledReclamations = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     #[ORM\OneToMany(targetEntity: Care::class, mappedBy: 'caregiver')]
@@ -146,6 +147,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'admin')]
     private Collection $handledReclamations;
+    // In App\Entity\User
+
+#[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+private Collection $notifications;
+
+
+/**
+ * @return Collection|Notification[]
+ */
+public function getNotifications(): Collection
+{
+    return $this->notifications;
+}
+
+public function addNotification(Notification $notification): self
+{
+    if (!$this->notifications->contains($notification)) {
+        $this->notifications[] = $notification;
+        $notification->setUser($this);
+    }
+    return $this;
+}
+
+public function removeNotification(Notification $notification): self
+{
+    if ($this->notifications->removeElement($notification)) {
+        if ($notification->getUser() === $this) {
+            $notification->setUser(null);
+        }
+    }
+    return $this;
+}
 
     public function getId(): ?int
     {

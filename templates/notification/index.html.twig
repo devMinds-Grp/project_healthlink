@@ -1,0 +1,146 @@
+{% extends 'home/base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block body %}
+    <style>
+        .notification-page {
+            background: linear-gradient(135deg, #f5f7fa, #e3e8ee);
+            min-height: 100vh;
+            padding: 20px;
+            margin-top: 220px;
+            margin-bottom: 500px;
+            overflow-y: auto;
+        }
+        .notification-card {
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: all 0.4s ease;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            overflow: hidden;
+        }
+        .notification-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .notification-card.unread {
+            border-left: 6px solid #007bff;
+            background-color: #fff3cd;
+            animation: pulseBorder 2s infinite ease-in-out;
+        }
+        @keyframes pulseBorder {
+            0% { border-left-color: #007bff; }
+            50% { border-left-color: #0056b3; }
+            100% { border-left-color: #007bff; }
+        }
+        .notification-card .card-body {
+            color: #333;
+            padding: 18px;
+            font-size: 1.05rem;
+        }
+        .notification-card .card-body .soignant-name {
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        .notification-card .card-body .soignant-name i {
+            margin-right: 8px;
+            font-size: 1rem;
+            color: #007bff;
+            animation: rotateIcon 2s infinite linear;
+        }
+        @keyframes rotateIcon {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .notification-card .card-body p {
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        .notification-card .card-body small {
+            color: #666;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            display: block;
+            margin-top: 10px;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+        .notification-card .btn-primary, .notification-card .btn-chat {
+            background-color: #007bff;
+            border-color: #007bff;
+            font-size: 0.85rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        .notification-card .btn-primary:hover, .notification-card .btn-chat:hover {
+            background: linear-gradient(90deg, #0056b3, #003d7a);
+            border-color: #003d7a;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 87, 179, 0.3);
+        }
+        .notification-header {
+            color: #333;
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 2.2rem;
+            animation: fadeInDown 1.2s ease-in;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .no-notifications {
+            color: #666;
+            text-align: center;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            font-size: 1.1rem;
+            animation: fadeIn 1.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+
+    <div class="container notification-page">
+        <h1 class="notification-header">Vos Notifications</h1>
+        {% if notifications is empty %}
+            <div class="no-notifications">Aucune notification à afficher.</div>
+        {% else %}
+            {% for notification in notifications|sort((a, b) => b.createdAt <=> a.createdAt) %}
+                {% set soignant = notification.soignant ?? null %}
+                {% set patient = notification.patient ?? null %}
+                <div class="card notification-card {% if not notification.isRead %}unread{% endif %}">
+                    <div class="card-body">
+                        {% if patient and 'ROLE_SOIGNANT' in app.user.roles %}
+                            <div class="soignant-name"><i class="fas fa-user"></i> Par {{ patient.nom|capitalize }} {{ patient.prenom|capitalize }}</div>
+                            <a href="{{ path('app_chat_with_soignant', {'recipientId': patient.id}) }}" class="btn btn-sm btn-chat float-end">Chat avec Patient</a>
+                        {% elseif soignant and 'ROLE_PATIENT' in app.user.roles %}
+                            <div class="soignant-name"><i class="fas fa-user-md"></i> Par {{ soignant.nom|capitalize }} {{ soignant.prenom|capitalize }}</div>
+                            <a href="{{ path('app_chat_with_soignant', {'recipientId': soignant.id}) }}" class="btn btn-sm btn-chat float-end">Chat avec Soignant</a>
+                        {% endif %}
+                        <p>{{ notification.message }}</p>
+                        <small>{{ notification.createdAt|date('d/m/Y H:i') }}</small>
+                        {% if not notification.isRead %}
+                            <a href="{{ path('app_notification_read', {'id': notification.id}) }}" class="btn btn-sm btn-primary float-end">Marquer comme lu</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

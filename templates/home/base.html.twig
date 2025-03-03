@@ -23,6 +23,117 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <!-- <link rel="stylesheet" href="css/responsive.css"> -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .notification-area {
+        position: relative;
+    }
+    .notification-area .btn-link {
+        color: #007bff;
+        font-size: 1.3rem;
+        transition: color 0.3s ease;
+    }
+    .notification-area .btn-link:hover {
+        color: #0056b3;
+    }
+    .notification-area .btn-link i.fas.fa-bell {
+        color: #fff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    .notification-area .badge {
+        position: absolute;
+        top: -5px;
+        right: -10px;
+        font-size: 0.75rem;
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        animation: pulse 1.5s infinite ease-in-out;
+        border-radius: 50%;
+        padding: 0.3rem 0.5rem;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    .notification-area .dropdown-menu {
+        max-height: 400px;
+        overflow-y: auto;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        border: none;
+        padding: 10px 0;
+    }
+    .notification-area .dropdown-item {
+        color: #333 !important;
+        padding: 14px 20px;
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 0.95rem;
+    }
+    .notification-area .dropdown-item:hover {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        color: #fff !important;
+        transform: translateX(8px);
+        box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+    }
+    .notification-area .dropdown-item small {
+        color: #666;
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+    .notification-area .font-weight-bold {
+        font-weight: 600;
+        background-color: #fff3cd;
+        border-left: 5px solid #ffc107;
+        padding-left: 15px;
+        animation: highlight 2s ease-in-out infinite;
+    }
+    @keyframes highlight {
+        0% { background-color: #fff3cd; }
+        50% { background-color: #ffeeba; }
+        100% { background-color: #fff3cd; }
+    }
+    .notification-area .dropdown-divider {
+        margin: 0;
+        border-top: 1px solid #e9ecef;
+    }
+    .notification-area .text-center {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        color: #fff;
+        padding: 4px 8px; /* Much smaller padding */
+        border-radius: 0 0 12px 12px;
+        font-size: 0.7rem; /* Much smaller font size */
+        font-weight: 500;
+        transition: background 0.3s ease, transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .notification-area .text-center:hover {
+        background: linear-gradient(90deg, #0056b3, #003d7a);
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+    .notification-area .text-center i {
+        margin-right: 3px; /* Reduced space between icon and text */
+        font-size: 0.8rem; /* Smaller icon */
+    }
+    .notification-area .btn-chat {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-size: 0.75rem; /* Smaller font for consistency */
+        padding: 4px 10px; /* Smaller padding to match "Voir toutes" */
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-top: 5px; /* Adjust vertical alignment */
+    }
+    .notification-area .btn-chat:hover {
+        background: linear-gradient(90deg, #0056b3, #003d7a);
+        border-color: #003d7a;
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(0, 87, 179, 0.3);
+    }
+</style>
 </head>
     
     <body>
@@ -71,6 +182,47 @@
                                                         {% if is_granted('ROLE_ADMIN') %}
                                                         <li class="nav-item"><a href="{{ path('app_admin') }}" class="nav-link">Dashboard</a></li>
                                                     {% endif %}
+                                                    <!-- Inside the <header> section after the navigation -->
+<!-- Inside the <header> section after the navigation in base.html.twig -->
+{% if app.user %}
+    <div class="notification-area ml-3">
+        <div class="dropdown">
+            <button class="btn btn-link dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-bell"></i>
+                {% set unreadNotifications = app.user.notifications|filter(n => n.isRead == false)|length %}
+                {% if unreadNotifications > 0 %}
+                    <span class="badge bg-danger rounded-pill">{{ unreadNotifications }}</span>
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                {% for notification in app.user.notifications|sort((a, b) => b.createdAt <=> a.createdAt)|slice(0, 5) %}
+                    <li>
+                        <div class="d-flex justify-content-between align-items-start">
+                            <a class="dropdown-item flex-grow-1 {% if not notification.isRead %}font-weight-bold{% endif %}" href="{{ path('app_notification_read', {'id': notification.id}) }}">
+                                {{ notification.message }} <br>
+                                <small>{{ notification.createdAt|date('d/m/Y H:i') }}</small>
+                            </a>
+                            {% if notification.patient and 'ROLE_SOIGNANT' in app.user.roles %}
+                                <a href="{{ path('app_chat_with_soignant', {'recipientId': notification.patient.id}) }}" class="btn btn-sm btn-chat ms-2" style="margin-top: 5px;">
+                                    Chat avec Patient
+                                </a>
+                            {% elseif notification.soignant and 'ROLE_PATIENT' in app.user.roles %}
+                                <a href="{{ path('app_chat_with_soignant', {'recipientId': notification.soignant.id}) }}" class="btn btn-sm btn-chat ms-2" style="margin-top: 5px;">
+                                    Chat avec Soignant
+                                </a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+                {% if app.user.notifications is empty %}
+                    <li><span class="dropdown-item">Aucune notification</span></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-center" href="{{ path('app_notifications') }}">Voir toutes les notifications</a></li>
+            </ul>
+        </div>
+    </div>
+{% endif %}
                                                     {% if app.user %}
                                                     <li class="nav-item">
                                                         <a href="{{ path('app_logout') }}" class="nav-link">

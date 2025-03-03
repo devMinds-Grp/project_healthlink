@@ -12,65 +12,68 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\SecurityBundle\Security;
-
+use App\Entity\Notification;
 
 #[Route('/care/response')]
 final class CareResponseController extends AbstractController
 {
-    #[Route(name: 'app_care_response_index', methods: ['GET'])]
-    public function index(CareResponseRepository $careResponseRepository): Response
-    {
-        return $this->render('care_response/index.html.twig', [
-            'care_responses' => $careResponseRepository->findAll(),
-        ]);
-    }
-
     #[Route('/new', name: 'app_care_response_new', methods: ['POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager, CareRepository $careRepository, Security $security): Response
-{
-    $contenuRep = $request->request->get('contenu_rep');
-    $careId = $request->request->get('care_id');
-
-    if (!$careId || empty($contenuRep)) {
-        return $this->redirectToRoute('app_care_index'); 
-    }
-
-    $care = $careRepository->find($careId);
-    if (!$care) {
-        throw $this->createNotFoundException('Care not found');
-    }
-
-    $careResponse = new CareResponse();
-    $careResponse->setContenuRep($contenuRep);
-    $careResponse->setCare($care);
-    $careResponse->setDateRep(new \DateTime('now', new \DateTimeZone('Africa/Tunis')));
-
-    // Set the logged-in user if available
-    $user = $security->getUser();
-    if ($user) {
-        $careResponse->setUser($user);
-    }
-
-    $entityManager->persist($careResponse);
-    $entityManager->flush();
-
-    // Redirect back to the modal
-    return $this->redirectToRoute('app_care_index');
-}
-
-
-    #[Route('/{id}', name: 'app_care_response_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(int $id, CareResponseRepository $careResponseRepository): Response
-    {
-        $careResponse = $careResponseRepository->find($id);
-
-        if (!$careResponse) {
-            throw $this->createNotFoundException('CareResponse not found');
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        CareRepository $careRepository,
+        Security $security
+    ): Response {
+        $contenuRep = $request->request->get('contenu_rep');
+        $careId = $request->request->get('care_id');
+    
+        if (!$careId || empty($contenuRep)) {
+            return $this->redirectToRoute('app_care_index');
         }
-
-        return $this->render('care_response/show.html.twig', [
-            'care_response' => $careResponse,
-        ]);
+    
+        $care = $careRepository->find($careId);
+        if (!$care) {
+            throw $this->createNotFoundException('Care not found');
+        }
+    
+        $careResponse = new CareResponse();
+        $careResponse->setContenuRep($contenuRep);
+        $careResponse->setCare($care);
+        $careResponse->setDateRep(new \DateTime('now', new \DateTimeZone('Africa/Tunis')));
+    
+        // Set the soignant (user) to the currently logged-in user
+        $user = $security->getUser();
+        if ($user && in_array('ROLE_SOIGNANT', $user->getRoles())) {
+            $careResponse->setUser($user); // Set in CareResponse
+            $careResponse->setSoignant($user); // Optionally set soignant if you want to use this property
+        }
+    
+        // Set the patient from the associated Care entity
+        $careResponse->setPatient($care->getPatient());
+    
+        // Persist the CareResponse
+        $entityManager->persist($careResponse);
+    
+        // Create a notification for the patient
+        $notification = new Notification();
+        $notification->setUser($care->getPatient());
+        $notification->setMessage("Un soignant a commenté votre demande de soin : \"$contenuRep\"");
+        $notification->setCreatedAt(new \DateTime('now', new \DateTimeZone('Africa/Tunis')));
+        $notification->setIsRead(false);
+        $notification->setCareResponse($careResponse); // Keep this for consistency, if needed
+        $notification->setSoignant($user); // Set the soignant directly in Notification
+    
+        // Debug to verify
+        error_log("Notification created with Soignant: " . ($user ? $user->getNom() . " " . $user->getPrenom() : 'null'));
+    
+        // Persist the notification
+        $entityManager->persist($notification);
+    
+        // Flush all changes to the database
+        $entityManager->flush();
+    
+        // Redirect back to the modal
+        return $this->redirectToRoute('app_care_index');
     }
 
     #[Route('/{id}/edit', name: 'app_care_response_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]

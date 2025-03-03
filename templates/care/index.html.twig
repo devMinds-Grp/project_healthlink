@@ -158,7 +158,7 @@
                                 <small class="text-muted">{{ response.dateRep|date('Y-m-d') }}</small>
                             </div>
                             <p class="mb-2">{{ response.contenuRep }}</p>
-
+{% if app.user and response.user and app.user.id == response.user.id %}
                             <!-- Edit, Delete, and Reply Buttons -->
                             <div class="d-flex gap-2">
                                 <a href="{{ path('app_care_response_edit', {'id': response.id}) }}" class="btn btn-sm btn-outline-secondary">
@@ -211,7 +211,9 @@
 </script>
                                 
                             </div>
+                             {% endif %}
                         </div>
+                        
                     </div>
                 {% else %}
                     <p class="text-muted text-center">No comments yet.</p>

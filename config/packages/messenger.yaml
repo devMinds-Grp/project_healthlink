@@ -1,17 +1,11 @@
+# config/packages/messenger.yaml
 framework:
     messenger:
         failure_transport: failed
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
-            async:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    use_notify: true
-                    check_delayed_interval: 60000
-                retry_strategy:
-                    max_retries: 3
-                    multiplier: 2
+            # Use Doctrine ORM for both async and failed transports
+            async: 'doctrine://default?queue_name=chat_messages'  # Store chat messages in the database
             failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
 
@@ -22,8 +16,6 @@ framework:
 
         routing:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
-            Symfony\Component\Notifier\Message\ChatMessage: async
+            Symfony\Component\Notifier\Message\ChatMessage: async  # Keep this for notifier integration if needed
             Symfony\Component\Notifier\Message\SmsMessage: async
-
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+            'App\Message\ChatMessage': async  # Route your custom ChatMessage to the async transport
