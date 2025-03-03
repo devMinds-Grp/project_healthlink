@@ -40,8 +40,6 @@ class UserRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-<<<<<<< HEAD
-=======
 public function countTotalUsers(): int
 {
     return $this->createQueryBuilder('u')
@@ -127,7 +125,6 @@ public function statistics(UserRepository $userRepository): Response
 }
 
    
->>>>>>> e6eab44440763c3ca3bdb10fb74d6719702effdb
 
 
 }

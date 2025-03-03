@@ -379,8 +379,4 @@ final class UserController extends AbstractController
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e6eab44440763c3ca3bdb10fb74d6719702effdb
 }
