@@ -8,142 +8,38 @@
     <i class="bi bi-trash"></i> Delete
 </button>
 
-<!-- The Modal -->
-<div id="deleteModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 class="mb-3">Are you sure you want to delete this item?</h2>
-        <p class="text-muted mb-4">This action cannot be undone.</p>
-        <div class="d-flex justify-content-center gap-3">
-            <button type="button" class="btn confirm-btn" id="confirmDeleteBtn">Yes, delete it!</button>
-            <button type="button" class="btn cancel-btn" id="cancelBtn">No, keep it!</button>
-        </div>
-    </div>
-</div>
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-<!-- Styles for the modal -->
-<style>
-    /* Modal Background */
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed;
-        z-index: 1050; /* Ensure it's above other elements */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-        animation: fadeIn 0.3s ease-in-out; /* Smooth fade-in animation */
-    }
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    /* Modal Content */
-    .modal-content {
-        background-color: #fff;
-        margin: 10% auto;
-        padding: 25px;
-        border: 1px solid #ddd;
-        width: 90%;
-        max-width: 500px;
-        text-align: center;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        animation: slideIn 0.3s ease-in-out; /* Smooth slide-in animation */
-    }
-
-    /* Close Button */
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: color 0.3s ease;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: #000;
-        text-decoration: none;
-    }
-
-    /* Buttons */
-    .btn {
-        border: none;
-        color: white;
-        padding: 10px 25px;
-        text-align: center;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-
-    .confirm-btn {
-        background-color: #dc3545; /* Red */
-    }
-
-    .confirm-btn:hover {
-        background-color: #c82333; /* Darker red */
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
-    }
-
-    .cancel-btn {
-        background-color: #6c757d; /* Gray */
-    }
-
-    .cancel-btn:hover {
-        background-color: #5a6268; /* Darker gray */
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    @keyframes slideIn {
-        from { transform: translateY(-20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-</style>
-
-<!-- JavaScript for opening/closing the modal -->
+<!-- JavaScript for SweetAlert2 Integration -->
 <script>
-    var modal = document.getElementById("deleteModal");
-    var btn = document.getElementById("deleteBtn");
-    var span = document.getElementsByClassName("close")[0];
-    var cancelBtn = document.getElementById("cancelBtn");
-    var confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-    var deleteForm = document.getElementById("deleteForm");
+    document.addEventListener("DOMContentLoaded", function() {
+        var deleteBtn = document.getElementById("deleteBtn");
+        var deleteForm = document.getElementById("deleteForm");
 
-    // Open the modal
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
+        // Attach click event to the delete button
+        deleteBtn.addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default button behavior
 
-    // Close the modal when clicking the close button
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    // Close the modal when clicking the cancel button
-    cancelBtn.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    // Close the modal when clicking outside the modal
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    // Submit the form when user confirms
-    confirmDeleteBtn.onclick = function() {
-        deleteForm.submit();
-    }
+            // SweetAlert2 confirmation popup
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545', // Red color for the confirm button
+                cancelButtonColor: '#6c757d', // Gray color for the cancel button
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form if the user confirms
+                    deleteForm.submit();
+                }
+            });
+        });
+    });
 </script>

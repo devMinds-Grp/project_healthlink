@@ -61,18 +61,14 @@ class CareType extends AbstractType
             ]
         ])
         
-            ->add('caregiver', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
+           
             ->add('patient', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'id',
+                'choice_label' => function (User $user) {
+        return $user->getNom() . ' ' . $user->getPrenom(); // Concatenating nom and prenom
+    },
             ])
-            ->add('CareUser', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
+           
         ;
     }
 

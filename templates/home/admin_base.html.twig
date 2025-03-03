@@ -67,44 +67,129 @@
                     </div>
                 </div>
             </div>
-            <div class="sidebar-menu">
-                <ul class="menu">
-                    <li class="sidebar-title">Menu</li>
+         <div class="sidebar-menu">
+    <ul class="menu">
+        <li class="sidebar-title">Menu</li>
 
-                    <li
-                            class="sidebar-item active ">
-                        <a href="index.html" class='sidebar-link'>
-                            <i class="bi bi-grid-fill"></i>
-                            <span>Gestion des RDv</span>
-                        </a>
-                    </li>
-                    
+        <!-- Gestion utilisateurs -->
+        <li class="sidebar-item has-sub">
+            <a href="#" class='sidebar-link'>
+                <i class="bi bi-people-fill"></i> <!-- Icon for Gestion utilisateurs -->
+                <span>Gestion utilisateurs</span>
+            </a>
+            <ul class="submenu">
+                <li class="submenu-item">
+                    <a href="{{ path('app_user_patients') }}" class="submenu-link">
+                        <i class="bi bi-person-fill"></i> <!-- Icon for Patients -->
+                        <span>Patients</span>
+                    </a>
+                </li>
+                <li class="submenu-item">
+                    <a href="{{ path('app_user_medecins') }}" class="submenu-link">
+                        <i class="bi bi-heart-pulse-fill"></i> <!-- Icon for Médecins -->
+                        <span>Médecins</span>
+                    </a>
+                </li>
+                <li class="submenu-item">
+                    <a href="{{ path('app_user_soignants') }}" class="submenu-link">
+                        <i class="bi bi-person-badge-fill"></i> <!-- Icon for Soignants -->
+                        <span>Soignants</span>
+                    </a>
+                </li>
+                <li class="submenu-item">
+                    <a href="{{ path('app_user_index') }}" class="submenu-link">
+                        <i class="bi bi-hourglass-split"></i> <!-- Icon for Utilisateurs en attentes -->
+                        <span>Utilisateurs en attentes</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-                    <li
-                            class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>Gestion utilisateurs</a> </span>
-                        </a>
+        <!-- Gestion Forum -->
+        <li class="sidebar-item has-sub">
+            <a href="#" class='sidebar-link'>
+                <i class="bi bi-chat-left-text-fill"></i> <!-- Icon for Gestion Forum -->
+                <span>Gestion Forum</span>
+            </a>
+            <ul class="submenu">
+                <li class="submenu-item">
+                    <a href="{{ path('admin_forum_index') }}" class="submenu-link">
+                        <i class="bi bi-chat-dots-fill"></i> <!-- Icon for Forums -->
+                        <span>Forums</span>
+                    </a>
+                </li>
+             
+            </ul>
+        </li>
 
-                        <ul class="submenu ">
+        <!-- Gestion Soin -->
+        <li class="sidebar-item has-sub">
+            <a href="#" class='sidebar-link'>
+                <i class="bi bi-heart-fill"></i> <!-- Icon for Gestion Soin -->
+                <span>Gestion Soin</span>
+            </a>
+            <ul class="submenu">
+                <li class="submenu-item">
+                    <a href="{{ path('app_admin_care') }}" class="submenu-link">
+                        <i class="bi bi-heart-pulse-fill"></i> <!-- Icon for Soins -->
+                        <span>Soins</span>
+                    </a>
+                </li>
+                <li class="submenu-item">
+                    <a href="{{ path('admin_care_responses') }}" class="submenu-link">
+                        <i class="bi bi-chat-square-text-fill"></i> <!-- Icon for Réponses -->
+                        <span>Réponses</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-                            <li class="submenu-item  ">
-                                <a href="{{ path('app_user_patients') }}" class="submenu-link">Patients</a>
+        <!-- Gestion RDV -->
+        <li class="sidebar-item has-sub">
+            <a href="#" class='sidebar-link'>
+                <i class="bi bi-calendar-check-fill"></i> <!-- Icon for Gestion RDV -->
+                <span>Gestion RDV</span>
+            </a>
+            <ul class="submenu">
+                <li class="submenu-item">
+                    <a href="{{ path('app_admin_appointment') }}" class="submenu-link">
+                        <i class="bi bi-calendar-event-fill"></i> <!-- Icon for Rendez-vous -->
+                        <span>Rendez-vous</span>
+                    </a>
+                </li>
+                <li class="submenu-item">
+                    <a href="{{ path('app_admin_prescription') }}" class="submenu-link">
+                        <i class="bi bi-file-earmark-medical-fill"></i> <!-- Icon for Prescriptions -->
+                        <span>Prescriptions</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Gestion Don du sang -->
+        <li class="sidebar-item has-sub">
+            <a href="#" class='sidebar-link'>
+                <i class="bi bi-droplet-fill"></i> <!-- Icon for Gestion Don du sang -->
+                <span>Gestion Don du sang</span>
+            </a>
+            <ul class="submenu">
+                <li class="submenu-item">
+                    <a href="{{ path('app_admin_blood_donations') }}" class="submenu-link">
+                        <i class="bi bi-droplet-half"></i> <!-- Icon for Dons -->
+                        <span>Dons</span>
+                    </a>
+                </li>
+                <li class="submenu-item">
+                    <a href="{{ path('app_admin_Donation_Response') }}" class="submenu-link">
+                        <i class="bi bi-chat-left-text-fill"></i> <!-- Icon for Réponses -->
+                        <span>Réponses</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
                             </li>
-
-                            <li class="submenu-item  ">
-                                <a href="{{ path('app_user_medecins') }}" class="submenu-link">Médecins</a>
-
-                            </li>
-                            <li class="submenu-item  ">
-                                <a href="{{ path('app_user_soignants') }}" class="submenu-link">Soignants</a>
-
-                            </li>
-                            <li class="submenu-item  ">
-                                <a href="{{ path('app_user_index') }}" class="submenu-link">Utilisateurs en attentes</a>
-
-                            </li>
+                            
 
 
                             
@@ -116,55 +201,13 @@
 
                     
                     </li>
-                    <li
-                            class="sidebar-item  ">
-                        <a href="{{ path('app_care_index') }}" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>Liste des demandes</a> </span>
-                        </a>
-                    </li>
-                    <li
-                            class="sidebar-item  ">
-                        <a href="{{ path('admin_forum_index') }}" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>Gestion Forums</a> </span>
-                        </a>
-                    </li>
-                    <li
-                            class="sidebar-item  ">
-                        <a href="{{ path('app_admin_appointment') }}" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>Liste rendez-vous</a> </span>
-                        </a>
-                    </li>
-                    <li
-                            class="sidebar-item  ">
-                        <a href="{{ path('app_admin_care') }}" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>Liste Soins</a> </span>
-                        </a>
-                    </li>
-                    <li
-                            class="sidebar-item  ">
-                        <a href="{{ path('app_admin_reclamation') }}" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>Gestion Reclamation</a> </span>
-                        </a>
-                    </li>
-                    <li
-                            class="sidebar-item  ">
-                        <a href="{{ path('app_category_new') }}" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>Gestion Catégories</a> </span>
-                        </a>
-                    </li>
-                    <li
-                            class="sidebar-item  ">
-                        <a href="{{ path('app_admin_blood_donation') }}" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>Gestion don </a> </span>
-                        </a>
-                    </li>
+                    
+                   
+                    
+                   
+                    
+                  
+                    
                     
                 </ul>
             </div>

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'home/base.html.twig' %}
 
 {% block title %}📌 Mes Réclamations {% endblock %}
 
@@ -10,8 +10,9 @@
     height: 100%;
     object-fit: cover;
 }</style>
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container mt-4" style="margin-top: 350px; margin-bottom: 500px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4"style="margin-top: 200px; margin-bottom: 500px;">
         <h2 class="fw-bold text-primary"><i class="bx bx-list-ul"></i> Mes Réclamations</h2>
         <a href="{{ path('app_reclamation_new') }}" class="btn btn-success btn-lg shadow-lg">
             <i class="bx bx-plus-circle"></i> Ajouter une réclamation
@@ -71,13 +72,6 @@
         </div>
     {% endif %}
 </div>
-
-<!-- Bouton flottant pour ajouter une réclamation -->
-<a href="{{ path('app_reclamation_new') }}" class="btn btn-success position-fixed bottom-0 end-0 m-4 shadow-lg rounded-circle transition-300"
-   style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-    <i class="bx bx-plus-circle fs-3"></i>
-</a>
-
 <style>
     .hover-shadow:hover {
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;

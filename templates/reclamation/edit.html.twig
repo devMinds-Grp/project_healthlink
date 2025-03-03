@@ -1,8 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'home/base.html.twig' %}
 
 {% block title %}Edit Reclamation{% endblock %}
 
 {% block body %}
+<div class="container" style="margin-top: 220px;margin-bottom: 500px;>
     <h1>Edit Reclamation</h1>
 
     {{ include('reclamation/_form.html.twig', {'button_label': 'Update'}) }}

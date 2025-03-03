@@ -7,15 +7,17 @@
                 <!-- Première colonne -->
                 <div class="col-md-6">
                     <div class="form-floating mb-4">
-                                            {{ form_label(form.nomMedicament, 'Nom du médicament', {'label_attr': {'class': 'form-label'}}) }}
+                                           
                         {{ form_widget(form.nomMedicament, {'attr': {'class': 'form-control' ~ (form.nomMedicament.vars.valid ? '' : ' is-invalid'), 'placeholder': ' EX. Doliprane'}}) }}
+                         {{ form_label(form.nomMedicament, 'Nom du médicament', {'label_attr': {'class': 'form-label'}}) }}
                         <div class="invalid-feedback">{{ form_errors(form.nomMedicament)|striptags }}</div>
                     </div>
 
                     <div class="form-floating mb-4">
-                                            {{ form_label(form.dosage, 'Dosage', {'label_attr': {'class': 'form-label'}}) }}
+                                           
 
                         {{ form_widget(form.dosage, {'attr': {'class': 'form-control' ~ (form.dosage.vars.valid ? '' : ' is-invalid'), 'placeholder': 'Ex. Une fois par jour '}}) }}
+                         {{ form_label(form.dosage, 'Dosage', {'label_attr': {'class': 'form-label'}}) }}
                         <div class="invalid-feedback">{{ form_errors(form.dosage)|striptags }}</div>
                     </div>
                 </div>
@@ -23,16 +25,16 @@
                 <!-- Deuxième colonne -->
                 <div class="col-md-6">
                     <div class="form-floating mb-4">
-                                            {{ form_label(form.duree, 'Durée', {'label_attr': {'class': 'form-label'}}) }}
+                                            
 
                         {{ form_widget(form.duree, {'attr': {'class': 'form-control' ~ (form.duree.vars.valid ? '' : ' is-invalid'), 'placeholder': 'Ex. 1 semaine '}}) }}
+                       {{ form_label(form.duree, 'Durée', {'label_attr': {'class': 'form-label'}}) }}
                         <div class="invalid-feedback">{{ form_errors(form.duree)|striptags }}</div>
                     </div>
 
                     <div class="form-floating mb-4">
-                                            {{ form_label(form.RDVCard, 'Rendez-vous associé', {'label_attr': {'class': 'form-label'}}) }}
-
                         {{ form_widget(form.RDVCard, {'attr': {'class': 'form-select' ~ (form.RDVCard.vars.valid ? '' : ' is-invalid'), 'placeholder': 'EX. Prendre avec un repas '}}) }}
+                        {{ form_label(form.RDVCard, 'Rendez-vous associé', {'label_attr': {'class': 'form-label'}}) }}
                         <div class="invalid-feedback">{{ form_errors(form.RDVCard)|striptags }}</div>
                     </div>
                 </div>
@@ -40,8 +42,9 @@
                 <!-- Champ full-width -->
                 <div class="col-12">
                     <div class="form-floating mb-4">
-                                            {{ form_label(form.notes, 'Notes', {'label_attr': {'class': 'form-label'}}) }}
+                                           
                         {{ form_widget(form.notes, {'attr': {'class': 'form-control' ~ (form.notes.vars.valid ? '' : ' is-invalid'), 'placeholder': ' ', 'style': 'height: 100px'}}) }}
+                        {{ form_label(form.notes, 'Notes', {'label_attr': {'class': 'form-label'}}) }}
                         <div class="invalid-feedback">{{ form_errors(form.notes)|striptags }}</div>
                     </div>
                 </div>

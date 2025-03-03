@@ -29,17 +29,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Assert\NotBlank(message: "L'email est obligatoire.")]
-    #[Assert\Email(message: "L'email '{{ value }}' n'est pas valide.")]
+    #[Assert\NotBlank(message: "Email est obligatoire.")]
+    #[Assert\Email(message: "Email '{{ value }}' n'est pas valide.")]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
     #[Assert\Length(min: 8, max: 255, minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.")]
-    // #[Assert\Regex(
-    //     pattern: "/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/",
-    //     message: "Le mot de passe doit contenir au moins une lettre et un chiffre."
-    // )]
+    #[Assert\Regex(
+        pattern: '/^(?=.*[A-Z])(?=.*\d).+$/',
+        message: "Le mot de passe doit contenir au moins une majuscule et un chiffre."
+    )]
     private ?string $motDePasse = null;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
@@ -47,11 +47,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Role $role = null;
 
     #[ORM\Column(length: 8, nullable: true)]
-    #[Assert\Regex(pattern: "/^(\+?\d{1,3})?\d{8,14}$/", message: "Le numéro de téléphone doit être valide.")]
+    #[Assert\Regex(pattern: "/^[0-9]{8}$/", message: "Le numéro de téléphone doit être valide.")]
     private ?string $numTel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Length(max: 255, maxMessage: "L'adresse ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\Length(max: 255, maxMessage: "Adresse ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\Regex(
+        pattern: '/^[A-Z]/',
+        message: "Adresse doit commencer par une lettre majuscule."
+    )]
     private ?string $adresse = null;
 
 
@@ -81,6 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 20, options: ['default' => 'en attente'])]
     private ?string $statut = 'en attente';
+    
     #[ORM\Column(type: 'string', length: 6, nullable: true)]
     private ?string $resetCode = null;
 
@@ -252,7 +257,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // Si le rôle existe et a un nom, l'ajouter au tableau des rôles
         if ($role !== null && $role->getNom() !== null) {
             // Normaliser le nom du rôle (supprimer les accents et convertir en majuscules)
-            $roleName = strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT', $role->getNom()));
+            $roleName = strtoupper($role->getNom());
             $roles[] = 'ROLE_' . $roleName;
         }
 

@@ -113,4 +113,24 @@ class Prescription
         $this->RDVCard = $RDVCard;
         return $this;
     }
+    public function getCardUser(): ?User
+    {
+        return $this->cardUser;
+    }
+
+    public function setCardUser(?User $cardUser): static
+    {
+        $this->cardUser = $cardUser;
+        return $this;
+    }
+    public function getPatient(): ?User
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?User $patient): static
+    {
+        $this->patient = $patient;
+        return $this;
+    }
 }

@@ -65,7 +65,7 @@ class BloodDonation
     #[ORM\ManyToOne(inversedBy: 'bloodDonations')]
     private ?User $BldDon = null;
 
-    #[ORM\OneToMany(targetEntity: DonationResponse::class, mappedBy: 'bloodDonation')]
+    #[ORM\OneToMany(targetEntity: DonationResponse::class, mappedBy: 'bloodDonation', cascade: ['remove'])]
     private Collection $DldRep;
 
 

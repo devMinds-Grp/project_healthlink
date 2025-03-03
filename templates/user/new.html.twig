@@ -10,7 +10,7 @@
                 <div class="card-content">
                     <div class="card-body">
                         <h2 class="text-center">Inscription {{ role }}</h2>
-                        {{ form_start(form, {'attr': {'class': 'form form-vertical'}}) }}
+                        {{ form_start(form, {'attr': {'class': 'form form-vertical needs-validation', 'novalidate': 'novalidate'}}) }}
                             <div class="form-body">
                                 <div class="row">
                                     {% for field in form %}
@@ -18,8 +18,17 @@
                                             <div class="form-group has-icon-left">
                                                 <label for="{{ field.vars.id }}">{{ field.vars.label }}</label>
                                                 <div class="position-relative">
-                                                    {{ form_widget(field, {'attr': {'class': 'form-control', 'id': field.vars.id, 'placeholder': field.vars.label}}) }}
-                                                    {{ form_errors(field) }}
+                                                    {# Ajout de la classe 'is-invalid' si le champ est invalide #}
+                                                    {{ form_widget(field, {
+                                                        'attr': {
+                                                            'class': 'form-control' ~ (not field.vars.valid ? ' is-invalid' : ''),
+                                                            'id': field.vars.id
+                                                        }
+                                                    }) }}
+                                                    {# Affichage des erreurs #}
+                                                    <div class="invalid-feedback">
+                                                        {{ form_errors(field)|striptags }}
+                                                    </div>
                                                     <div class="form-control-icon">
                                                         {% if field.vars.name == 'email' %}
                                                             <i class="bi bi-envelope"></i>
@@ -31,7 +40,6 @@
                                                             <i class="bi bi-person"></i>
                                                         {% endif %}
                                                     </div>
-                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -43,7 +51,6 @@
                                 </div>
                             </div>
                         {{ form_end(form) }}
-                        
                     </div>
                 </div>
             </div>

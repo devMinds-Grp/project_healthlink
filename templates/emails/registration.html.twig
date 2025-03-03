@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f9fc;
+            background-color: #eef5f9;
             margin: 0;
             padding: 0;
             text-align: center;
@@ -17,66 +17,73 @@
             margin: 20px auto;
             padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
         .logo {
-            max-width: 150px;
-            margin-bottom: 20px;
+            max-width: 180px;
+            margin: 20px auto;
+            display: block;
         }
         h1 {
-            color: #2C3E50;
-            font-size: 28px;
+            color: #1B4F72;
+            font-size: 30px;
             margin-bottom: 20px;
         }
         p {
-            color: #555;
+            color: #333;
             font-size: 16px;
             line-height: 1.6;
         }
         .info {
-            background-color: #f9f9f9;
+            background-color: #f0f8ff;
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
             text-align: left;
+            border-left: 5px solid #1B4F72;
         }
         .info p {
-            margin: 0;
+            margin: 5px 0;
             font-size: 16px;
             color: #333;
         }
         .btn {
             display: inline-block;
-            background-color: #3498db;
-            color: white;
-            padding: 12px 30px;
+            background-color: #1B4F72;;
+            color: white !important;
+            padding: 14px 40px;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 18px;
             margin-top: 20px;
-            transition: background-color 0.3s ease;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
         .btn:hover {
-            background-color: #2980b9;
+            background-color: #1B4F72;
+            transform: scale(1.05);
         }
         .footer {
             margin-top: 30px;
             font-size: 14px;
-            color: #888;
+            color: #666;
         }
         .footer a {
-            color: #3498db;
+            color: #1B4F72;
             text-decoration: none;
+            font-weight: bold;
         }
         .footer a:hover {
             text-decoration: underline;
         }
         .highlight {
-            color: #3498db;
+            color: #1B4F72;
             font-weight: bold;
         }
         .header {
-            background-color: #3498db;
+            background-color: #1B4F72;
             padding: 20px;
             border-radius: 10px 10px 0 0;
             color: white;
@@ -85,37 +92,42 @@
             color: white;
             margin: 0;
         }
+        .alert {
+            background-color: #ffeded;
+            color: #d9534f;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: normal;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- En-tête avec fond coloré -->
         <div class="header">
             <h1>Bienvenue sur HealthLink</h1>
         </div>
 
-        <!-- Logo -->
-        <img src="{{ absolute_url(asset('img/logo siteweb.png')) }}" alt="HealthLink Logo" class="logo">
-
-        <!-- Message de bienvenue -->
+        <img src="https://i.postimg.cc/hvfDj0Pw/476404938-9574320402579693-7829423363891692225-n.png" alt="HealthLink Logo" class="logo">
         <p>Nous sommes ravis de vous accueillir sur <span class="highlight">HealthLink</span>, votre plateforme de santé en ligne.</p>
         <p>Votre compte a été créé avec succès. Voici vos informations de connexion :</p>
 
-        <!-- Informations de connexion -->
         <div class="info">
             <p><strong>Email :</strong> {{ user.email }}</p>
-            <p><strong>Mot de passe :</strong> {{ user.motDePasse }}</p>
+            <p><strong>Mot de passe :</strong> {{ motDePasseAffiche }}</p>
         </div>
 
-        <!-- Bouton de connexion -->
-        <a href="{{ url('app_login') }}" class="btn">Se connecter à mon compte</a>
+        <div class="alert">
+            Pour des raisons de sécurité, veuillez modifier votre mot de passe lors de votre première connexion.
+        </div>
 
-        <!-- Message de sécurité -->
+        <a href="{{ url('app_login') }}" class="btn">Se connecter</a>
+
         <p class="footer">
             <strong>Conseil de sécurité :</strong> Ne partagez jamais votre mot de passe avec qui que ce soit.
         </p>
 
-        <!-- Informations de contact -->
         <p class="footer">
             Si vous avez des questions, contactez-nous à <a href="mailto:contact@healthlink.com">contact@healthlink.com</a>
             ou appelez-nous au <span class="highlight">+216 XX XXX XXX</span>.

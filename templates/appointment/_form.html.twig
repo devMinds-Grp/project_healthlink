@@ -7,7 +7,7 @@
                 <!-- Première colonne -->
                 <div class="col-md-6">
                     <div class="form-floating mb-4">
-                        {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
+                        
                         {{ form_widget(form.date, {
                             'attr': {
                                 'class': 'form-control' ~ (form.date.vars.valid ? '' : ' is-invalid'),
@@ -16,6 +16,7 @@
                                 'data-validation-target': 'dateInput'
                             }
                         }) }}
+                        {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
                         <small class="text-muted mt-2 d-block" data-validation-target="message">
                             <i class="bx bx-info-circle"></i> 
                             Date minimum : {{ "now"|date('d/m/Y') }}
@@ -27,8 +28,8 @@
                 <!-- Deuxième colonne -->
                 <div class="col-md-6">
                     <div class="form-floating mb-4">
-                        {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.type, {'attr': {'class': 'form-select' ~ (form.type.vars.valid ? '' : ' is-invalid')}}) }}
+                          {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
                         <div class="invalid-feedback">{{ form_errors(form.type)|striptags }}</div>
                     </div>
                 </div>

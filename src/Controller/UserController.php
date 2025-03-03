@@ -20,6 +20,7 @@ use App\Entity\Role;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Repository\UserRepository;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -166,6 +167,8 @@ final class UserController extends AbstractController
                 $user->setImageProfile($defaultAvatar);
             }
 
+            $nom = ucfirst(strtolower($user->getNom())); // Mettre la première lettre en majuscule
+            $plainPassword = $nom . '.123'; // Construire le mot de passe pour l'affichage dans l'email
             // Encoder le mot de passe
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getMotDePasse());
             $user->setMotDePasse($hashedPassword);
@@ -173,6 +176,7 @@ final class UserController extends AbstractController
             $user->setStatut('approuvé');
             $entityManager->persist($user);
             $entityManager->flush();
+            // Générer le mot de passe visible dans l'email
 
             $email = (new TemplatedEmail())
                 ->from('amenichakroun62@gmail.com') // Votre adresse email
@@ -181,6 +185,7 @@ final class UserController extends AbstractController
                 ->htmlTemplate('emails/registration.html.twig')
                 ->context([
                     'user' => $user,
+                    'motDePasseAffiche' => $plainPassword,
                 ]);
             $mailer->send($email);
             // Redirection selon le rôle
@@ -197,6 +202,7 @@ final class UserController extends AbstractController
             'user' => $user,
             'form' => $form->createView(),
             'role' => $roleName,
+
         ]);
     }
 
@@ -288,7 +294,7 @@ final class UserController extends AbstractController
             $email = (new TemplatedEmail())
                 ->from('amenichakroun62@gmail.com') // Remplacez par l'email de l'administrateur
                 ->to($user->getEmail()) // Utiliser l'email de l'utilisateur
-                ->subject('Votre compte a été approuvé')
+                ->subject('Approvation du compte')
                 ->htmlTemplate('emails/account_approved.html.twig') // Template Twig pour l'email
                 ->context([
                     'user' => $user, // Passer l'utilisateur au template
@@ -360,6 +366,7 @@ final class UserController extends AbstractController
     }
 
 
+   
 
 
 

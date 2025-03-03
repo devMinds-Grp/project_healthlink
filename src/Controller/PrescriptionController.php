@@ -78,4 +78,5 @@ final class PrescriptionController extends AbstractController
 
         return $this->redirectToRoute('app_prescription_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }

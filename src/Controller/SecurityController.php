@@ -12,18 +12,108 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Form\PatientType;
 use App\Form\MedecinType;
 use App\Form\SoignantType;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Security\Core\Security; // Ajouter cette importation
+
 use App\Entity\Role;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 class SecurityController extends AbstractController
 {
+    #[Route('/connect/google', name: 'connect_google')]
+    public function connectGoogle(ClientRegistry $clientRegistry): RedirectResponse
+    {
+        // Redirige vers Google pour l'authentification
+        return $clientRegistry->getClient('google')->redirect([
+            'openid',
+            'email',
+            'profile' // Scopes nécessaires
+        ], []);
+    }
+
+    #[Route('/connect/google/check', name: 'connect_google_check')]
+public function connectGoogleCheck(
+    Request $request,
+    ClientRegistry $clientRegistry,
+    EntityManagerInterface $entityManager,
+    UserPasswordHasherInterface $passwordHasher,
+    Security $security // Ajouter cette dépendance
+): Response {
+    $client = $clientRegistry->getClient('google');
+    try {
+        // Récupère les informations de l'utilisateur depuis Google
+        $googleUser = $client->fetchUser();
+
+        $email = $googleUser->getEmail();
+        $nom = $googleUser->getLastName();
+        $prenom = $googleUser->getFirstName();
+
+        // Vérifie si l'utilisateur existe déjà
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        if (!$user) {
+            // Crée un nouvel utilisateur uniquement avec le rôle Patient
+            $user = new User();
+            $user->setEmail($email);
+            $user->setNom($nom ?: 'Inconnu');
+            $user->setPrenom($prenom ?: 'Inconnu');
+
+            // Générer un mot de passe aléatoire
+            $randomPassword = bin2hex(random_bytes(10));
+            $hashedPassword = $passwordHasher->hashPassword($user, $randomPassword);
+            $user->setMotDePasse($hashedPassword);
+
+            // Assigner le rôle "Patient"
+            $rolePatient = $entityManager->getRepository(Role::class)->findOneBy(['nom' => 'Patient']);
+            if (!$rolePatient) {
+                throw $this->createNotFoundException("Le rôle 'Patient' n'existe pas.");
+            }
+            $user->setRole($rolePatient);
+
+            // Statut approuvé immédiatement pour les patients
+            $user->setStatut('approuvé');
+
+            // Générer une image de profil par défaut avec initiales
+            $initials = strtoupper(substr($user->getNom(), 0, 1) . substr($user->getPrenom(), 0, 1));
+            $defaultAvatar = $this->generateInitialAvatar($initials);
+            $user->setImageProfile($defaultAvatar);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+        } else {
+            // Vérifier que l'utilisateur existant est un Patient
+            if ($user->getRole()->getNom() !== 'Patient') {
+                $this->addFlash('error', 'La connexion avec Google est réservée aux patients.');
+                return $this->redirectToRoute('app_login');
+            }
+        }
+
+        // Connecter l'utilisateur manuellement
+        $security->login($user, 'form_login', 'main');
+
+        // Rediriger vers la page d'accueil
+        return $this->redirectToRoute('app_home');
+
+    } catch (\Exception $e) {
+        $this->addFlash('error', 'Erreur lors de la connexion avec Google : ' . $e->getMessage());
+        return $this->redirectToRoute('app_login');
+    }
+}
+    #[Route('/not-approved', name: 'app_not_approved')]
+    public function notApproved(): Response
+    {
+        return $this->render('security/not_approved.html.twig');
+    }
     #[Route(path: '/', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
@@ -202,12 +292,16 @@ class SecurityController extends AbstractController
         $user->setResetCode((string) $code); // Assurez-vous que le code est stocké en tant que chaîne de caractères
         $entityManager->flush();
         // Création de l'email
-        $emailMessage = (new Email())
+        $emailMessage = (new TemplatedEmail())
             ->from('amenichakroun62@gmail.com')  // Remplace par ton adresse d'expéditeur
             ->to($email)
             ->subject('Code de récupération de mot de passe')
-            ->text("Votre code de récupération est : $code");
-
+            // ->text("Votre code de récupération est : $code");
+            ->htmlTemplate('emails/reset_code.html.twig')
+            ->context([
+                'user' => $user,
+                'code' => $code, // Passer l'utilisateur au template
+            ]);
         try {
             $mailer->send($emailMessage);
             return new JsonResponse(['message' => 'Email envoyé avec succès', 'code' => $code], 200);
