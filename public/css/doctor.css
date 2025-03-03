@@ -1,0 +1,201 @@
+body{
+    margin-top:20px;
+    background:#f4ffff;
+}
+.candidates-listing-bg {
+  padding: 210px 0px 60px 0px;
+  background-size: cover;
+  position: relative;
+  background-position: center center;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label:before {
+  background-color: #ff4f6c;
+  border-color: #ff4f6c;
+}
+
+.custom-checkbox .custom-control-input:focus ~ .custom-control-label:before {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.candidates-img img {
+  max-width: 20px;
+}
+
+.fav-icon i {
+  -webkit-text-stroke: 2px #ff4f6c;
+  -webkit-text-fill-color: transparent;
+}
+
+.fav-icon i:hover {
+  -webkit-text-stroke: 0px #ff4f6c;
+  -webkit-text-fill-color: #ff4f6c;
+}
+
+.candidates-list-desc {
+  overflow: hidden;
+}
+
+.candidates-right-details {
+  position: absolute;
+  top: 0;
+  right: 20px;
+}
+
+.candidates-item-desc {
+  margin-left: 45px;
+}
+
+.list-grid-item {
+  border: 1px solid #ececec;
+  border-radius: 6px;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.list-grid-item:hover {
+  -webkit-box-shadow: 0 0 20px 0px rgba(47, 47, 47, 0.09);
+          box-shadow: 0 0 20px 0px rgba(47, 47, 47, 0.09);
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-color: transparent;
+}
+
+.left-sidebar .card-body {
+    border-bottom: 1px solid #ececec;
+}
+
+.custom-control {
+    margin: 11px 20px;
+}
+
+.card-header {
+    background-color: transparent;
+    margin-bottom: 0 !important;
+}
+
+.pagination.job-pagination .page-link {
+  border-radius: 50% !important;
+  margin: 0 4px;
+  height: 46px;
+  width: 45px;
+  line-height: 29px;
+  text-align: center;
+  color: #777777;
+}
+
+.page-item.active .page-link {
+  background-color: #ff4f6c;
+  border-color: #ff4f6c;
+  color: #ffffff !important;
+}
+
+.f-14 {
+    font-size: 14px;
+}
+
+.btn-outline {
+    color: #ff4f6c;
+    border-color: #ff4f6c;
+}
+.btn-sm {
+    padding: 8px 22px;
+}
+
+/* Ajoutez ces styles à votre fichier CSS */
+
+/* Style pour la barre de recherche */
+.search-bar .form-control {
+    border-radius: 20px;
+    border: 1px solid #ff4f6c;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.search-bar .form-control:focus {
+    box-shadow: 0 0 5px rgba(255, 79, 108, 0.5);
+    border-color: #ff4f6c;
+}
+
+/* Style pour les images des médecins */
+.candidates-img img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 2px solid #ff4f6c;
+    padding: 3px;
+}
+
+/* Style pour le bouton "Prendre un RDV" */
+.btn-outline {
+    color: #ff4f6c;
+    border-color: #ff4f6c;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background-color: #ff4f6c;
+    color: #fff;
+}
+
+/* Amélioration des cartes de médecin */
+.list-grid-item {
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.list-grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour les titres des médecins */
+.candidates-list-desc h5 a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.candidates-list-desc h5 a:hover {
+    color: #ff4f6c;
+}
+
+/* Style pour les informations supplémentaires */
+.candidates-list-desc ul li {
+    color: #777;
+    font-size: 14px;
+}
+
+.candidates-list-desc ul li i {
+    margin-right: 5px;
+    color: #ff4f6c;
+}
+
+/* Style pour la pagination */
+.pagination.job-pagination .page-link {
+    border-radius: 50%;
+    margin: 0 4px;
+    height: 46px;
+    width: 45px;
+    line-height: 29px;
+    text-align: center;
+    color: #777;
+    transition: all 0.3s ease;
+}
+
+.pagination.job-pagination .page-link:hover {
+    background-color: #ff4f6c;
+    color: #fff;
+}
+
+.list-grid-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.list-grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}

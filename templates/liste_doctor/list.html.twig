@@ -1,0 +1,75 @@
+{# templates/liste_doctor/list.html.twig #}
+{% extends 'home/base.html.twig' %}
+
+{% block title %}List of Doctors{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }} {# Include parent stylesheets #}
+    <style>
+        .doctors-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .doctor-card {
+            flex: 1 1 calc(33.333% - 40px); /* Three cards per row with gap */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .doctor-card img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+        }
+        .doctor-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .doctor-card p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .doctor-card p strong {
+            color: #333;
+        }
+        .no-doctors {
+            text-align: center;
+            color: #777;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center my-4">List of Doctors</h1>
+        <div class="doctors-list">
+            {% for doctor in doctors %}
+                <div class="doctor-card">
+                    {% if doctor.imageprofile %}
+                        <img src="{{ asset('uploads/profile_images/' ~ doctor.imageprofile) }}" alt="Profile Image">
+                    {% endif %}
+                    <h2>{{ doctor.nom }} {{ doctor.prenom }}</h2>
+                    <p><strong>Speciality:</strong> {{ doctor.speciality }}</p>
+                    <p><strong>Email:</strong> {{ doctor.email }}</p>
+                    <p><strong>Phone:</strong> {{ doctor.numTel }}</p>
+                    <p><strong>Address:</strong> {{ doctor.adresse }}</p>
+                </div>
+            {% else %}
+                <p class="no-doctors">No doctors found.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

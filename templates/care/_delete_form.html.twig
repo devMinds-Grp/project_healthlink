@@ -1,0 +1,45 @@
+<!-- Form to trigger the modal -->
+<form id="deleteForm" method="post" action="{{ path('app_care_delete', {'id': care.id}) }}" style="display: none;">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ care.id) }}">
+</form>
+
+<!-- Button to trigger the modal -->
+<button class="btn btn-sm btn-outline-danger" id="deleteBtn">
+    <i class="bi bi-trash"></i> Delete
+</button>
+
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- JavaScript for SweetAlert2 Integration -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var deleteBtn = document.getElementById("deleteBtn");
+        var deleteForm = document.getElementById("deleteForm");
+
+        // Attach click event to the delete button
+        deleteBtn.addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default button behavior
+
+            // SweetAlert2 confirmation popup
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545', // Red color for the confirm button
+                cancelButtonColor: '#6c757d', // Gray color for the cancel button
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form if the user confirms
+                    deleteForm.submit();
+                }
+            });
+        });
+    });
+</script>

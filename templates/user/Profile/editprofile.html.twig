@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User - Mazer Admin Dashboard</title>
+    
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo siteweb.png') }}">
+    <!-- CSS here -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/themify-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/nice-select.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/flaticon.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/gijgo.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/slicknav.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    
+    <link rel="shortcut icon" href="{{ asset('compiled/svg/favicon.svg') }}" type="image/x-icon">    
+    <link rel="stylesheet" href="{{ asset('compiled/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/app-dark.css') }}">
+    <style>
+        /* Header */
+        .header-area {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            max-width: 600px; /* Limite la largeur de la carte */
+            margin: 0 auto; /* Centre la carte horizontalement */
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .avatar img {
+            border-radius: 50%;
+            border: 3px solid #007bff;
+            padding: 3px;
+        }
+
+        /* Form */
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* Logout Section */
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+
+        .mt-3 a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .mt-3 a:hover {
+            color: #0056b3;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card, .avatar, .form-group {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo-img img {
+                margin-left: 0 !important;
+            }
+
+            .menu_wrap {
+                display: none;
+            }
+
+            .mobile_menu {
+                display: block;
+            }
+
+            .col-lg-4, .col-lg-8 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* Flexbox */
+        .d-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Colors */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .card {
+            background-color: #ffffff;
+        }
+
+        /* Transitions */
+        a, button, input, .form-control {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-area">
+            <div id="sticky-header" class="main-header-area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-xl-3 col-lg-3">
+                            <div class="logo-img">
+                                <a href="{{ path('app_home') }}">
+                                    <img src="{{ asset('img/logo siteweb.png') }}" alt="" width="130" height="110" style="margin-left: -100px;">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xl-9 col-lg-9">
+                            <div class="menu_wrap d-none d-lg-block">
+                                <div class="menu_wrap_inner d-flex align-items-center justify-content-end">
+                                    <div class="main-menu">
+                                        <nav>
+                                            <ul id="navigation">
+                                                <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                                                <li><a href="{{ path('forum_index') }}">Forum</a></li>
+                                                <li><a href="{{ path('app_care_index') }}">Soins</a></li>
+                                                <li><a href="{{ path('app_doctor_list') }}">Médecin</a></li>
+                                                <li><a href="{{ path('app_prescription_new') }}">Prescription</a></li>
+                                                <li><a href="{{ path('app_reclamation_index') }}">Reclamation</a></li>
+                                                <li><a href="{{ path('app_blood_donation_index') }}">Don song</a></li>
+                                                {% if app.user %}
+                                                    <li class="nav-item">
+                                                        <a href="{{ path('app_logout') }}" class="nav-link">
+                                                            <i class="fas fa-sign-out-alt"></i> {# Icône de déconnexion #}
+                                                            Déconnexion
+                                                        </a>
+                                                    </li>
+                                                {% endif %}  
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mobile_menu d-block d-lg-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="section" style="margin-top: 150px;">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-center">Modifer le profile</h2>
+                        <form method="post" class="form form-vertical" enctype="multipart/form-data">
+                            <div class="form-body">
+                                <div class="row">
+                                    {% for field in form %}
+                                        <div class="col-12">
+                                            <div class="form-group has-icon-left">
+                                                <label for="{{ field.vars.id }}">{{ field.vars.label }}</label>
+                                                <div class="position-relative">
+                                                    {{ form_widget(field, {'attr': {'class': 'form-control', 'id': field.vars.id, 'placeholder': field.vars.label}}) }}
+                                                    {{ form_errors(field) }}
+                                                    <div class="form-control-icon">
+                                                        {% if field.vars.name == 'email' %}
+                                                            <i class="bi bi-envelope"></i>
+                                                        {% elseif field.vars.name == 'password' %}
+                                                            <i class="bi bi-lock"></i>
+                                                        {% elseif field.vars.name == 'phone' %}
+                                                            <i class="bi bi-phone"></i>
+                                                        {% else %}
+                                                            <i class="bi bi-person"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    {% endfor %}
+                                      
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <a href="{{ path('app_profile') }}" class="btn btn-secondary">
+                                            <i class="bi bi-arrow-left"></i> Retour au profile 
+                                        </a>
+                                        <button type="submit" class="btn btn-primary me-1 mb-1">Mettre à jour</button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                            Changer le mot de passe
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">© 2023 Mazer Admin Dashboard. Tous droits réservés.</span>
+        </div>
+    </footer>
+
+    <!-- Scripts JS -->
+    <script src="{{ asset('static/js/initTheme.js') }}"></script>
+    <script src="{{ asset('static/js/components/dark.js') }}"></script>
+    <script src="{{ asset('extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('compiled/js/app.js') }}"></script>
+    <script src="{{ asset('js/vendor/modernizr-3.5.0.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/jquery-1.12.4.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let passwordField = document.getElementById("motDePasse_first");
+            let toggleButton = document.createElement("button");
+            toggleButton.type = "button";
+            toggleButton.innerHTML = "👁";
+            toggleButton.style.marginLeft = "10px";
+            
+            passwordField.parentNode.appendChild(toggleButton);
+        
+            toggleButton.addEventListener("click", function() {
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                } else {
+                    passwordField.type = "password";
+                }
+            });
+        });
+        </script>
+        
+</body>
+
+</html>

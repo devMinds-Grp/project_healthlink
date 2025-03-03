@@ -1,0 +1,148 @@
+{% extends 'home/base.html.twig' %}
+
+{% block body %}
+<div class="container appointment-details" style="margin-top: 220px; margin-bottom: 500px;">
+    <h1 class="mb-4 text-center">Détails du Rendez-vous</h1>
+
+    <div class="text-left mb-4">
+        <a href="{{ path('app_appointment_index') }}" class="btn btn-custom-secondary">Retour à la liste</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Nom du docteur</th>
+                        <td>{{ appointment.doctor.nom }} {{ appointment.doctor.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom du patient</th>
+                        <td>{{ appointment.patient.nom }} {{ appointment.patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>{{ appointment.date ? appointment.date|date('Y-m-d') : 'Non spécifiée' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Statut</th>
+                        <td>
+                            <span class="badge {{ appointment.statut.value == 'confirme' ? 'bg-success' : 'bg-warning' }}">
+                                {{ appointment.statut.label() }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td>{{ appointment.type.label() }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-end gap-2">
+        <a href="{{ path('app_appointment_edit', {'id': appointment.id}) }}" class="btn btn-custom-warning">Modifier</a>
+        {{ include('appointment/_delete_form.html.twig') }}
+    </div>
+</div>
+
+<style>
+    .appointment-details {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        width: 30%;
+    }
+
+    .table td {
+        background-color: #ffffff;
+    }
+
+    /* Styles personnalisés pour les boutons */
+    .btn-custom-warning,
+    .btn-custom-danger,
+    .btn-custom-secondary {
+        min-width: 120px;
+        height: 50px;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: 600;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        text-align: center;
+        display: inline-block;
+        width: auto;
+    }
+
+    .btn-custom-warning {
+        background-color: rgb(63, 158, 79);
+        color: #000;
+    }
+
+    .btn-custom-warning:hover {
+        background-color: rgb(63, 158, 79);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-custom-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .btn-custom-danger:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-custom-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn-custom-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .d-flex {
+        display: flex;
+    }
+
+    .justify-content-start {
+        justify-content: flex-start;
+    }
+
+    .justify-content-end {
+        justify-content: flex-end;
+    }
+
+    .gap-2 {
+        gap: 10px;
+    }
+</style>
+{% endblock %}

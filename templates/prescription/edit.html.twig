@@ -1,0 +1,97 @@
+{% extends 'home/base.html.twig' %}
+
+{% block body %}
+<div class="container prescription-details" style="margin-top: 150px; margin-bottom: 100px;">
+    <h1 class="mb-4 text-center">Modifier la Prescription</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ include('prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-end gap-2">
+        <a href="{{ path('app_prescription_index') }}" class="btn btn-custom-secondary">Retour à la liste</a>
+        {{ include('prescription/_delete_form.html.twig') }}
+    </div>
+</div>
+
+<style>
+    .prescription-details {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .btn-custom-warning,
+    .btn-custom-danger,
+    .btn-custom-secondary {
+        min-width: 120px; 
+        height: 50px;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: 600;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        text-align: center;
+        display: inline-block;
+        width: auto;
+    }
+
+    .btn-custom-warning {
+        background-color: rgb(63, 158, 79);
+        color: #000;
+    }
+
+    .btn-custom-warning:hover {
+        background-color: rgb(63, 158, 79);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-custom-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .btn-custom-danger:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-custom-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn-custom-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .d-flex {
+        display: flex;
+    }
+
+    .justify-content-end {
+        justify-content: flex-end;
+    }
+
+    .gap-2 {
+        gap: 10px;
+    }
+</style>
+{% endblock %}

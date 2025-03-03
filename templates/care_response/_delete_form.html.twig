@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Confirmation Popup</title>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Bootstrap CSS (optional, for styling) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Hidden Delete Form -->
+    <form id="deleteResponseForm" method="POST" action="" style="display: none;">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete-response') }}">
+    </form>
+
+    <!-- Delete Button Example -->
+    <button class="delete-response-btn btn btn-danger" data-response-id="1">Delete Response</button>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Bootstrap JS (optional, for styling) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for Delete Confirmation -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var deleteResponseForm = document.getElementById('deleteResponseForm');
+
+            // Attach click event to all delete buttons
+            document.querySelectorAll('.delete-response-btn').forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default behavior
+
+                    var responseId = this.getAttribute('data-response-id');
+                    var deleteUrl = `/care-response/${responseId}/delete`; // Ensure this matches your route
+
+                    // SweetAlert2 confirmation popup
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Set the form action and submit the form
+                            deleteResponseForm.action = deleteUrl;
+                            deleteResponseForm.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

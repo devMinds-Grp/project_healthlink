@@ -1,0 +1,47 @@
+{% extends 'home/base.html.twig' %}
+
+{% block title %}New Forum{% endblock %}
+
+{% block body %}
+    {#  {% form_theme form 'form_theme.html.twig' %}#}
+    <!-- bradcam_area_start  -->
+    <div class="bradcam_area breadcam_bg_1">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="bradcam_text">
+                        <h3>Forum</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card w-50">
+            <div class="card-body">
+                <h1 class="card-title text-center">Create new Forum</h1>
+
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
+
+                <div class="mb-3">
+                    {{ form_label(form.Title, 'Title', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.Title, {'attr': {'class': 'form-control', 'placeholder': 'Enter the title'}}) }}
+                    {{ form_errors(form.Title) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.Description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'placeholder': 'Enter the description', 'rows': 3}}) }}
+                    {{ form_errors(form.Description) }}
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
+                    <a href="{{ path('forum_index') }}" class="btn btn-secondary">Back to list</a>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        
+        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+        
+        <div class="mb-3">
+            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.description, {
+                'attr': {
+                    'class': 'form-control' ~ (form.description.vars.errors|length > 0 ? ' is-invalid' : '')
+                }
+            }) }}
+            {% if form.description.vars.errors|length > 0 %}
+                <div class="invalid-feedback">
+                    {% for error in form.description.vars.errors %}
+                        {{ error.message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Add bloodDonation field above the button -->
+        <div class="mb-3">
+            {{ form_label(form.bloodDonation, 'Lieu de demande', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.bloodDonation, {
+                'attr': {
+                    'class': 'form-control' ~ (form.bloodDonation.vars.errors|length > 0 ? ' is-invalid' : '')
+                }
+            }) }}
+            {% if form.bloodDonation.vars.errors|length > 0 %}
+                <div class="invalid-feedback">
+                    {% for error in form.bloodDonation.vars.errors %}
+                        {{ error.message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit button remains unchanged -->
+        <button type="submit" class="btn btn-primary w-100">
+            {{ button_label|default('Save') }}
+        </button>
+        
+        {{ form_end(form) }}
+    </div>
+</div>

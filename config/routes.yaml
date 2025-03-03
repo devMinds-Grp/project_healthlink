@@ -1,0 +1,12 @@
+controllers:
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+app_home:
+  path: /home
+  controller: App\Controller\HomeController::index
+
+app_admin:
+  path: /admin
+  controller: App\Controller\AdminController::index

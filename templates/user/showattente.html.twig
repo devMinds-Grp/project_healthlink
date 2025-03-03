@@ -1,0 +1,62 @@
+{% extends 'home/admin_base.html.twig' %}
+
+{% block title %}Liste des utilisateurs en attente{% endblock %}
+
+{% block body %}
+<section>
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Utilisateurs en attente</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set users_en_attente = users|filter(user => user.statut == 'en attente') %}
+                        
+                        {% if users_en_attente is not empty %}
+                            {% for user in users_en_attente %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.nom }}</td>
+                                    <td>{{ user.prenom }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.role.nom }}</td>
+                                    <td>
+                                        <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-sm btn-primary me-2">
+                                            <i class="bi bi-eye"></i> Voir
+                                        </a>
+                                        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-success me-2">
+                                            <i class="bi bi-check-circle"></i> Approuver
+                                        </a>
+                                        
+                                        <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir refuser cet utilisateur ?');" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-x-circle"></i> Refuser
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun utilisateur en attente</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

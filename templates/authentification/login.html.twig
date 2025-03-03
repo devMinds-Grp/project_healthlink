@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    
+    <link rel="shortcut icon" href="{{ asset('img/logo siteweb.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ asset('compiled/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/app-dark.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/auth.css') }}">
+
+</head>
+
+<body>
+    <script src="{{ asset('static/js/initTheme.js') }}"></script>
+    
+    <div id="auth">
+        <div class="row h-100">
+            <div class="col-lg-5 col-12">
+                <div id="auth-left">
+                    <h2 class="text-center">Connexion</h2>
+
+                   
+
+                    <form method="post" action="{{ path('app_login') }}">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group has-icon-left">
+                                        <label for="email">Email</label>
+                                        <div class="position-relative">
+                                            <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+                                            <div class="form-control-icon">
+                                                <i class="bi bi-envelope"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group has-icon-left">
+                                        <label for="motDePasse">Mot de passe</label>
+                                        <div class="position-relative">
+                                            <input type="password" name="motDePasse" id="motDePasse" class="form-control" placeholder="Mot de passe" required>
+                                            <div class="form-control-icon">
+                                                <i class="bi bi-lock"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary me-1 mb-1">Se connecter</button>
+                                    <button type="reset" class="btn btn-light-secondary me-1 mb-1">Réinitialiser</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <p>Pas encore inscrit ? <a href="{{ path('app_register') }}">Inscrivez-vous</a>.</p>
+                </div>
+            </div>
+            <div class="col-lg-7 d-none d-lg-block">
+                <div id="auth-right"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

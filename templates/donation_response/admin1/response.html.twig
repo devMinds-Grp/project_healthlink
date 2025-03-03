@@ -1,0 +1,218 @@
+{% extends 'home/admin_base.html.twig' %}
+
+{% block title %}Admin - Reponses de Dons{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ asset('compiled/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/app-dark.css') }}">
+    <link rel="stylesheet" href="{{ asset('compiled/css/iconly.css') }}">
+    <style>
+        .btn-sm {
+            margin: 2px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+   
+    /* General Styling */
+    .btn-sm {
+        margin: 2px;
+        padding: 5px 10px;
+        font-size: 0.875rem;
+        border-radius: 4px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-sm:hover {
+        opacity: 0.9;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+    /* Table Styling */
+    .table-responsive {
+        overflow-x: auto;
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th,
+    .table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .table tbody tr td {
+        vertical-align: middle;
+    }
+
+    /* Actions Column */
+    .table tbody tr td:last-child {
+        white-space: nowrap;
+    }
+
+    /* Footer Styling */
+    .footer {
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        margin-top: 20px;
+    }
+
+    .footer .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .footer a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .footer a:hover {
+        text-decoration: underline;
+    }
+
+    .page-heading {
+    margin-left: -260px; /* Match the card's left margin */
+    width: calc(100% + 300px); /* Match the card's width */
+    text-align: center; /* Center the title text */
+}
+
+    /* Card Styling */
+    .card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-left: -260px; /* Move the card to the left */
+        width: calc(100% + 300px); /* Increase the width of the card */
+        max-width: none; /* Remove any max-width restrictions */
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        padding: 15px 20px;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .card-header h4 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #343a40;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+  
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+            <div class="page-heading">
+                <h3>Admin - Reponses de Dons</h3>
+            </div>
+
+            <div class="page-content">
+                <section class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Listes des reponses</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-lg">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Description</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                         {% for DonationResponse in DonationResponse %}
+
+                                            <tr>
+                                                <td>{{ DonationResponse.id }}</td>
+                                                <td>{{ DonationResponse.Description }}</td>
+                                                <td>
+                                                    <a href="{{ path('approve_blood_donation', { 'id': DonationResponse.id }) }}" class="btn btn-success btn-sm">Approuver</a>
+                                                    <a href="{{ path('delete_blood_donation', { 'id': DonationResponse.id }) }}" class="btn btn-danger btn-sm">Supprimer</a>
+                                                </td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="6" class="text-center">Pas de demandes.</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer>
+               
+                </div>
+            </footer>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ asset('static/js/initTheme.js') }}"></script>
+    <script src="{{ asset('static/js/components/dark.js') }}"></script>
+    <script src="{{ asset('extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('compiled/js/app.js') }}"></script>
+    <script src="{{ asset('extensions/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('static/js/pages/dashboard.js') }}"></script>
+{% endblock %}

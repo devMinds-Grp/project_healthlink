@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<title>CareResponse index</title>
+
+{% block body %}
+<div class="container" style="margin-top: 220px;margin-bottom: 500px;">
+    <h1>CareResponse index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date_rep</th>
+                <th>Contenu_rep</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for care_response in care_responses %}
+            <tr>
+                <td>{{ care_response.id }}</td>
+                <td>{{ care_response.dateRep ? care_response.dateRep|date('Y-m-d') : '' }}</td>
+                <td>{{ care_response.contenuRep }}</td>
+                <td>
+                    <a href="{{ path('app_care_response_show', {'id': care_response.id}) }}">show</a>
+                    <a href="{{ path('app_care_response_edit', {'id': care_response.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_care_response_new') }}">Create new</a>
+{% endblock %}
