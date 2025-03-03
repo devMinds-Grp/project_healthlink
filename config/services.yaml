@@ -12,6 +12,7 @@ parameters:
     twilio_sid: 'AC4d47c9846983f4a9198e28adf8d6fd02'
     twilio_auth_token: '5b894c385035596f899e61530295ff2c'
     twilio_phone_number: '16507299537'
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
 imports:
     - { resource: 'mots_inappropries.yaml' }

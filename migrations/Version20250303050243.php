@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250303044213 extends AbstractMigration
+final class Version20250303050243 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -25,10 +25,12 @@ final class Version20250303044213 extends AbstractMigration
         $this->addSql('CREATE TABLE care (id INT AUTO_INCREMENT NOT NULL, caregiver_id INT DEFAULT NULL, patient_id INT DEFAULT NULL, care_user_id INT DEFAULT NULL, date DATE NOT NULL, address VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, INDEX IDX_6113A84541946261 (caregiver_id), INDEX IDX_6113A8456B899279 (patient_id), INDEX IDX_6113A845E70F4DA0 (care_user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE care_response (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, care_id INT NOT NULL, patient_id INT DEFAULT NULL, soignant_id INT DEFAULT NULL, date_rep DATE NOT NULL, contenu_rep VARCHAR(255) DEFAULT NULL, INDEX IDX_6888AE46A76ED395 (user_id), INDEX IDX_6888AE46F270FD45 (care_id), INDEX IDX_6888AE466B899279 (patient_id), INDEX IDX_6888AE46453B4D3C (soignant_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE category (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE chat_messages (id INT AUTO_INCREMENT NOT NULL, sender_id INT NOT NULL, recipient_id INT NOT NULL, message LONGTEXT NOT NULL, created_at DATETIME NOT NULL, INDEX IDX_EF20C9A6F624B39D (sender_id), INDEX IDX_EF20C9A6E92F8F78 (recipient_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE diagnostic (id INT AUTO_INCREMENT NOT NULL, diag_user_id INT DEFAULT NULL, fichier VARCHAR(255) NOT NULL, resultat VARCHAR(255) NOT NULL, INDEX IDX_FA7C8889CB3B5707 (diag_user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE donation_response (id INT AUTO_INCREMENT NOT NULL, blood_donation_id INT DEFAULT NULL, description VARCHAR(255) NOT NULL, INDEX IDX_F530148B9A49365F (blood_donation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE forum (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, date DATE NOT NULL, is_approved TINYINT(1) NOT NULL, INDEX IDX_852BBECDA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE forum_response (id INT AUTO_INCREMENT NOT NULL, forum_id INT DEFAULT NULL, description VARCHAR(255) NOT NULL, date DATE NOT NULL, INDEX IDX_1988861C29CCBAD0 (forum_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE notification (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, soignant_id INT DEFAULT NULL, patient_id INT DEFAULT NULL, chat_message_id INT DEFAULT NULL, message LONGTEXT NOT NULL, created_at DATETIME NOT NULL, is_read TINYINT(1) DEFAULT 0 NOT NULL, INDEX IDX_BF5476CAA76ED395 (user_id), INDEX IDX_BF5476CA453B4D3C (soignant_id), INDEX IDX_BF5476CA6B899279 (patient_id), INDEX IDX_BF5476CA948B568F (chat_message_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE pharmacy (id INT AUTO_INCREMENT NOT NULL, phar_user_id INT DEFAULT NULL, nom VARCHAR(255) NOT NULL, adresse VARCHAR(255) NOT NULL, num_tel VARCHAR(20) NOT NULL, type_pharmacie VARCHAR(255) NOT NULL, horaires VARCHAR(255) NOT NULL, INDEX IDX_D6C15C1EE3FC597A (phar_user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE prescription (id INT AUTO_INCREMENT NOT NULL, card_user_id INT DEFAULT NULL, nom_medicament VARCHAR(255) NOT NULL, dosage VARCHAR(255) NOT NULL, duree VARCHAR(255) NOT NULL, notes LONGTEXT NOT NULL, RDVCard_id INT NOT NULL, INDEX IDX_1FBFB8D9F07459E3 (card_user_id), INDEX IDX_1FBFB8D95641EA8B (RDVCard_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE rating (id INT AUTO_INCREMENT NOT NULL, forum_id INT NOT NULL, user_id INT DEFAULT NULL, stars INT NOT NULL, comment LONGTEXT DEFAULT NULL, INDEX IDX_D889262229CCBAD0 (forum_id), INDEX IDX_D8892622A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -47,10 +49,16 @@ final class Version20250303044213 extends AbstractMigration
         $this->addSql('ALTER TABLE care_response ADD CONSTRAINT FK_6888AE46F270FD45 FOREIGN KEY (care_id) REFERENCES care (id)');
         $this->addSql('ALTER TABLE care_response ADD CONSTRAINT FK_6888AE466B899279 FOREIGN KEY (patient_id) REFERENCES utilisateur (id)');
         $this->addSql('ALTER TABLE care_response ADD CONSTRAINT FK_6888AE46453B4D3C FOREIGN KEY (soignant_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE chat_messages ADD CONSTRAINT FK_EF20C9A6F624B39D FOREIGN KEY (sender_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE chat_messages ADD CONSTRAINT FK_EF20C9A6E92F8F78 FOREIGN KEY (recipient_id) REFERENCES utilisateur (id)');
         $this->addSql('ALTER TABLE diagnostic ADD CONSTRAINT FK_FA7C8889CB3B5707 FOREIGN KEY (diag_user_id) REFERENCES utilisateur (id)');
         $this->addSql('ALTER TABLE donation_response ADD CONSTRAINT FK_F530148B9A49365F FOREIGN KEY (blood_donation_id) REFERENCES blood_donation (id)');
         $this->addSql('ALTER TABLE forum ADD CONSTRAINT FK_852BBECDA76ED395 FOREIGN KEY (user_id) REFERENCES utilisateur (id)');
         $this->addSql('ALTER TABLE forum_response ADD CONSTRAINT FK_1988861C29CCBAD0 FOREIGN KEY (forum_id) REFERENCES forum (id)');
+        $this->addSql('ALTER TABLE notification ADD CONSTRAINT FK_BF5476CAA76ED395 FOREIGN KEY (user_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE notification ADD CONSTRAINT FK_BF5476CA453B4D3C FOREIGN KEY (soignant_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE notification ADD CONSTRAINT FK_BF5476CA6B899279 FOREIGN KEY (patient_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE notification ADD CONSTRAINT FK_BF5476CA948B568F FOREIGN KEY (chat_message_id) REFERENCES chat_messages (id)');
         $this->addSql('ALTER TABLE pharmacy ADD CONSTRAINT FK_D6C15C1EE3FC597A FOREIGN KEY (phar_user_id) REFERENCES utilisateur (id)');
         $this->addSql('ALTER TABLE prescription ADD CONSTRAINT FK_1FBFB8D9F07459E3 FOREIGN KEY (card_user_id) REFERENCES utilisateur (id)');
         $this->addSql('ALTER TABLE prescription ADD CONSTRAINT FK_1FBFB8D95641EA8B FOREIGN KEY (RDVCard_id) REFERENCES Appointment (id)');
@@ -76,10 +84,16 @@ final class Version20250303044213 extends AbstractMigration
         $this->addSql('ALTER TABLE care_response DROP FOREIGN KEY FK_6888AE46F270FD45');
         $this->addSql('ALTER TABLE care_response DROP FOREIGN KEY FK_6888AE466B899279');
         $this->addSql('ALTER TABLE care_response DROP FOREIGN KEY FK_6888AE46453B4D3C');
+        $this->addSql('ALTER TABLE chat_messages DROP FOREIGN KEY FK_EF20C9A6F624B39D');
+        $this->addSql('ALTER TABLE chat_messages DROP FOREIGN KEY FK_EF20C9A6E92F8F78');
         $this->addSql('ALTER TABLE diagnostic DROP FOREIGN KEY FK_FA7C8889CB3B5707');
         $this->addSql('ALTER TABLE donation_response DROP FOREIGN KEY FK_F530148B9A49365F');
         $this->addSql('ALTER TABLE forum DROP FOREIGN KEY FK_852BBECDA76ED395');
         $this->addSql('ALTER TABLE forum_response DROP FOREIGN KEY FK_1988861C29CCBAD0');
+        $this->addSql('ALTER TABLE notification DROP FOREIGN KEY FK_BF5476CAA76ED395');
+        $this->addSql('ALTER TABLE notification DROP FOREIGN KEY FK_BF5476CA453B4D3C');
+        $this->addSql('ALTER TABLE notification DROP FOREIGN KEY FK_BF5476CA6B899279');
+        $this->addSql('ALTER TABLE notification DROP FOREIGN KEY FK_BF5476CA948B568F');
         $this->addSql('ALTER TABLE pharmacy DROP FOREIGN KEY FK_D6C15C1EE3FC597A');
         $this->addSql('ALTER TABLE prescription DROP FOREIGN KEY FK_1FBFB8D9F07459E3');
         $this->addSql('ALTER TABLE prescription DROP FOREIGN KEY FK_1FBFB8D95641EA8B');
@@ -95,10 +109,12 @@ final class Version20250303044213 extends AbstractMigration
         $this->addSql('DROP TABLE care');
         $this->addSql('DROP TABLE care_response');
         $this->addSql('DROP TABLE category');
+        $this->addSql('DROP TABLE chat_messages');
         $this->addSql('DROP TABLE diagnostic');
         $this->addSql('DROP TABLE donation_response');
         $this->addSql('DROP TABLE forum');
         $this->addSql('DROP TABLE forum_response');
+        $this->addSql('DROP TABLE notification');
         $this->addSql('DROP TABLE pharmacy');
         $this->addSql('DROP TABLE prescription');
         $this->addSql('DROP TABLE rating');

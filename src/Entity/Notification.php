@@ -8,6 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'notification')]
 class Notification
 {
+    #[ORM\ManyToOne(targetEntity: CareResponse::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?CareResponse $careResponse = null; // Add this property
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -118,6 +122,16 @@ class Notification
     public function setChatMessage(?ChatMessage $chatMessage): self
     {
         $this->chatMessage = $chatMessage;
+        return $this;
+    }
+    public function getCareResponse(): ?CareResponse
+    {
+        return $this->careResponse;
+    }
+
+    public function setCareResponse(?CareResponse $careResponse): self
+    {
+        $this->careResponse = $careResponse;
         return $this;
     }
 }
