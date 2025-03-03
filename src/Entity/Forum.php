@@ -54,26 +54,29 @@ class Forum
     /**
      * @var Collection<int, ForumResponse>
      */
-    #[ORM\OneToMany(targetEntity: ForumResponse::class, mappedBy: 'forum',cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: ForumResponse::class, mappedBy: 'forum', cascade: ['remove'])]
     private Collection $ForomRep;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isApproved = false; // Par défaut, la publication n'est pas approuvée
 
-    public function isApproved(): bool
-    {
-        return $this->isApproved;
-    }
+    /**
+     * @var Collection<int, Rating>
+     */
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'forum', cascade: ['remove'])]
+    private Collection $ratings;
 
-    public function setIsApproved(bool $isApproved): self
-    {
-        $this->isApproved = $isApproved;
-        return $this;
-    }
+    /**
+     * @var Collection<int, Report>
+     */
+    #[ORM\OneToMany(targetEntity: Report::class, mappedBy: 'forum', cascade: ['remove'])]
+    private Collection $reports;
 
     public function __construct()
     {
         $this->ForomRep = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -157,5 +160,98 @@ class Forum
         }
 
         return $this;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->isApproved;
+    }
+
+    public function setIsApproved(bool $isApproved): static
+    {
+        $this->isApproved = $isApproved;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): static
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setForum($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): static
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getForum() === $this) {
+                $rating->setForum(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Report>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
+    }
+
+    public function addReport(Report $report): static
+    {
+        if (!$this->reports->contains($report)) {
+            $this->reports->add($report);
+            $report->setForum($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): static
+    {
+        if ($this->reports->removeElement($report)) {
+            // set the owning side to null (unless already changed)
+            if ($report->getForum() === $this) {
+                $report->setForum(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Vérifie si le forum a été signalé 3 fois ou plus.
+     */
+    public function isReportedThreeTimes(): bool
+    {
+        return count($this->reports) >= 3;
+    }
+
+    /**
+     * Vérifie si l'utilisateur a déjà signalé ce forum.
+     */
+    public function isReportedByUser(User $user): bool
+    {
+        foreach ($this->reports as $report) {
+            if ($report->getReportedBy()->getId() === $user->getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -30,6 +30,7 @@
                         <td>
                             <a href="{{ path('app_blood_donation_show', {'id': blood_donation.id}) }}" class="btn btn-info btn-sm">Voir</a>
                             <a href="{{ path('app_blood_donation_edit', {'id': blood_donation.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            <a href="{{ path('app_donation_response_new', {'id': blood_donation.id}) }}" class="btn btn-primary btn-sm">Répondre</a>
                         </td>
                     </tr>
                 {% else %}
@@ -37,7 +38,60 @@
                         <td colspan="6" class="text-center">Aucun enregistrement trouvé.</td>
                     </tr>
                 {% endfor %}
+                
             </tbody>
         </table>
+        <h5 class="mb-4 text-center">Partagez votre action de don de sang sur les réseaux sociaux !</h5>
+
+    <div class="social-share">
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}&quote=J'ai donné mon sang ! Venez sauver des vies !" target="_blank">Partager sur Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url={{ app.request.uri }}&text=J'ai donné mon sang ! Venez sauver des vies !" target="_blank" class="twitter">Partager sur Twitter</a>
+        <a href="https://www.instagram.com" target="_blank" class="instagram">Partager sur Instagram</a>
+    </div>
+
+    <style>
+        /* Style pour la section de partage social */
+        .social-share {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-share a {
+            background-color: #3b5998; /* Facebook */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .social-share a:hover {
+            background-color: #2d4373; /* Couleur sur hover pour Facebook */
+        }
+
+        .social-share a.twitter {
+            background-color: #1da1f2; /* Twitter */
+        }
+
+        .social-share a.twitter:hover {
+            background-color: #0d95e8; /* Couleur sur hover pour Twitter */
+        }
+
+        .social-share a.instagram {
+            background-color: #e4405f; /* Instagram */
+        }
+
+        .social-share a.instagram:hover {
+            background-color: #c13584; /* Couleur sur hover pour Instagram */
+        }
+
+        .social-share a:active {
+            transform: scale(0.98); /* Effet de pression sur les boutons */
+        }
+    </style>
     </div>
 {% endblock %}

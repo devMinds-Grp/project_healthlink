@@ -21,7 +21,7 @@
 
         <!-- Add bloodDonation field above the button -->
         <div class="mb-3">
-            {{ form_label(form.bloodDonation, 'Blood Donation', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_label(form.bloodDonation, 'Lieu de demande', {'label_attr': {'class': 'form-label'}}) }}
             {{ form_widget(form.bloodDonation, {
                 'attr': {
                     'class': 'form-control' ~ (form.bloodDonation.vars.errors|length > 0 ? ' is-invalid' : '')

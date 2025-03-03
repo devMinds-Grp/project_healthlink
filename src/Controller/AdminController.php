@@ -29,28 +29,41 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use App\Repository\UserRepository;
 
 
 final class AdminController extends AbstractController
 {
+
     #[Route('/admin', name: 'app_admin')]
-    public function index(): Response
+    public function index(UserRepository $userRepository): Response
     {
-        return $this->render('home/admin_base.html.twig', [
-            'controller_name' => 'AdminController',
+        $totalUsers = $userRepository->countTotalUsers();
+        $pendingUsers = $userRepository->countPendingUsers();
+        $doctors = $userRepository->countDoctors();
+        $caregivers = $userRepository->countCaregivers();
+        $doctorPatientPercentage = $userRepository->getDoctorAndPatientPercentage();
+        $pendingApprovedPercentage = $userRepository->getPendingAndApprovedPercentage();
+
+        return $this->render('home/statistic.html.twig', [
+            'totalUsers' => $totalUsers,
+            'pendingUsers' => $pendingUsers,
+            'doctors' => $doctors,
+            'caregivers' => $caregivers,
+            'doctorPercentage' => $doctorPatientPercentage['doctorPercentage'],
+            'patientPercentage' => $doctorPatientPercentage['patientPercentage'],
+            'pendingPercentage' => $pendingApprovedPercentage['pendingPercentage'],
+            'approvedPercentage' => $pendingApprovedPercentage['approvedPercentage'],
         ]);
     }
-    
     #[Route('/admin/blood-donations', name: 'app_admin_blood_donations')]
     public function listBloodDonations(EntityManagerInterface $em): Response
     {
         $bloodDonations = $em->getRepository(BloodDonation::class)->findAll();
-    
         return $this->render('blood_donation/admin1/list_blood_donations.html.twig', [
             'bloodDonations' => $bloodDonations,
         ]);
     }
-    
     // Remove or update the redundant method
     #[Route('/admin/blood_donation', name: 'app_admin_blood_donation')]
     public function indexx5(BloodDonationRepository $BloodDonationRepository): Response
@@ -67,42 +80,42 @@ final class AdminController extends AbstractController
         ]);
     }
     #[Route('/blood-donation/approve/{id}', name: 'approve_blood_donation')]
-public function approve(int $id, EntityManagerInterface $entityManager): Response
-{
-    $bloodDonation = $entityManager->getRepository(BloodDonation::class)->find($id);
+    public function approve(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $bloodDonation = $entityManager->getRepository(BloodDonation::class)->find($id);
 
-    if (!$bloodDonation) {
-        throw $this->createNotFoundException('Pas de demande de don trouvée pour cet ID');
+        if (!$bloodDonation) {
+            throw $this->createNotFoundException('Pas de demande de don trouvée pour cet ID');
+        }
+
+        // Exemple : Mettre à jour le statut
+        $bloodDonation->setStatus('approved');
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Demande approuvée avec succès.');
+
+        return $this->redirectToRoute('app_blood_donation_list');
     }
 
-    // Exemple : Mettre à jour le statut
-    $bloodDonation->setStatus('approved');
-    $entityManager->flush();
+    #[Route('/blood-donation/delete/{id}', name: 'delete_blood_donation')]
+    public function delete(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $bloodDonation = $entityManager->getRepository(BloodDonation::class)->find($id);
 
-    $this->addFlash('success', 'Demande approuvée avec succès.');
+        if (!$bloodDonation) {
+            throw $this->createNotFoundException('Pas de demande de don trouvée pour cet ID');
+        }
 
-    return $this->redirectToRoute('app_blood_donation_list');
-}
+        $entityManager->remove($bloodDonation);
+        $entityManager->flush();
 
-#[Route('/blood-donation/delete/{id}', name: 'delete_blood_donation')]
-public function delete(int $id, EntityManagerInterface $entityManager): Response
-{
-    $bloodDonation = $entityManager->getRepository(BloodDonation::class)->find($id);
+        $this->addFlash('success', 'Demande supprimée avec succès.');
 
-    if (!$bloodDonation) {
-        throw $this->createNotFoundException('Pas de demande de don trouvée pour cet ID');
+        return $this->redirectToRoute('app_admin_blood_donation');
     }
 
-    $entityManager->remove($bloodDonation);
-    $entityManager->flush();
-
-    $this->addFlash('success', 'Demande supprimée avec succès.');
-
-    return $this->redirectToRoute('app_admin_blood_donation');
-}
 
 
-   
     #[Route('/admin/category/reclamation', name: 'app_admin_category_reclamation')]
     public function index5(CategoryRepository $categoryRepository): Response
     {
@@ -138,7 +151,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
     #[Route('/admin/forum/{id}/approve', name: 'admin_forum_approve', methods: ['POST'])]
     public function approveForum(Request $request, Forum $forum, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('approve'.$forum->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('approve' . $forum->getId(), $request->request->get('_token'))) {
             $forum->setIsApproved(true);
             $entityManager->flush();
         }
@@ -149,7 +162,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
     #[Route('/admin/forum/{id}/disapprove', name: 'admin_forum_disapprove', methods: ['POST'])]
     public function disapproveForum(Request $request, Forum $forum, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('disapprove'.$forum->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('disapprove' . $forum->getId(), $request->request->get('_token'))) {
             $forum->setIsApproved(false);
             $entityManager->flush();
         }
@@ -160,7 +173,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
     #[Route('/admin/forum/{id}/delete', name: 'admin_forum_delete', methods: ['POST'])]
     public function deleteForum(Request $request, Forum $forum, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$forum->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $forum->getId(), $request->request->get('_token'))) {
             $entityManager->remove($forum);
             $entityManager->flush();
         }
@@ -179,7 +192,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
     #[Route('/admin/response/{id}/delete', name: 'admin_response_delete', methods: ['POST'])]
     public function deleteResponse(Request $request, ForumResponse $response, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$response->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $response->getId(), $request->request->get('_token'))) {
             $entityManager->remove($response);
             $entityManager->flush();
         }
@@ -217,8 +230,8 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
         // Rediriger vers la liste des commentaires du forum
         return $this->redirectToRoute('admin_forum_comments', ['id' => $comment->getForum()->getId()]);
     }
-   
-   
+
+
     #[Route('/admin/appointment', name: 'app_admin_appointment')]
     public function listappointment(EntityManagerInterface $em): Response
     {
@@ -233,7 +246,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
     public function approve2(Appointment $appointment, EntityManagerInterface $entityManager): RedirectResponse
     {
         // Supposons que l'entité Care ait un champ "approved"
-        $care->setApproved(true); 
+        $care->setApproved(true);
         $entityManager->flush();
 
         $this->addFlash('success', 'Le soin a été approuvé avec succès.');
@@ -268,7 +281,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
     public function approve3(prescription $prescription, EntityManagerInterface $entityManager): RedirectResponse
     {
         // Supposons que l'entité Care ait un champ "approved"
-        $prescription->setApproved(true); 
+        $prescription->setApproved(true);
         $entityManager->flush();
 
         $this->addFlash('success', 'Le soin a été approuvé avec succès.');
@@ -287,7 +300,6 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
 
         return $this->redirectToRoute('app_admin_prescription'); // Redirige vers la liste des soins
     }
-    
     #[Route('/admin/care', name: 'app_admin_care')]
     public function listcare(EntityManagerInterface $em): Response
     {
@@ -302,7 +314,7 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
     public function approve1(Care $care, EntityManagerInterface $entityManager): RedirectResponse
     {
         // Supposons que l'entité Care ait un champ "approved"
-        $care->setApproved(true); 
+        $care->setApproved(true);
         $entityManager->flush();
 
         $this->addFlash('success', 'Le soin a été approuvé avec succès.');
@@ -321,16 +333,13 @@ public function delete(int $id, EntityManagerInterface $entityManager): Response
 
         return $this->redirectToRoute('app_admin_care'); // Redirige vers la liste des soins
     }
-  
     #[Route('/admin/care-responses', name: 'admin_care_responses')]
     public function listCareResponse(CareResponseRepository $careResponseRepository): Response
     {
         $careResponses = $careResponseRepository->findAll();
-    
         return $this->render('care_response/admin1/careresp.html.twig', [
             'careResponses' => $careResponses // est bien définie
         ]);
     }
-    
 
 }

@@ -76,6 +76,15 @@ final class BloodDonationController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_blood_donation_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_donation_response_new', [], Response::HTTP_SEE_OTHER);
+    }
+    public function respond(int $id): Response
+    {
+        // Logique pour gérer la réponse à un don de sang (par exemple, afficher un formulaire)
+        
+        // Exemple de retour : vous pouvez créer une page de réponse ou une vue personnalisée
+        return $this->render('donation_response/new.html.twig', [
+            'donation_id' => $id,
+        ]);
     }
 }

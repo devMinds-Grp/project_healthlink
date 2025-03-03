@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Prescription Médicale</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            color:rgb(8, 9, 10);
+            margin: 10px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .logo {
+    width: 150px; /* Ajuste la largeur selon ton besoin */
+    height: auto; /* Garde les proportions */
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+    <div class="header">
+     <img src="https://i.postimg.cc/hvfDj0Pw/476404938-9574320402579693-7829423363891692225-n.png" alt="HealthLink Logo" class="logo" >
+        </div>
+
+        <h1>Bonjour {{ prescription.cardUser.nom }},</h1>
+        <p>Vous trouverez ci-joint votre prescription médicale.</p>
+        <p>Vous pouvez télécharger votre prescription médicale.</p>
+        <p>Cordialement,</p>
+     
+</body>
+</html>
+

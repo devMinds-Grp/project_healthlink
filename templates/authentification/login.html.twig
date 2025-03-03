@@ -10,12 +10,15 @@
     <link rel="stylesheet" href="{{ asset('compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('compiled/css/app-dark.css') }}">
     <link rel="stylesheet" href="{{ asset('compiled/css/auth.css') }}">
-
+    
+    
 </head>
 
 <body>
     <script src="{{ asset('static/js/initTheme.js') }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     
+
     <div id="auth">
         <div class="row h-100">
             <div class="col-lg-5 col-12">
@@ -49,6 +52,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="g-recaptcha" data-sitekey="{{ constant('RECAPTCHA2_KEY') }}"></div> 
+                                     
                                 </div>
                                 <div class="col-12 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary me-1 mb-1">Se connecter</button>
@@ -57,7 +62,7 @@
                             </div>
                         </div>
                     </form>
-
+                    <p>Mot de passe oublié? <a href="{{ path('') }}">Récuperer mot de passe</a>.</p>
                     <p>Pas encore inscrit ? <a href="{{ path('app_register') }}">Inscrivez-vous</a>.</p>
                 </div>
             </div>

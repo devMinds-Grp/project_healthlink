@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Reclamation;
+use App\Enum\Status;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,4 +42,21 @@ class ReclamationRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findBySearchQueryAndStatusQuery(?string $query, ?Status $status): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('r');
+    
+        if ($query) {
+            $qb->andWhere('r.titre LIKE :query OR r.description LIKE :query')
+               ->setParameter('query', '%' . $query . '%');
+        }
+    
+        if ($status) {
+            $qb->andWhere('r.Statut = :status')
+               ->setParameter('status', $status);
+        }
+    
+        return $qb;
+    }
 }

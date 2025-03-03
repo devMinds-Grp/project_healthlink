@@ -1,0 +1,223 @@
+{% extends 'home/admin_base.html.twig' %}
+
+{% block title %}Statistiques des Utilisateurs{% endblock %}
+
+{% block body %}
+<div class="page-heading py-4">
+    <h3 class="text-dark fw-bold mb-0">Statistiques des Utilisateurs</h3>
+    <p class="text-muted mt-2">Vue d'ensemble des données utilisateurs en temps réel</p>
+</div> 
+<div class="page-content"> 
+    <section class="row gy-4">
+        <div class="col-12 col-lg-9">
+            <div class="row g-4">
+                <!-- Carte : Nombre total d'utilisateurs -->
+                <div class="col-6 col-lg-3 col-md-6">
+                    <div class="card stats-card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stats-icon purple">
+                                    <i class="fas fa-users fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Total Utilisateurs</h6>
+                                    <h4 class="fw-bold mb-0 text-dark">{{ totalUsers }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte : Utilisateurs en attente -->
+                <div class="col-6 col-lg-3 col-md-6">
+                    <div class="card stats-card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stats-icon blue">
+                                    <i class="fas fa-user-clock fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">En Attente</h6>
+                                    <h4 class="fw-bold mb-0 text-dark">{{ pendingUsers }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte : Nombre de médecins -->
+                <div class="col-6 col-lg-3 col-md-6">
+                    <div class="card stats-card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stats-icon green">
+                                    <i class="fas fa-user-md fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Médecins</h6>
+                                    <h4 class="fw-bold mb-0 text-dark">{{ doctors }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte : Nombre de soignants -->
+                <div class="col-6 col-lg-3 col-md-6">
+                    <div class="card stats-card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stats-icon red">
+                                    <i class="fas fa-hands-helping fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Soignants</h6>
+                                    <h4 class="fw-bold mb-0 text-dark">{{ caregivers }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphique : Répartition des Utilisateurs -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white py-3">
+                            <h4 class="text-dark fw-semibold mb-0">Répartition des Utilisateurs</h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <canvas id="chart-user-distribution" style="max-height: 350px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphique : Statut des Utilisateurs -->
+        <div class="col-12 col-lg-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3">
+                    <h4 class="text-dark fw-semibold mb-0">Statut des Utilisateurs</h4>
+                </div>
+                <div class="card-body p-4">
+                    <canvas id="chart-user-status" style="max-height: 350px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Graphique : Répartition des Utilisateurs
+    const userDistributionCtx = document.getElementById('chart-user-distribution').getContext('2d');
+    new Chart(userDistributionCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Utilisateurs', 'Médecins', 'Soignants'],
+            datasets: [{
+                data: [{{ totalUsers }}, {{ doctors }}, {{ caregivers }}],
+                backgroundColor: ['#6b7280', '#10b981', '#ef4444'],
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: { position: 'top', labels: { padding: 15, font: { size: 14 } } },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 10,
+                    callbacks: {
+                        label: function(context) {
+                            const total = {{ totalUsers + doctors + caregivers }};
+                            const percentage = ((context.raw / total) * 100).toFixed(1);
+                            return `${context.label}: ${context.raw} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Graphique : Statut des Utilisateurs
+    const userStatusCtx = document.getElementById('chart-user-status').getContext('2d');
+    new Chart(userStatusCtx, {
+        type: 'pie',
+        data: {
+            labels: ['En Attente', 'Approuvés'],
+            datasets: [{
+                data: [{{ pendingPercentage }}, {{ approvedPercentage }}],
+                backgroundColor: ['#f59e0b', '#10b981'],
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 20, font: { size: 14 } } },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 10
+                }
+            }
+        }
+    });
+</script>
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- Styles -->
+<style>
+    .page-heading {
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .stats-card {
+        border-radius: 15px;
+        background: linear-gradient(145deg, #ffffff, #f9fafb);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .stats-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+    .stats-card:hover .stats-icon {
+        transform: scale(1.1);
+    }
+    .stats-icon.purple { background: #e9d5ff; color: #7c3aed; }
+    .stats-icon.blue { background: #bfdbfe; color: #3b82f6; }
+    .stats-icon.green { background: #d1fae5; color: #10b981; }
+    .stats-icon.red { background: #fee2e2; color: #ef4444; }
+    .text-dark { color: #1f2937; }
+    .text-muted { color: #6b7280; }
+    .fw-semibold { font-weight: 600; }
+    .fw-bold { font-weight: 700; }
+    .card-header {
+        border-bottom: 1px solid #e5e7eb;
+        background: #ffffff !important;
+    }
+    canvas {
+        transition: opacity 0.5s ease;
+    }
+</style>
+{% endblock %}

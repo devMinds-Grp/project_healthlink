@@ -142,6 +142,29 @@
     .card-body {
         padding: 20px;
     }
+    /* Styles pour les badges de statut */
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.875em;
+    font-weight: 600;
+    border-radius: 10px;
+    color: #000; /* Texte blanc pour une meilleure lisibilité */
+}
+
+/* Statut "En attente" */
+.badge.bg-warning {
+    background-color: #ffc107 !important; /* Jaune */
+}
+
+/* Statut "Confirmé" */
+.badge.bg-success {
+    background-color: #28a745 !important; /* Vert */
+}
+
+/* Statut "Annulé" */
+.badge.bg-danger {
+    background-color: #dc3545 !important; /* Rouge */
+}
 </style>
 {% endblock %}
 
@@ -184,20 +207,24 @@
                                             <tr>
 
  
-                                              <td> {{ appointment.doctor.nom }} {{ appointment.doctor.prenom }}</td>
-   
-                                              <td>{{ appointment.patient.nom }} {{ appointment.patient.prenom }}</td>
+  <td>{{ appointment.doctor ? appointment.doctor.nom ~ ' ' ~ appointment.doctor.prenom : '' }}</td>
+                <td>{{ appointment.patient ? appointment.patient.nom ~ ' ' ~ appointment.patient.prenom : '' }}</td>
    
                                                 
                 <td>{{ appointment.date ? appointment.date|date('Y-m-d') : '' }}</td>
                 <td>{{ appointment.type.value }}</td>
-                <td>
-                    <span class="badge {{ appointment.statut.value == 'en attente' ? 'bg-custom-warning' : 'bg-warning' }}">
+                    <td>
+                    <span class="badge 
+                        {% if appointment.statut == 'en_attente' %}bg-warning
+                        {% elseif appointment.statut == 'confirme' %}bg-success
+                        {% elseif appointment.statut == 'annule' %}bg-danger
+                        {% endif %}">
                         {{ appointment.statut.label() }}
                     </span>
                 </td>
+               
                                                 <td>
-                                                    <a href="{{ path('appointment_approve', { 'id': appointment.id }) }}" class="btn btn-success btn-sm">Approuver</a>
+                                                    
                                                     <a href="{{ path('appointment_delete', { 'id': appointment.id }) }}" class="btn btn-danger btn-sm">Supprimer</a>
                                                 </td>
                                             </tr>
@@ -231,3 +258,5 @@
     <script src="{{ asset('extensions/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('static/js/pages/dashboard.js') }}"></script>
 {% endblock %}
+
+

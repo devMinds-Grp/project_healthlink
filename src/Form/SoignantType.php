@@ -25,28 +25,28 @@ class SoignantType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
                 'attr' => [
-                    'placeholder' => 'Entrez le nom',
+                    'placeholder' => 'Ex. Ameni',
                     'class' => 'form-control',
                 ],
             ])
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => [
-                    'placeholder' => 'Entrez le prénom',
+                    'placeholder' => 'Ex. Chakroun',
                     'class' => 'form-control',
                 ],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
-                    'placeholder' => 'Entrez l\'email',
+                    'placeholder' => 'Ex .amenichakroun62@gmail.com',
                     'class' => 'form-control',
                 ],
             ])
             ->add('motDePasse', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'attr' => [
-                    'placeholder' => 'Entrez le mot de passe',
+                    'placeholder' => 'Ameni.123',
                     'class' => 'form-control',
                 ],
             ])
@@ -70,7 +70,11 @@ class SoignantType extends AbstractType
                 'label' => 'Image de profil',
                 'required' => false, // Le champ n'est pas obligatoire
                 'mapped' => false, // Ne pas mapper directement à l'entité
-            ]);
+            ])
+        ->add('captcha', Recaptcha3Type::class, [
+            'constraints' => new Recaptcha3(),
+            'action_name' => 'homepage',
+        ]);
 
     }
 

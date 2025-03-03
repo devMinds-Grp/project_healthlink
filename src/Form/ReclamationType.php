@@ -4,7 +4,9 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Reclamation;
+ 
 use App\Enum\Status;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
@@ -32,6 +34,14 @@ class ReclamationType extends AbstractType
                 'class' => Category::class,
                 'choice_label' => 'nom',
             ])
+            ->add('captcha', CaptchaType::class, [
+                'label' => 'Veuillez recopier le code CAPTCHA',
+                'attr' => [
+                    'placeholder' => 'Entrez le code affiché',
+                ],
+                'reload' => true, // Ajoute un bouton pour recharger le CAPTCHA
+                'as_url' => true, // Charge le CAPTCHA via une URL (recommandé)
+            ]);
         ;
     }
 

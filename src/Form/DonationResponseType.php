@@ -17,7 +17,7 @@ class DonationResponseType extends AbstractType
         $builder
         ->add('bloodDonation', EntityType::class, [
             'class' => BloodDonation::class,
-            'choice_label' => 'id',
+            'choice_label' => 'lieu',
         ])
         ->add('description', TextType::class, [
             'label' => 'Description',
