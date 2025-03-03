@@ -3,83 +3,200 @@
 {% block title %}📌 Mes Réclamations {% endblock %}
 
 {% block body %}
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <style>
     .img-cover {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}</style>
-<div class="container mt-4" style="margin-top: 350px; margin-bottom: 500px;">
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-    <div class="d-flex justify-content-between align-items-center mb-4"style="margin-top: 200px; margin-bottom: 500px;">
+    .hover-shadow:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-3px);
+    }
+
+    .transition-300 {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    .btn-floating {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .btn-floating:hover {
+        transform: scale(1.1);
+    }
+
+    .alert-fixed {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+ 
+
+<div class="container mt-4">
+    <!-- En-tête avec bouton d'ajout -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-primary"><i class="bx bx-list-ul"></i> Mes Réclamations</h2>
         <a href="{{ path('app_reclamation_new') }}" class="btn btn-success btn-lg shadow-lg">
             <i class="bx bx-plus-circle"></i> Ajouter une réclamation
         </a>
     </div>
 
-    {% if reclamations|length == 0 %}
-        <div class="alert alert-warning text-center" role="alert">
-            😕 Vous n'avez aucune réclamation. <br>
-            <a href="{{ path('app_reclamation_new') }}" class="btn btn-outline-warning mt-2">
-                <i class="bx bx-plus"></i> Ajouter maintenant
-            </a>
-        </div>
-    {% else %}
-        <div class="row">
-            {% for reclamation in reclamations %}
-                <div class="col-10 m-2">
-                    <div class="card shadow-sm border-0 hover-shadow transition-300">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <a href="/reclamation/{{reclamation.id}}">
-                                    <img class="card-img card-img-left img-cover" src="{{ asset('reclamations/' ~ reclamation.image) }}" alt="Image de la réclamation" />
+    <!-- Formulaire de recherche -->
+    <div class="card p-3 mb-4">
+        <form method="get" action="#">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="query" id="query" placeholder="Rechercher..." autocomplete="off">
+                </div>
+                <div class="col-md-4">
+                    <select name="status" id="status" class="form-control">
+                        <option value="">Tous les statuts</option>
+                        <option value="Refusé">Refusé</option>
+                        <option value="En cours">En cours</option>
+                        <option value="Traité et Terminé">Traité et Terminé</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
 
-                                </a>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title fw-bold text-primary">
-                                        <i class="bx bx-comment-detail"></i> {{ reclamation.titre }}
-                                    </h5>
-                                    <p class="card-text text-muted">{{ reclamation.description|length > 100 ? reclamation.description|slice(0, 100) ~ '...' : reclamation.description }}</p>
-
-                                    <p class="card-text">
-                                         <i class="bx bx-category"></i> {{ reclamation.category.nom }} 
-                                  <span class="badge {{ reclamation.Statut.badgeClass() }}">
-    <i class="bx {{ reclamation.Statut.iconClass() }}"></i>
-    {{ reclamation.Statut.label() }}
-</span>
-
-                                    </p>
-
-                                    <div class="d-flex justify-content-between mb-1 ">
-                                        <a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-sm btn-outline-primary transition-300">
-                                            <i class="bx bx-edit"></i> Modifier
-                                        </a>
-                                        
-
-
-                                     </div>                                            {{ include('reclamation/_delete_form.html.twig') }}
-
+    <!-- Liste des réclamations -->
+    <div id="reclamations-container">
+        {% for reclamation in reclamations %}
+            <div class="col-10 m-2">
+                <div class="card shadow-sm border-0 hover-shadow transition-300">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <a href="/reclamation/{{ reclamation.id }}">
+                                <img class="card-img card-img-left img-cover" src="{{ asset('reclamations/' ~ reclamation.image) }}" alt="Image de la réclamation">
+                            </a>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold text-primary">
+                                    <i class="bx bx-comment-detail"></i> {{ reclamation.titre }}
+                                </h5>
+                                <p class="card-text text-muted">
+                                    {{ reclamation.description|length > 100 ? reclamation.description|slice(0, 100) ~ '...' : reclamation.description }}
+                                </p>
+                                <p class="card-text">
+                                    <i class="bx bx-category"></i> {{ reclamation.category.nom }}
+                                    <span class="badge {{ reclamation.Statut.badgeClass() }}">
+                                        <i class="bx {{ reclamation.Statut.iconClass() }}"></i>
+                                        {{ reclamation.Statut.label() }}
+                                    </span>
+                                </p>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-sm btn-outline-primary transition-300">
+                                        <i class="bx bx-edit"></i> Modifier
+                                    </a>
+                                    {{ include('reclamation/_delete_form.html.twig') }}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+   {{knp_pagination_render(reclamations)}}
+
+    <!-- Bouton flottant pour ajouter une réclamation -->
+    <a href="{{ path('app_reclamation_new') }}" class="btn btn-success position-fixed bottom-0 end-0 m-4 shadow-lg rounded-circle btn-floating">
+        <i class="bx bx-plus-circle fs-3"></i>
+    </a>
 </div>
-<style>
-    .hover-shadow:hover {
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
-        transform: translateY(-3px);
-    }
-    .transition-300 {
-        transition: all 0.3s ease-in-out;
-    }
-</style>
+<!-- Script AJAX -->
+<script>
+ 
+    document.getElementById('query').addEventListener('keyup', function () {
+        let query = this.value;
+        let status = document.getElementById('status').value;
+        
+        fetch(`{{ path('app_reclamation_search') }}?query=${encodeURIComponent(query)}&status=${encodeURIComponent(status)}`)
+            .then(response => response.json())
+            .then(data => {
+                let container = document.getElementById('reclamations-container');
+                container.innerHTML = ''; // Vider la liste avant d'ajouter les nouveaux résultats
+    
+                if (data.length === 0) {
+                    container.innerHTML = `<div class="alert alert-warning text-center">Aucune réclamation trouvée.</div>`;
+                } else {
+                    data.forEach(reclamation => {
+                        let html = `
+                            <div class="col-10 m-2">
+                                <div class="card shadow-sm border-0 hover-shadow transition-300">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            <a href="/reclamation/${reclamation.id}">
+                                                <img class="card-img card-img-left img-cover" src="reclamations/${reclamation.image}" alt="Image de la réclamation">
+                                            </a>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title fw-bold text-primary">
+                                                    <i class="bx bx-comment-detail"></i> ${reclamation.titre}
+                                                </h5>
+                                                <p class="card-text text-muted">${reclamation.description.length > 100 ? reclamation.description.substring(0, 100) + '...' : reclamation.description}</p>
+                                                <p class="card-text">
+                                                    <i class="bx bx-category"></i> ${reclamation.category}
+                                                    <span class="badge ${reclamation.statut.badgeClass}">
+                                                        <i class="bx ${reclamation.statut.iconClass}"></i>
+                                                        ${reclamation.statut.label}
+                                                    </span>
+                                                </p>
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <a href="${reclamation.edit_url}" class="btn btn-sm btn-outline-primary transition-300">
+                                                        <i class="bx bx-edit"></i> Modifier
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += html;
+                    });
+                }
+            })
+            .catch(error => console.error('Erreur lors du chargement des réclamations :', error));
+    });
+
+</script>
 
 {% endblock %}
