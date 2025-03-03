@@ -49,6 +49,20 @@
                     </div>
                 </div>
 
+  <div class="col-12">
+                                    <div class="form-floating mb-4">
+                        {{ form_widget(form.cardUser, {
+                            'attr': {
+                                'class': 'form-control' ~ (form.cardUser.vars.valid ? '' : ' is-invalid'),
+                                'style': 'width: 350px;', 
+                                'placeholder': 'Sélectionner un patient'
+                            }
+                        }) }}
+                        {{ form_label(form.cardUser, 'Patient', {'label_attr': {'class': 'form-label'}}) }}
+                        <div class="invalid-feedback">{{ form_errors(form.cardUser)|striptags }}</div>
+                    </div>
+ </div>
+   
                 <!-- Bouton de soumission -->
                 <div class="col-12 text-end">
                     <button type="submit" class="btn btn-primary btn-action px-4">

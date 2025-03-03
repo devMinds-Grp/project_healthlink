@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Récupération de mot de passe - HealthLink</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef5f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            max-width: 180px;
+            margin: 20px auto;
+            display: block;
+        }
+        h1 {
+            color: #1B4F72;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #1B4F72;
+            color: white !important;
+            padding: 14px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        .btn:hover {
+            background-color: #1B4F72;
+            transform: scale(1.05);
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+        .footer a {
+            color: #1B4F72;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .highlight {
+            color: #1B4F72;
+            font-weight: bold;
+        }
+        .header {
+            background-color: #1B4F72;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            color: white;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Récupération de mot de passe</h1>
+        </div>
+
+        <img src="https://i.postimg.cc/hvfDj0Pw/476404938-9574320402579693-7829423363891692225-n.png" alt="HealthLink Logo" class="logo">
+
+        <p>Bonjour <span class="highlight">{{ user.nom }}</span>,</p>
+        <p>Vous avez demandé une récupération de mot de passe sur <span class="highlight">HealthLink</span>.</p>
+        <p>Voici votre code de récupération :</p>
+
+        <h2 style="color: #1B4F72; font-size: 28px; margin: 20px 0;">{{ code }}</h2>
+
+        <p>Utilisez ce code pour réinitialiser votre mot de passe.</p>
+
+        <p class="footer">
+            <strong>Conseil de sécurité :</strong> Ne partagez jamais ce code avec qui que ce soit.
+        </p>
+
+        <p class="footer">
+            Si vous n'avez pas demandé cette récupération, veuillez nous contacter immédiatement à
+            <a href="mailto:contact@healthlink.com">contact@healthlink.com</a>
+            ou appelez-nous au <span class="highlight">+216 XX XXX XXX</span>.
+        </p>
+    </div>
+</body>
+</html>

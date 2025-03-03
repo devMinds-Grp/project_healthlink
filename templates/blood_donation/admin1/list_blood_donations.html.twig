@@ -190,6 +190,7 @@
                                                 <td>{{ BloodDonation.Date ? BloodDonation.Date|date('Y-m-d') : 'N/A' }}</td>
                                                 <td>{{ BloodDonation.numTel }}</td>
                                                 <td>
+                                                    <a href="{{ path('approve_blood_donation', { 'id': BloodDonation.id }) }}" class="btn btn-success btn-sm">Approuver</a>
                                                     <a href="{{ path('delete_blood_donation', { 'id': BloodDonation.id }) }}" class="btn btn-danger btn-sm">Supprimer</a>
                                                 </td>
                                             </tr>

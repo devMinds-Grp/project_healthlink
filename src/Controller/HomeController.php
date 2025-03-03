@@ -24,13 +24,29 @@ final class HomeController extends AbstractController
     {
         // Fetch the role entity for doctors (assuming the role name is "ROLE_MEDECIN")
         $role = $entityManager->getRepository(Role::class)->findOneBy(['nom' => 'MEDECIN']);
-
+    
         // Fetch the list of doctors based on the role
         $doctors = $entityManager->getRepository(User::class)->findBy(['role' => $role]);
-
-        // Pass the list of doctors to the Twig template
+    
+        // Extract unique specialities and addresses from the list of doctors
+        $specialities = [];
+        $addresses = [];
+    
+        foreach ($doctors as $doctor) {
+            // Assurez-vous que les méthodes getSpeciality() et getAdresse() existent dans votre entité User
+            if (!in_array($doctor->getSpeciality(), $specialities)) {
+                $specialities[] = $doctor->getSpeciality();
+            }
+            if (!in_array($doctor->getAdresse(), $addresses)) {
+                $addresses[] = $doctor->getAdresse();
+            }
+        }
+    
+        // Pass the list of doctors, specialities, and addresses to the Twig template
         return $this->render('liste_doctor/list.html.twig', [
             'doctors' => $doctors,
+            'specialities' => $specialities, // Liste des spécialités uniques
+            'addresses' => $addresses, // Liste des adresses uniques
         ]);
     }
 

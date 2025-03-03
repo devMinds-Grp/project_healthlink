@@ -13,33 +13,33 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Table(name: "utilisateur")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]// pour dire que c'est le clé primaire 
+    #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
-    #[Assert\Length(min: 3, max: 50, minMessage: "Le nom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\Length(min: 2, max: 50, minMessage: "Le nom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.")]
-    #[Assert\Length(min: 3, max: 50, minMessage: "Le prénom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\Length(min: 2, max: 50, minMessage: "Le prénom doit avoir au moins {{ limit }} caractères.", maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères.")]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Assert\NotBlank(message: "L'email est obligatoire.")]
-    #[Assert\Email(message: "L'email '{{ value }}' n'est pas valide.")]
+    #[Assert\NotBlank(message: "Email est obligatoire.")]
+    #[Assert\Email(message: "Email '{{ value }}' n'est pas valide.")]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
     #[Assert\Length(min: 8, max: 255, minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.")]
-    // #[Assert\Regex(
-    //     pattern: "/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/",
-    //     message: "Le mot de passe doit contenir au moins une lettre et un chiffre."
-    // )]
+    #[Assert\Regex(
+        pattern: '/^(?=.*[A-Z])(?=.*\d).+$/',
+        message: "Le mot de passe doit contenir au moins une majuscule et un chiffre."
+    )]
     private ?string $motDePasse = null;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
@@ -47,13 +47,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Role $role = null;
 
     #[ORM\Column(length: 8, nullable: true)]
-    #[Assert\Regex(pattern: "/^(\+?\d{1,3})?\d{8,14}$/", message: "Le numéro de téléphone doit être valide.")]
+    #[Assert\Regex(pattern: "/^[0-9]{8}$/", message: "Le numéro de téléphone doit être valide.")]
     private ?string $numTel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Length(max: 255, maxMessage: "L'adresse ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\Length(max: 255, maxMessage: "Adresse ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\Regex(
+        pattern: '/^[A-Z]/',
+        message: "Adresse doit commencer par une lettre majuscule."
+    )]
     private ?string $adresse = null;
-
 
     #[ORM\Column(length: 50, nullable: true)]
     #[Assert\Length(max: 50, maxMessage: "La spécialité ne peut pas dépasser {{ limit }} caractères.")]
@@ -78,26 +81,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $imageprofile = null;
 
-
     #[ORM\Column(type: 'string', length: 20, options: ['default' => 'en attente'])]
     private ?string $statut = 'en attente';
+    
+    #[ORM\Column(type: 'string', length: 6, nullable: true)]
+    private ?string $resetCode = null;
 
-
-    public function __construct()
+    public function getResetCode(): ?string
     {
-        $this->UserForum = new ArrayCollection();
-        $this->caresAsCaregiver = new ArrayCollection();
-        $this->caresAsPatient = new ArrayCollection();
-        $this->diagnostics = new ArrayCollection();
-        $this->bloodDonations = new ArrayCollection();
-        $this->pharmacies = new ArrayCollection();
-        $this->CargiverCare = new ArrayCollection();
-        $this->Prescriptions = new ArrayCollection();
-        $this->appointmentsAsDoctor = new ArrayCollection();
-        $this->appointmentsAsPatient = new ArrayCollection();
-        $this->reclamations = new ArrayCollection();
-        $this->handledReclamations = new ArrayCollection();
+        return $this->resetCode;
     }
+
+    public function setResetCode(?string $resetCode): self
+    {
+        $this->resetCode = $resetCode;
+        return $this;
+    }
+
+    
 
     #[ORM\OneToMany(targetEntity: Care::class, mappedBy: 'caregiver')]
     private Collection $caresAsCaregiver;
@@ -147,6 +148,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'admin')]
     private Collection $handledReclamations;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $bannedUntil = null;
+
+    /**
+     * @var Collection<int, Rating>
+     */
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'user')]
+    private Collection $ratings;
+    public function __construct()
+    {
+        $this->UserForum = new ArrayCollection();
+        $this->caresAsCaregiver = new ArrayCollection();
+        $this->caresAsPatient = new ArrayCollection();
+        $this->diagnostics = new ArrayCollection();
+        $this->bloodDonations = new ArrayCollection();
+        $this->pharmacies = new ArrayCollection();
+        $this->CargiverCare = new ArrayCollection();
+        $this->Prescriptions = new ArrayCollection();
+        $this->appointmentsAsDoctor = new ArrayCollection();
+        $this->appointmentsAsPatient = new ArrayCollection();
+        $this->reclamations = new ArrayCollection();
+        $this->handledReclamations = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,36 +189,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(?string $image): self
-    {
-        $this->image = $image;
-        return $this;
-    }
-    public function getImageprofile(): ?string
-    {
-        return $this->imageprofile;
-    }
-
-    public function setImageprofile(?string $imageprofile): self
-    {
-        $this->imageprofile = $imageprofile;
-        return $this;
-    }
-    public function getStatut(): ?string
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(string $statut): self
-    {
-        $this->statut = $statut;
-        return $this;
-    }
     public function getPrenom(): ?string
     {
         return $this->prenom;
@@ -246,7 +242,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $roles;
     }
-
 
     public function eraseCredentials(): void
     {
@@ -310,6 +305,88 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCategorieSoin(?string $categorieSoin): self
     {
         $this->categorieSoin = $categorieSoin;
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getImageprofile(): ?string
+    {
+        return $this->imageprofile;
+    }
+
+    public function setImageprofile(?string $imageprofile): self
+    {
+        $this->imageprofile = $imageprofile;
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): self
+    {
+        $this->statut = $statut;
+        return $this;
+    }
+
+    public function getBannedUntil(): ?\DateTimeInterface
+    {
+        return $this->bannedUntil;
+    }
+
+    public function setBannedUntil(?\DateTimeInterface $bannedUntil): self
+    {
+        $this->bannedUntil = $bannedUntil;
+        return $this;
+    }
+
+    /**
+     * Vérifie si l'utilisateur est actuellement banni.
+     */
+    public function isBanned(): bool
+    {
+        return $this->bannedUntil && $this->bannedUntil > new \DateTime();
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): static
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): static
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getUser() === $this) {
+                $rating->setUser(null);
+            }
+        }
+
         return $this;
     }
 }

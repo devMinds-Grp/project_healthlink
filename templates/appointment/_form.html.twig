@@ -5,17 +5,19 @@
 
             <div class="row g-4">
                 <!-- Première colonne -->
-                <div class="col-md-6">
+               <div class="col-md-6 offset-md-3"> <!-- Centrer les champs -->
                     <div class="form-floating mb-4">
-                        
+                        <div id="calendar"></div> <!-- Conteneur pour FullCalendar -->
                         {{ form_widget(form.date, {
                             'attr': {
                                 'class': 'form-control' ~ (form.date.vars.valid ? '' : ' is-invalid'),
                                 'required': 'required',
                                 'min': "now"|date('Y-m-d'),
-                                'data-validation-target': 'dateInput'
+                                'data-validation-target': 'dateInput',
+                                
                             }
                         }) }}
+                        
                         {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
                         <small class="text-muted mt-2 d-block" data-validation-target="message">
                             <i class="bx bx-info-circle"></i> 
@@ -24,24 +26,39 @@
                         <div class="invalid-feedback">{{ form_errors(form.date)|striptags }}</div>
                     </div>
                 </div>
-
+<br><br><br>
                 <!-- Deuxième colonne -->
-                <div class="col-md-6">
+               
+                     <div class="col-md-6 offset-md-3"> <!-- Centrer les champs -->
                     <div class="form-floating mb-4">
+
                         {{ form_widget(form.type, {'attr': {'class': 'form-select' ~ (form.type.vars.valid ? '' : ' is-invalid')}}) }}
-                          {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
                         <div class="invalid-feedback">{{ form_errors(form.type)|striptags }}</div>
                     </div>
                 </div>
 
+                <div class="form-floating mb-4" style="display: none;">
+                    {{ form_widget(form.doctor, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.doctor, 'Médecin', {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="invalid-feedback">{{ form_errors(form.doctor)|striptags }}</div>
+                </div>
+
+                <div class="form-floating mb-4" style="display: none;">
+                    {{ form_widget(form.patient, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.patient, 'Médecin', {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="invalid-feedback">{{ form_errors(form.patient)|striptags }}</div>
+                </div>
+
+
                 <!-- Bouton de soumission -->
-                <div class="col-12 text-end">
+                <div class="col-md-6 offset-md-3"> <!-- Centrer les champs -->
+                    <div class="form-floating mb-4">
                     <button type="submit" class="btn btn-primary btn-action px-4">
                         <i class="bi bi-save me-2"></i>{{ button_label|default('Enregistrer') }}
                     </button>
                 </div>
-
-                
+                 </div>
             </div>
 
             {{ form_end(form) }}
@@ -49,102 +66,224 @@
     </div>
 </div>
 
-<style>
-    /* Styles existants */
-    .card-prescription {
-        border-radius: 1rem;
-        border: 1px solid rgba(0, 0, 0, 0.125);
-        transition: transform 0.3s ease;
-    }
+  
+  <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    .card-prescription:hover {
-        transform: translateY(-5px);
-    }
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    /* Nouveaux styles pour les labels */
-    .form-floating > label {
-        color: #2c3e50;
-        font-weight: 600;
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        padding: 0.75rem 1.25rem;
-        transition: all 0.2s ease;
-        opacity: 0.9;
-    }
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
 
-    .form-floating > .form-control:not(:placeholder-shown) ~ label {
-        opacity: 1;
-        transform: translateY(-0.5rem) scale(0.85);
-    }
+    <!-- Font Awesome CSS -->
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css' rel='stylesheet' />
 
-    /* Styles améliorés pour le bouton */
-    .btn-action {
-        border: 2px solid transparent;
-        border-radius: 0.8rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        padding: 0.75rem 1.5rem;
-    }
 
-    .btn-action:hover {
-        background-color: #0b5ed7;
-        border-color: #094bac;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
-    }
-
-    .btn-action:active {
-        transform: translateY(0);
-        box-shadow: none;
-    }
-
-    /* Styles existants */
-    .form-control:focus, .form-select:focus {
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-
-    .form-control.is-invalid, .form-select.is-invalid {
-        border-color: #dc3545;
-        padding-right: calc(1.5em + 0.75rem);
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right calc(0.375em + 0.1875rem) center;
-        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-    }
-
-    .invalid-feedback {
-        font-size: 0.85em;
-        margin-top: 0.25rem;
-    }
-
-    .valid-message { color: #28a745 !important; }
-    .invalid-message { color: #dc3545 !important; }
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
     const dateInput = document.querySelector('[data-validation-target="dateInput"]');
-    const message = document.querySelector('[data-validation-target="message"]');
 
-    function checkDate() {
-        const selectedDate = new Date(dateInput.value);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+    // Initialisation de FullCalendar
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth', // Vue par défaut (mois)
+        locale: 'fr', // Localisation en français
+        selectable: true, // Permet la sélection de date
+        validRange: {
+            start: new Date(), // Empêche la sélection de dates passées
+        },
+        dateClick: function(info) {
+            const clickedDate = new Date(info.date);
+            if (clickedDate.getDay() !== 0 && clickedDate.getDay() !== 6) { // 0 = Dimanche, 6 = Samedi
+                dateInput.value = info.dateStr; // Mettre à jour le champ de date caché
+                console.log('Date sélectionnée :', info.dateStr);
+            } else {
+                alert("Les week-ends ne sont pas sélectionnables !");
+            }
+        },
+        dayCellDidMount: function(info) {
+            const day = info.date.getDay();
+            if (day === 0 || day === 6) { // Désactiver le week-end visuellement
+                info.el.style.backgroundColor = '#f5f5f5';
+                info.el.style.pointerEvents = 'none';
+                info.el.style.opacity = '0.5';
+            }
+        },
+    });
 
-        if (selectedDate > today) {
-            message.classList.add('valid-message');
-            message.classList.remove('invalid-message');
-        } else {
-            message.classList.add('invalid-message');
-            message.classList.remove('valid-message');
+    // Affiche le calendrier
+    calendar.render();
+
+    // Force la sélection d'une date spécifique (ex: Demain)
+    let tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    while (tomorrow.getDay() === 0 || tomorrow.getDay() === 6) { // S'assurer que ce n'est pas un week-end
+        tomorrow.setDate(tomorrow.getDate() + 1);
+    }
+    const defaultDateStr = tomorrow.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    dateInput.value = defaultDateStr;
+
+    // Simule un clic sur la date forcée
+    setTimeout(() => {
+        calendar.select(defaultDateStr);
+    }, 500);
+});
+</script>
+
+
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css' rel='stylesheet' />
+    <style>
+        #calendar {
+            height: 700px;
+            margin: 20px 0;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            font-family: 'Segoe UI', sans-serif;
         }
+
+        .fc-header-toolbar {
+            margin-bottom: 20px;
+            background-color: #4a90e2;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+        }
+        .fc-daygrid-day.selected-date {
+            background-color: #4a90e2 !important;
+            color: white !important;
+            border-radius: 4px;
+        }
+        .fc-button {
+            background-color: #6c5ce7;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .fc-button:hover {
+            background-color: #5a4dcc;
+        }
+
+        .fc-today-button {
+            background-color: #00b894;
+        }
+
+        .fc-today-button:hover {
+            background-color: #00a383;
+        }
+
+        .fc-daygrid-day-number {
+            color: #2d3436;
+            font-weight: 500;
+        }
+
+        .fc-event {
+            background-color: #4a90e2;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            color: white;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .fc-event:hover {
+            background-color: #357abd;
+        }
+
+        .fc-timegrid-slot {
+            color: #636e72;
+            font-size: 14px;
+        }
+        
+ .btn {
+        border: 2px solid #007bff;
+        color: #007bff;
+        background-color: transparent;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s, color 0.3s;
     }
 
-    // Vérification initiale
-    checkDate();
-    
-    // Écouteur d'événement en temps réel
-    dateInput.addEventListener('input', checkDate);
+    .btn:hover {
+        background-color: #007bff;
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(141, 138, 138, 0.2);
+    }
+        .fc-day-today {
+            background-color: #f0f8ff !important;
+        }
+        .calendrier-html {
+            display: none;
+        }
+        .valid-message { color: #28a745 !important; }
+            .invalid-message { color: #dc3545 !important; }
+            .btn-lg {
+        padding: 36px 30px; /* Taille plus grande */
+        font-size: 18px; /* Texte plus grand */
+    }
+
+    /* Styles pour le bouton Enregistrer */
+    .btn-action {
+        margin-bottom: 0px; /* Espacement supplémentaire */
+    }
+ </style>
+
+    <!-- FullCalendar JavaScript -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.11.3/main.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@5.11.3/main.global.min.js'></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const dateInput = document.querySelector('[data-validation-target="dateInput"]');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+        initialView: 'dayGridMonth', // Vue par défaut
+        locale: 'fr',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        buttonText: {
+            today: '<i class="fas fa-calendar-day"></i> Aujourd\'hui',
+            month: '<i class="fas fa-calendar-alt"></i> Mois',
+            week: '<i class="fas fa-calendar-week"></i> Semaine',
+            day: '<i class="fas fa-calendar-day"></i> Jour'
+        },
+        validRange: {
+            start: new Date() // Bloque les dates passées
+        },
+       dateClick: function(info) {
+                    if (selectedDateElement) {
+                        selectedDateElement.classList.remove('selected-date');
+                    }
+                    selectedDateElement = info.dayEl;
+                    selectedDateElement.classList.add('selected-date');
+                    dateInput.value = info.dateStr;
+                    console.log('Date sélectionnée :', info.dateStr);
+                }
+            });
+
+    calendar.render();
+
+    // Initialisation de Select2
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+
+        
 });
 </script>

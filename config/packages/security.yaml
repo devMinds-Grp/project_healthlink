@@ -11,12 +11,24 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
     main:
+<<<<<<< HEAD
       lazy: true
       provider: app_user_provider
       form_login:
         login_path: app_login
         check_path: app_login
 
+=======
+      user_checker: App\Security\UserChecker
+      lazy: true
+      provider: app_user_provider
+      custom_authenticators:
+        - App\Security\AppAuthenticator #hethy mta3 approuvé et désaprouvé
+      form_login:
+        login_path: app_login
+        check_path: app_login
+        failure_path: app_not_approved
+>>>>>>> e6eab44440763c3ca3bdb10fb74d6719702effdb
         enable_csrf: true
         username_parameter: email
         password_parameter: motDePasse
@@ -24,12 +36,24 @@ security:
         path: app_logout
         target: app_login
       entry_point: form_login # Set the entry point to "form_login"
+<<<<<<< HEAD
   access_control:
     - { path: ^/admin, roles: ROLE_ADMIN }
     
     - { path: ^/patient, roles: ROLE_PATIENT }
     - { path: ^/soignant, roles: ROLE_SOIGNANT }
     - { path: ^/profile, roles: ROLE_USER }
+=======
+
+  access_control:
+    - { path: ^/admin, roles: ROLE_ADMIN }
+
+    - { path: ^/patient, roles: ROLE_PATIENT }
+    - { path: ^/soignant, roles: ROLE_SOIGNANT }
+    - { path: ^/profile, roles: ROLE_USER }
+    - { path: ^/connect/google, roles: PUBLIC_ACCESS }
+
+>>>>>>> e6eab44440763c3ca3bdb10fb74d6719702effdb
 when@test:
   security:
     password_hashers:

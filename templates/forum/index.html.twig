@@ -1,9 +1,10 @@
+{# templates/forum/index.html.twig #}
+
 {% extends 'home/base.html.twig' %}
 
 {% block title %}Forum{% endblock %}
 
 {% block body %}
-
     <!-- bradcam_area_start  -->
     <div class="bradcam_area breadcam_bg_1">
         <div class="container">
@@ -30,25 +31,23 @@
                 </div>
                 <div class="col-xl-6 col-lg-6">
                     <div class="welcome_docmed_info">
-                        <h3>Welcome To
-                            <span>Our Forum.</span></h3>
+                        <h3>Welcome To <span>Our Forum.</span></h3>
                         <p>Nous croyons en la collaboration et en l'échange de connaissances. Nous vous encourageons à partager vos idées, à poser des questions et à participer activement à la vie de ce forum. Ensemble, nous pouvons créer une communauté forte et dynamique.</p>
                         <ul>
-                            <li> <i class="flaticon-verified"></i> Obtenez des conseils de professionnels </li>
-                            <li> <i class="flaticon-verified"></i> Rejoignez une communauté active</li>
-                            <li> <i class="flaticon-verified"></i> Partagez vos expériences et apprenez </li>
+                            <li><i class="flaticon-verified"></i> Obtenez des conseils de professionnels</li>
+                            <li><i class="flaticon-verified"></i> Rejoignez une communauté active</li>
+                            <li><i class="flaticon-verified"></i> Partagez vos expériences et apprenez</li>
                         </ul>
-                        {#  {% if is_granted('ROLE_USER') %}#}
                         <a href="{{ path('forum_new') }}" class="boxed-btn6">Create new</a>
-                        {#  {% endif %}#}
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- welcome_clicnic_area_end -->
-    <h3 class="table-title">Forum List</h3> <!-- Titre du tableau -->
+
+    <!-- Tableau des forums -->
+    <h3 class="table-title">Forum List</h3>
     <div class="table-wrapper">
         <table class="table">
             <thead>
@@ -58,6 +57,7 @@
                 <th scope="col">Description</th>
                 <th scope="col">Date</th>
                 <th scope="col">User</th>
+                <th scope="col">Average Rating</th>
                 <th scope="col">Actions</th>
             </tr>
             </thead>
@@ -68,46 +68,95 @@
                     <td>{{ forum.Title }}</td>
                     <td>{{ forum.Description }}</td>
                     <td>{{ forum.Date ? forum.Date|date('Y-m-d') : '' }}</td>
-                    <td>{{ forum.user ? forum.user.nom : '' }}</td>
+                    <td>{{ forum.user ? forum.user.prenom ~ ' ' ~ forum.user.nom : '' }}</td>                    <td>
+                        <!-- Affichage des étoiles pour la moyenne des notes -->
+                        <div class="rating-stars">
+                            {% for i in 1..5 %}
+                                <span class="star {% if forum.averageRating >= i %}active{% endif %}">&#9733;</span>
+                            {% endfor %}
+                            <span class="average-rating-text">({{ forum.averageRating|number_format(1) }} / 5)</span>
+                        </div>
+                    </td>
                     <td>
                         <a href="{{ path('forum_show', {'id': forum.id}) }}" class="btn btn-info btn-sm">Show</a>
-                        {#  {% if is_granted('ROLE_USER') %}
-                        <a href="{{ path('forum_edit', {'id': forum.id}) }}" class="btn btn-warning btn-sm">Edit</a>
-                          {% endif %} #}
-                    </td> <!-- Ajoute les boutons d'actions (Show/Edit) -->
+                    </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5">No forums found.</td> <!-- Message si aucun forum n'est trouvé -->
+                    <td colspan="7">No forums found.</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination avec Bootstrap et espace ajouté -->
+    <div class="navigation d-flex justify-content-center mb-5">
+        {{ knp_pagination_render(forums, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
+    </div>
+
     {% block stylesheets %}
         <style>
+            /* Styles pour le tableau */
             .table-wrapper {
                 display: flex;
-                justify-content: center;  /* Centre le tableau horizontalement */
-                margin-top: 20px;  /* Ajoute une petite marge en haut si nécessaire */
+                justify-content: center;
+                margin-top: 20px;
             }
 
             .table {
-                margin: 0 auto; /* Centre le tableau */
-                width: 90%; /* Ajustez la largeur selon vos besoins */
-                margin-bottom: 50px; /* Espace de 30px entre le tableau et le footer */
-
+                margin: 0 auto;
+                width: 90%;
+                margin-bottom: 50px;
+                border-collapse: collapse;
             }
+
+            .table th, .table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .table th {
+                background-color: #f8f9fa;
+                font-weight: bold;
+            }
+
+            .table tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            /* Styles pour le titre du tableau */
             .table-title {
                 font-size: 24px;
                 font-weight: 700;
                 color: #333;
-                margin-bottom: 35px;  /* Ajoute un peu d'espace entre le titre et le tableau */
-                text-align: center;   /* Centre le titre */
+                margin-bottom: 35px;
+                text-align: center;
             }
 
+            /* Style pour les étoiles de notation */
+            .rating-stars {
+                display: flex;
+                align-items: center;
+                font-size: 18px;
+                color: #ccc;
+            }
+
+            .rating-stars .star {
+                cursor: pointer;
+                transition: color 0.3s ease-in-out;
+            }
+
+            .rating-stars .star.active {
+                color: #06BBCC; /* Couleur des étoiles actives */
+            }
+
+            .average-rating-text {
+                margin-left: 10px;
+                font-size: 14px;
+                color: #666;
+            }
         </style>
     {% endblock %}
-
-
 {% endblock %}

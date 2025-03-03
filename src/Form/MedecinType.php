@@ -24,49 +24,49 @@ class MedecinType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
                 'attr' => [
-                    'placeholder' => 'Entrez le nom',
+                    'placeholder' => 'Ex. Ameni',
                     'class' => 'form-control',
                 ],
             ])
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => [
-                    'placeholder' => 'Entrez le prénom',
+                    'placeholder' => 'Ex. Chakroun',
                     'class' => 'form-control',
                 ],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
-                    'placeholder' => 'Entrez l\'email',
+                    'placeholder' => 'Ex .amenichakroun62@gmail.com',
                     'class' => 'form-control',
                 ],
             ])
             ->add('motDePasse', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'attr' => [
-                    'placeholder' => 'Entrez le mot de passe',
+                    'placeholder' => 'Ameni.123',
                     'class' => 'form-control',
                 ],
             ])
             ->add('numTel', TextType::class, [
                 'label' => 'Numéro de téléphone',
                 'attr' => [
-                    'placeholder' => 'Entrez le numéro de téléphone',
+                    'placeholder' => 'Ex. XX XXX XXX',
                     'class' => 'form-control',
                 ],
             ])
             ->add('adresse', TextType::class, [
                 'label' => 'Adresse',
                 'attr' => [
-                    'placeholder' => 'Entrez l\'adresse',
+                    'placeholder' => 'Ex. Ariana',
                     'class' => 'form-control',
                 ],
             ])
             ->add('speciality', TextType::class, [
                 'label' => 'Spécialité',
                 'attr' => [
-                    'placeholder' => 'Entrez la spécialité',
+                    'placeholder' => 'Ex. Généraliste',
                     'class' => 'form-control',
                 ],
             ])
@@ -80,6 +80,10 @@ class MedecinType extends AbstractType
                 'label' => 'Image de profil',
                 'required' => false, 
                 'mapped' => false, 
+            ])
+            ->add('captcha', Recaptcha3Type::class, [
+                'constraints' => new Recaptcha3(),
+                'action_name' => 'homepage',
             ]);
             
     }

@@ -20,6 +20,7 @@ use App\Entity\Role;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Repository\UserRepository;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -74,6 +75,8 @@ final class UserController extends AbstractController
         if (!$roleMedecin) {
             return $this->render('user/medecins.html.twig', [
                 'medecins' => [],
+                'specialities' => [],
+                'cities' => []
             ]);
         }
 
@@ -82,8 +85,15 @@ final class UserController extends AbstractController
             ->getRepository(User::class)
             ->findBy(['role' => $roleMedecin]);
 
+        // Extraire les spécialités uniques
+        // $specialities = array_unique(array_filter(array_map(fn($m) => $m->getSpeciality(), $medecins)));
+        // $addresses = array_unique(array_map(function ($doctor) {
+        //     return $doctor->getAdresse(); }, $doctors));
+
         return $this->render('user/medecins.html.twig', [
             'medecins' => $medecins,
+            // 'specialities' => $specialities,
+            // 'addresses' => $addresses,
         ]);
     }
 
@@ -151,8 +161,8 @@ final class UserController extends AbstractController
                     $user->setImage($newFilename); // Enregistrer le nom du fichier dans l'entité
                 }
             }
-            $imageFile = $form->get('imageprofile')->getData(); // Récupérer l'image
 
+            $imageFile = $form->get('imageprofile')->getData(); // Récupérer l'image
             if ($imageFile) {
                 $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
                 $newFilename = uniqid() . '.' . $imageFile->guessExtension(); // Générer un nom unique
@@ -166,6 +176,8 @@ final class UserController extends AbstractController
                 $user->setImageProfile($defaultAvatar);
             }
 
+            $nom = ucfirst(strtolower($user->getNom())); // Mettre la première lettre en majuscule
+            $plainPassword = $nom . '.123'; // Construire le mot de passe pour l'affichage dans l'email
             // Encoder le mot de passe
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getMotDePasse());
             $user->setMotDePasse($hashedPassword);
@@ -173,6 +185,7 @@ final class UserController extends AbstractController
             $user->setStatut('approuvé');
             $entityManager->persist($user);
             $entityManager->flush();
+            // Générer le mot de passe visible dans l'email
 
             $email = (new TemplatedEmail())
                 ->from('amenichakroun62@gmail.com') // Votre adresse email
@@ -181,6 +194,7 @@ final class UserController extends AbstractController
                 ->htmlTemplate('emails/registration.html.twig')
                 ->context([
                     'user' => $user,
+                    'motDePasseAffiche' => $plainPassword,
                 ]);
             $mailer->send($email);
             // Redirection selon le rôle
@@ -234,9 +248,10 @@ final class UserController extends AbstractController
         // Calculer la position du texte pour le centrer
         $textBox = imagettfbbox($fontSize, 0, $fontPath, $initials);
         $textWidth = $textBox[2] - $textBox[0];
-        $textHeight = $textBox[7] - $textBox[1];
+        $textHeight = abs($textBox[7] - $textBox[1]); // Prendre la valeur absolue
+
         $textX = ($width - $textWidth) / 2;
-        $textY = ($height - $textHeight) / 2 + $fontSize;
+        $textY = ($height + $textHeight) / 2 - ($textBox[1]); // Ajustement pour un centrage correct
 
         // Ajouter le texte à l'image
         imagettftext($image, $fontSize, 0, $textX, $textY, $textColor, $fontPath, $initials);
@@ -287,7 +302,7 @@ final class UserController extends AbstractController
             $email = (new TemplatedEmail())
                 ->from('amenichakroun62@gmail.com') // Remplacez par l'email de l'administrateur
                 ->to($user->getEmail()) // Utiliser l'email de l'utilisateur
-                ->subject('Votre compte a été approuvé')
+                ->subject('Approvation du compte')
                 ->htmlTemplate('emails/account_approved.html.twig') // Template Twig pour l'email
                 ->context([
                     'user' => $user, // Passer l'utilisateur au template
@@ -364,4 +379,8 @@ final class UserController extends AbstractController
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e6eab44440763c3ca3bdb10fb74d6719702effdb
 }

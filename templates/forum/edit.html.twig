@@ -3,7 +3,6 @@
 {% block title %}Edit Forum{% endblock %}
 
 {% block body %}
-   {#  {% form_theme form 'form_theme.html.twig' %}#}
     <!-- bradcam_area_start  -->
     <div class="bradcam_area breadcam_bg_1">
         <div class="container">
@@ -22,6 +21,20 @@
             <div class="card-body">
                 <h1 class="card-title text-center mb-4">Edit Forum</h1>
 
+                {# Afficher les messages flash #}
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {# Afficher le formulaire #}
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-horizontal'}}) }}
 
                 <div class="mb-3">
@@ -36,13 +49,26 @@
                     {{ form_errors(form.Description) }}
                 </div>
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">{{ button_label|default('Update') }}</button>
-                    <a href="{{ path('forum_index') }}" class="btn btn-secondary">Back to list</a>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary d-inline-block">{{ button_label|default('Update') }}</button>
+                    <a href="{{ path('forum_index') }}" class="btn btn-secondary d-inline-block">Back to list</a>
                 </div>
 
                 {{ form_end(form) }}
             </div>
         </div>
     </div>
+
+    <style>
+        /* Style pour uniformiser les boutons */
+        .btn {
+            display: inline-block !important;
+            width: auto !important;
+        }
+
+        /* Container pour les boutons */
+        .d-flex.gap-2 {
+            gap: 0.5rem !important;
+        }
+    </style>
 {% endblock %}
