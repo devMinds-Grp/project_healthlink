@@ -11,15 +11,16 @@
     </div>
 
     <div class="mt-3 text-end"> <!-- Ajout de text-end pour aligner à droite -->
-        <a href="{{ path('app_doctor_list') }}" class="btn btn-secondary btn-action px-4">
+        <a href="{{ path('app_doctor_list') }}" class="btn btn-secondary btn-actionn px-4">
             <i class="bi bi-arrow-left me-2"></i>Retour à la liste
         </a>
     </div>
 </div>
 
 <script>
-.btn-action {
+.btn-actionn {
     border: 2px solid transparent;
+         background-color:rgb(5, 48, 97);
     border-radius: 0.8rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
@@ -27,14 +28,14 @@
     padding: 0.75rem 1.5rem;
 }
 
-.btn-action:hover {
+.btn-actionn:hover {
     background-color:rgb(83, 93, 107);
     border-color:rgb(42, 46, 51);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(65, 78, 97, 0.25);
 }
 
-.btn-action:active {
+.btn-actionn:active {
     transform: translateY(0);
     box-shadow: none;
 }

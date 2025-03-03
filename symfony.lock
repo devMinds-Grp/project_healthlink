@@ -35,6 +35,15 @@
             "ref": "e5a4aa21f2e98d7440ae9aab6b56e307f99dd084"
         }
     },
+    "hwi/oauth-bundle": {
+        "version": "2.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "2.0",
+            "ref": "20154480d558409ad3eb9de3644817c81fad2268"
+        }
+    },
     "karser/karser-recaptcha3-bundle": {
         "version": "0.2",
         "recipe": {
@@ -58,6 +67,8 @@
         "files": [
             "./config/packages/knpu_oauth2_client.yaml"
         ]
+    "knplabs/knp-paginator-bundle": {
+        "version": "v6.6.1"
     },
     "phpunit/phpunit": {
         "version": "9.6",

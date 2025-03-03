@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthLink</title>
+    <style>
+        /* Styles généraux */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Conteneur principal */
+        .container {
+            max-width: 800px;
+            width: 90%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* Tableau de la prescription */
+        .prescription-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .prescription-table th, .prescription-table td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .prescription-table th {
+            background-color: #4a90e2;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .prescription-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #4a90e2;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 0 0 12px 12px;
+            margin-top: 20px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        /* Centrer les paragraphes */
+        .centered-text {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* Titres et sous-titres */
+        h1 {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* Espacement réduit */
+        br {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header avec logo et titre -->
+        <div class="header">
+        
+        </div>
+
+        <h1>Prescription Médicale</h1>
+        <h1>Bonjour {{ prescription.cardUser.nom }},</h1>
+        <p class="centered-text">Nous espérons que vous allez mieux. Voici votre prescription médicale.</p>
+        <p class="centered-text">Veuillez prendre soin de vous et suivre les recommandations prescrites par votre médecin.</p>
+
+        <!-- Tableau des détails de la prescription -->
+        <table class="prescription-table">
+            <tr>
+                <th>Nom du patient</th>
+                <td>{{ prescription.cardUser.nom }} {{ prescription.cardUser.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Nom du médicament</th>
+                <td>{{ prescription.nomMedicament }}</td>
+            </tr>
+            <tr>
+                <th>Dosage</th>
+                <td>{{ prescription.dosage }}</td>
+            </tr>
+            <tr>
+                <th>Durée</th>
+                <td>{{ prescription.duree }}</td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td>{{ prescription.notes }}</td>
+            </tr>
+            <tr>
+                <th>Date du RDV</th>
+                <td>{{ prescription.RDVCard.date|date('Y-m-d ') }}</td>
+            </tr>
+        </table>
+
+      <br><br><br><br> <br><br><br><br>
+        <!-- Pied de page -->
+        <div class="footer">
+            <p>Merci de faire confiance à notre service médical.</p>
+            <p>&copy; {{ "now"|date("Y") }} Votre Site Médical. Tous droits réservés.</p>
+        </div>
+    </div>
+
+</body>
+</html>

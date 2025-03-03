@@ -75,6 +75,8 @@ final class UserController extends AbstractController
         if (!$roleMedecin) {
             return $this->render('user/medecins.html.twig', [
                 'medecins' => [],
+                'specialities' => [],
+                'cities' => []
             ]);
         }
 
@@ -83,8 +85,14 @@ final class UserController extends AbstractController
             ->getRepository(User::class)
             ->findBy(['role' => $roleMedecin]);
 
+            // Extraire les spécialités uniques
+    $specialities = array_unique(array_filter(array_map(fn($m) => $m->getSpeciality(), $medecins)));
+    $addresses = array_unique(array_map(function($doctor) {return $doctor->getAdresse();}, $doctors));
+
         return $this->render('user/medecins.html.twig', [
             'medecins' => $medecins,
+            'specialities' => $specialities,
+            'addresses' => $addresses,
         ]);
     }
 

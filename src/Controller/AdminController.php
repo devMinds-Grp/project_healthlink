@@ -33,7 +33,7 @@ use App\Repository\UserRepository;
 
 final class AdminController extends AbstractController
 {
-    
+
     #[Route('/admin', name: 'app_admin')]
     public function index(UserRepository $userRepository): Response
     {
@@ -55,7 +55,6 @@ final class AdminController extends AbstractController
             'approvedPercentage' => $pendingApprovedPercentage['approvedPercentage'],
         ]);
     }
-
     #[Route('/admin/blood-donations', name: 'app_admin_blood_donations')]
     public function listBloodDonations(EntityManagerInterface $em): Response
     {

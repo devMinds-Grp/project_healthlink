@@ -58,6 +58,14 @@ class PatientType extends AbstractType
                     'class' => 'form-control',
                 ],
             ])
+            ->add('numTel', TextType::class, [
+                'label' => 'Numéro de téléphone',
+                'attr' => [
+                    'placeholder' => 'Entrez le numéro de téléphone',
+                    'class' => 'form-control',
+                ],
+            ])
+            
             ->add('imageprofile', FileType::class, [
                 'label' => 'Image de profil',
                 'required' => false, // Le champ n'est pas obligatoire

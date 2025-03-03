@@ -1,0 +1,6 @@
+# config/mots_inappropries.yaml
+parameters:
+  mots_inappropries:
+    - "maset"
+    - "bhim"
+    - "jabri"

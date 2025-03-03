@@ -22,7 +22,7 @@ class AppointmentType extends AbstractType
             'required' => true,
             'attr' => [
                 'class' => 'form-control',
-                'min' => (new \DateTime())->modify('+1 day')->format('Y-m-d') // HTML5 validation
+                'min' => (new \DateTime())->modify('+1 day')->format('Y-m-d H:i') // HTML5 validation
             ]
         ])
             
@@ -46,12 +46,16 @@ class AppointmentType extends AbstractType
             
             ->add('doctor', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => function (User $user) {
-        return $user->getNom() . ' ' . $user->getPrenom(); // Concatenating nom and prenom
-    }, // Change 'nom' par le champ que tu veux afficher (ex: email, prénom)
-                'placeholder' => 'Sélectionner un médecin', // Optionnel, pour éviter un champ vide
+                'choice_label' => function (?User $user) {
+                    // Handle null case
+                    return $user ? $user->getNom() . ' ' . $user->getPrenom() : 'Utilisateur inconnu';
+                },
+                'placeholder' => 'Sélectionner un médecin',
             ])
             
+
+            
+
             ->add('patient', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function (User $user) {
