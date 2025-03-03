@@ -98,11 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @var Collection<int, Rating>
-     */
-    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'user')]
-    private Collection $ratings;
+    
 
     #[ORM\OneToMany(targetEntity: Care::class, mappedBy: 'caregiver')]
     private Collection $caresAsCaregiver;
@@ -152,6 +148,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'admin')]
     private Collection $handledReclamations;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $bannedUntil = null;
+
+    /**
+     * @var Collection<int, Rating>
+     */
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'user')]
+    private Collection $ratings;
     public function __construct()
     {
         $this->UserForum = new ArrayCollection();
