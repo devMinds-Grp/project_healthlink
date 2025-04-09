@@ -30,7 +30,7 @@
                 <div class="d-flex justify-content-between gap-2 align-items-center">
 
                     <div class="theme-toggle d-flex  align-items-center mt-2">
-                        <h1 style="font-size: 1.75rem;" margin-right: 50px;">HealthLink</h1>
+                        <h1 style="font-size: 1.75rem; margin-right: 50px;">HealthLink</h1>
                     </div>
 
                     <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
@@ -122,6 +122,7 @@
             </ul>
         </li>
 
+
         <!-- Gestion Soin -->
         <li class="sidebar-item has-sub">
             <a href="#" class='sidebar-link'>
@@ -165,6 +166,35 @@
                 </li>
             </ul>
         </li>
+
+
+          <li class="sidebar-item has-sub">
+            <a href="#" class='sidebar-link'>
+                <i class="bi bi-chat-left-text-fill"></i> <!-- Icon for Gestion Forum -->
+                <span>Gestion Reclamation</span>
+            </a>
+            <ul class="submenu">
+                <li class="submenu-item">
+                    <a href="{{ path('app_admin_reclamation') }}" class="submenu-link">
+                        <i class="bi bi-chat-dots-fill"></i> <!-- Icon for Forums -->
+                        <span>reclamation</span>
+                    </a>
+                </li>
+                <li class="submenu-item">
+                    <a href="{{ path('app_admin_category_reclamation') }}" class="submenu-link">
+                        <i class="bi bi-chat-dots-fill"></i> <!-- Icon for Forums -->
+                        <span>category</span>
+                    </a>
+                </li>
+             
+            </ul>
+        </li>
+
+
+
+
+
+
 
         <!-- Gestion Don du sang -->
         <li class="sidebar-item has-sub">

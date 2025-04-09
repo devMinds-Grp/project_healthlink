@@ -18,6 +18,11 @@ imports:
     - { resource: 'mots_inappropries.yaml' }
 
 services:
+
+    # Configuration explicite pour DeepLTranslationService
+    App\Service\DeepLTranslationService:
+        arguments:
+            $params: '@parameter_bag'
     App\Service\DetecteurMotsInappropries:
         arguments:
             $motsInappropries: '%mots_inappropries%'
