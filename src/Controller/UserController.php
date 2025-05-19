@@ -213,7 +213,6 @@ final class UserController extends AbstractController
             'role' => $roleName,
         ]);
     }
-
     private function generateInitialAvatar(string $initials): string
     {
         // Taille de l'image

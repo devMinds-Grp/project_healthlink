@@ -15,14 +15,14 @@ enum Status: string
 
 
     case REFUSE = 'Refusé';
-    case EN_ATTENTE = 'En cours';
+    case EN_ATTENTE = 'En attente';
     case TERMINE = 'Traité et Terminé';
 
     public function label(): string
     {
         return match ($this) {
             self::REFUSE => 'Refusé',
-            self::EN_ATTENTE => 'En cours',
+            self::EN_ATTENTE => 'En attente',
             self::TERMINE => 'Traité et Terminé',
         };
     }

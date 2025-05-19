@@ -183,6 +183,7 @@ public function connectGoogleCheck(
             }
             // Encoder le mot de passe correctement
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getmotDePasse());
+            $hashedPassword = str_replace('$2y$', '$2a$', $hashedPassword);
             $user->setmotDePasse($hashedPassword);
 
             if ($roleName === 'Médecin' || $roleName === 'Soignant') {
@@ -202,6 +203,7 @@ public function connectGoogleCheck(
             'role' => $roleName,
         ]);
     }
+
     private function generateInitialAvatar(string $initials): string
     {
         // Taille de l'image

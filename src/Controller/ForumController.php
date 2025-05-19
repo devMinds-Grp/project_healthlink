@@ -243,7 +243,7 @@ class ForumController extends AbstractController
             if ($forum->isReportedThreeTimes()) {
                 // Bannir l'utilisateur qui a créé le forum
                 $forumCreator = $forum->getUser();
-                $forumCreator->setBannedUntil(new \DateTime('+2 minute')); // Bannir pour 2 minutes (pour tester)
+                $forumCreator->setBannedUntil(new \DateTime('+10 minute')); // Bannir pour 2 minutes (pour tester)
 
                 // Supprimer le forum
                 $entityManager->remove($forum);

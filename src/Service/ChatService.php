@@ -6,7 +6,6 @@ use App\Entity\ChatMessage;
 use App\Entity\User;
 use App\Entity\Notification;
 use App\Repository\ChatMessageRepository;
-use App\Repository\NotificationRepository; // Add this if you have a repository, or use EntityManager
 use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -33,24 +32,26 @@ class ChatService
         $chatMessage = new ChatMessage();
         $chatMessage->setSender($sender);
         $chatMessage->setRecipient($recipient);
-        $chatMessage->setMessage($message);
+        // Encode the message using Base64
+        $encodedMessage = base64_encode($message);
+        $chatMessage->setMessage($encodedMessage);
+        $chatMessage->setCreatedAt(new \DateTime('now'));
 
         $this->chatMessageRepository->save($chatMessage);
 
         // Create a notification for the soignant if the sender is a patient
-        if (in_array('ROLE_PATIENT', $sender->getRoles())) {
-            if (in_array('ROLE_SOIGNANT', $recipient->getRoles())) {
-                $notification = new Notification();
-                $notification->setUser($recipient); // Soignant receiving the notification
-                $notification->setMessage("Nouveau message de " . $sender->getNom() . " " . $sender->getPrenom() . ": \"" . $message . "\". Cliquez pour discuter.");
-                $notification->setCreatedAt(new \DateTime('now'));
-                $notification->setIsRead(false);
-                $notification->setPatient($sender); // Link to the patient
-                $notification->setChatMessage($chatMessage); // Link to the chat message
+        if (in_array('ROLE_PATIENT', $sender->getRoles()) && in_array('ROLE_SOIGNANT', $recipient->getRoles())) {
+            $notification = new Notification();
+            $notification->setUser($recipient); // Soignant receiving the notification
+            // Use the plain message for the notification
+            $notification->setMessage("Nouveau message de " . $sender->getNom() . " " . $sender->getPrenom() . ": \"" . $message . "\". Cliquez pour discuter.");
+            $notification->setCreatedAt(new \DateTime('now'));
+            $notification->setIsRead(false);
+            $notification->setPatient($sender);
+            $notification->setChatMessage($chatMessage);
 
-                $this->entityManager->persist($notification);
-                $this->entityManager->flush();
-            }
+            $this->entityManager->persist($notification);
+            $this->entityManager->flush();
         }
 
         return $chatMessage;
@@ -63,6 +64,13 @@ class ChatService
             throw new \RuntimeException('No authenticated user found.');
         }
 
-        return $this->chatMessageRepository->findMessagesBetweenUsers($currentUser, $otherUser);
+        $messages = $this->chatMessageRepository->findMessagesBetweenUsers($currentUser, $otherUser);
+        // Decode messages before returning
+        foreach ($messages as $message) {
+            $decodedMessage = base64_decode($message->getMessage(), true);
+            $message->setMessage($decodedMessage !== false ? $decodedMessage : $message->getMessage());
+        }
+
+        return $messages;
     }
 }

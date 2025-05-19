@@ -4,8 +4,8 @@ namespace App\Enum;
 
 enum StatutRdv: string
 {
-    case EN_ATTENTE = 'en_attente';
-    case CONFIRME = 'confirme';
+    case EN_ATTENTE = 'en attente';
+    case CONFIRME = 'confirmé';
     case ANNULE = 'annule';
 
     public function label(): string
